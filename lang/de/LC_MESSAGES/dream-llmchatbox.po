@@ -337,6 +337,12 @@ msgstr "Zurück"
 msgid "Finish"
 msgstr "Fertig"
 
+msgid "🔄 Sync before each message: on"
+msgstr "🔄 Vor jeder Nachricht abgleichen: an"
+
+msgid "🔄 Sync before each message: off"
+msgstr "🔄 Vor jeder Nachricht abgleichen: aus"
+
 msgid "read + write"
 msgstr "lesen + schreiben"
 
@@ -1185,6 +1191,12 @@ msgstr "{}: keine Textdateien gefunden"
 
 msgid "Audio and video need 'ffmpeg' installed"
 msgstr "Audio und Video benötigen installiertes 'ffmpeg'"
+
+msgid "🔄 Test environment synced from the project: {} file(s) updated"
+msgstr "🔄 Testumgebung mit dem Projekt abgeglichen: {} Datei(en) aktualisiert"
+
+msgid "Sync failed"
+msgstr "Abgleich fehlgeschlagen"
 
 msgid "Mon–Fri at {}"
 msgstr "Mo–Fr um {}"

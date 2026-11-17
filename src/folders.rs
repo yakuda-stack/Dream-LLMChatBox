@@ -92,6 +92,7 @@ pub fn set(ui: &AppWindow, list: &[Folder]) {
         .collect();
     ui.set_shared_folders(ModelRc::new(VecModel::from(entries)));
     crate::coding_ui::refresh(ui);
+    crate::auto_sync::refresh(ui);
 }
 
 pub fn label(list: &[Folder]) -> String {

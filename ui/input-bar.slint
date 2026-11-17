@@ -80,6 +80,30 @@ component LevelMeter inherits Rectangle {
     }
 }
 
+component SyncChip inherits Rectangle {
+    in property <bool> on;
+    callback clicked();
+
+    height: 26px;
+    width: label.preferred-width + 20px;
+    border-radius: 13px;
+    background: root.on ? #2da44e40 : Palette.alternate-background;
+    border-width: 1px;
+    border-color: root.on ? #2da44e : Palette.border;
+
+    label := Text {
+        text: root.on ? @tr("🔄 Sync before each message: on") : @tr("🔄 Sync before each message: off");
+        font-size: 12px;
+        vertical-alignment: center;
+        horizontal-alignment: center;
+        opacity: touch.has-hover || root.on ? 1.0 : 0.75;
+    }
+
+    touch := TouchArea {
+        clicked => { root.clicked(); }
+    }
+}
+
 component FolderChip inherits Rectangle {
     in property <string> name;
     in property <string> path;
@@ -196,6 +220,9 @@ export component InputBar inherits VerticalLayout {
     in-out property <string> draft;
     in property <[string]> pending-attachments;
     in property <[SharedFolder]> shared-folders;
+    in property <bool> sync-available;
+    in-out property <bool> auto-sync;
+    callback auto-sync-changed(bool);
     in property <bool> mic-recording;
     in-out property <int> think-mode: 0;
     callback think-changed(int);
@@ -383,6 +410,14 @@ export component InputBar inherits VerticalLayout {
                     writable: folder.writable;
                     toggle-write => { root.toggle-folder-write(index); }
                     remove => { root.remove-shared-folder(index); }
+                }
+
+                if root.sync-available: SyncChip {
+                    on: root.auto-sync;
+                    clicked => {
+                        root.auto-sync = !root.auto-sync;
+                        root.auto-sync-changed(root.auto-sync);
+                    }
                 }
             }
 

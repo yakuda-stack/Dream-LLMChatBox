@@ -2,6 +2,19 @@
 
 All notable changes to Dream-LLMChatBox. Newest first.
 
+## [v0.1.1] – 2026-11-17
+
+### Added
+- "🔄 Sync before each message" toggle per chat: the app syncs project → test environment before sending and tells the model which files changed
+- Test environment hint: the model checks code there (e.g. `cargo check`) before showing it
+- Tool `sync_from_project`: copies files from the original project into the test environment (only differing files, without asking)
+
+### Changed
+- Short follow-ups ("weiter") are routed with the last 3 user messages; in Coding mode "simple chat" becomes "coding" (Thinking stays on, Auto-Switch keeps a big model)
+- Nudge also when the answer stops after one or two words ("##", "OK")
+- Model announces a step but stops ("Let me look at …"): the app nudges it to call the tool right away (max. 2× per answer), and the folder hint tells models not to stop after announcing
+- Test environment: writing and editing files there no longer asks; terminal commands don't ask when they run in the container
+
 ## [v0.1.0] – 2026-11-17
 
 First public release (GitHub, AppImage, AUR). Everything below was built before it, sorted by date.

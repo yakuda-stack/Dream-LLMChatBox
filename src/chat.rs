@@ -14,6 +14,7 @@ use crate::folders;
 use crate::groups;
 use crate::groups_ui;
 use crate::markdown;
+use crate::nudge;
 use crate::models_page;
 use crate::ollama::{self, ChatConfig, ChatStats, Message};
 use crate::sandbox;
@@ -55,6 +56,7 @@ pub fn setup(ui: &AppWindow) {
         if let Some(ui) = weak.upgrade() {
             set_messages(&ui, Vec::new());
             ui.set_current_chat_id("".into());
+            ui.set_auto_sync(false);
             folders::set(&ui, &[]);
             groups_ui::set_current(&ui, "");
             coding_ui::reset(&ui);
@@ -305,6 +307,7 @@ fn open_chat(ui: &AppWindow, id: &str) {
             coding_ui::set(ui, coding::Mode::from_json(&chat.mode));
             ui.set_think_mode(storage::chat_think(&chat.id));
             ui.set_current_chat_id(chat.id.into());
+            crate::auto_sync::refresh(ui);
             crate::work_ui::refresh(ui);
             mark_checkpoints(ui);
             crate::preview::chat_changed(ui);
@@ -581,6 +584,12 @@ fn send_message(weak: slint::Weak<AppWindow>, text: SharedString, cancel: Arc<At
     if ui.get_current_chat_id().is_empty() {
         ui.set_current_chat_id(storage::new_id().into());
     }
+    let mut request = request;
+    if let Some(note) = crate::auto_sync::before_send(&ui)
+        && let Some(last) = request.iter_mut().rev().find(|m| m.role == "user")
+    {
+        last.content = format!("{note}\n\n{}", last.content);
+    }
     start_stream(&ui, model, request, String::new(), cancel);
 }
 
@@ -668,16 +677,13 @@ fn start_stream(
     thread::spawn(move || {
         let mut model = model;
         let mut start_context = start_context;
-        let prompt = request
-            .iter()
-            .rev()
-            .find(|m| m.role == "user")
-            .map(|m| m.content.clone())
-            .unwrap_or_default();
+        let route_text = auto_switch::route_text(
+            &request.iter().filter(|m| m.role == "user").map(|m| m.content.as_str()).collect::<Vec<_>>(),
+        );
         let mut task = None;
         if auto {
             let _ = weak.upgrade_in_event_loop(|ui| ui.set_mic_status(tr("Auto-Switch: choosing a model…").into()));
-            let choice = auto_switch::choose(&prompt, &model);
+            let choice = auto_switch::choose(&route_text, &model, mode.is_coding());
             task = choice.as_ref().map(|choice| choice.task);
             if let Some(choice) = &choice
                 && choice.model != model
@@ -712,7 +718,7 @@ fn start_stream(
             let _ = weak.upgrade_in_event_loop(|ui| ui.set_mic_status("".into()));
         }
         if ollama::supports_thinking(&model) {
-            let task = task.unwrap_or_else(|| auto_switch::guess(&prompt));
+            let task = task.unwrap_or_else(|| auto_switch::adjust(auto_switch::guess(&route_text), mode.is_coding()));
             let off = auto_switch::think_off(think_mode, task);
             config.think = off.then_some(false);
             if think_mode == auto_switch::THINK_AUTO {
@@ -815,6 +821,7 @@ fn start_stream(
         let mut recent_steps: Vec<String> = Vec::new();
         let mut freed_others = false;
         let mut crash_retried = false;
+        let mut nudges = 0;
         let short_model = model.rsplit('/').next().unwrap_or(&model).to_string();
         let thinking_label = trf("Thinking ({})", &[&short_model]);
         let writing_label = trf("Writing the answer ({})", &[&short_model]);
@@ -903,6 +910,26 @@ fn start_stream(
 
             let calls = match &result {
                 Ok(outcome) if !outcome.tool_calls.is_empty() => outcome.tool_calls.clone(),
+                Ok(_) if tools.is_some()
+                    && !shared.is_empty()
+                    && nudges < nudge::MAX
+                    && !cancel.load(Ordering::SeqCst)
+                    && nudge::stalled(&markdown::without_tool_blocks(&stream.reply[step_start..])) =>
+                {
+                    nudges += 1;
+                    request.push(Message {
+                        role: "assistant".to_string(),
+                        content: markdown::without_tool_blocks(&stream.reply[step_start..]),
+                        ..Default::default()
+                    });
+                    request.push(Message {
+                        role: "user".to_string(),
+                        content: nudge::MESSAGE.to_string(),
+                        ..Default::default()
+                    });
+                    stream.push("\n\n");
+                    continue;
+                }
                 _ => break,
             };
             if cancel.load(Ordering::SeqCst) {

@@ -30,7 +30,7 @@ Slint UI (ui/*.slint)  ⇄  setup()/callbacks in src/*_ui.rs, chat.rs …
 |---|---|---|
 | Chat flow | `chat.rs` | Send, stream, agent loop (max. 10 tool steps, loop guard `repeats`, `pause_and_wait` + `schedule_continue`, command timer `start_ticker`), context limit, context bar, work folder prompt |
 | Context saver | `context_saver.rs` | Per answer: skip re-reading unchanged files (`Reads`), shorten old tool results over ~55 % context (`shorten_old`), strip `<think>` from history |
-| Model choice | `auto_switch.rs` | BETA: smallest model rates the task (`/api/generate`, keep_alive 30m), `pick()` chooses an installed model, keeps a loaded one if it fits |
+| Model choice | `auto_switch.rs` | BETA: smallest model rates the task (`/api/generate`, keep_alive 30m), `pick()` chooses an installed model, keeps a loaded one if it fits; `route_text()` adds the last 3 user messages to short follow-ups, `adjust()` turns "simple" into "coding" in Coding mode |
 | Ollama | `ollama.rs`, `server.rs`, `usage.rs` | HTTP API, start/stop server, VRAM/RAM display |
 | Hardware | `hardware.rs` | Active GPU only (NVIDIA via `nvidia-smi`, AMD via sysfs `gpu_busy_percent` + `amdgpu.ids` → `glxinfo` → `lspci`), RAM, fit estimate |
 | Tools | `tools.rs`, `file_tools.rs` (list/read/search/write/edit), `web_tools.rs`, `memory_tools.rs`, `custom_tools.rs`, `mcp.rs`, `shell.rs`, `commands.rs`, `approval.rs` | Tool definitions, sandboxed folders, approval bar, safe/blocked commands |
@@ -103,6 +103,9 @@ Rust-Desktop-App mit Slint-1.18-Oberfläche. Sie spricht per HTTP (`ureq`) mit e
 - **ollama_backend.rs**: Vulkan/ROCm/CPU für Ollama umschalten
 - **cli.rs**: `--version` / `--help`
 - **theme.rs**: appearance (System / Light / Dark)
+- **auto_sync.rs**: per-chat toggle (`auto_sync.json` in the profile), `before_send()` runs `project_sync::sync` and puts a note in front of the user message in the request (not in the stored chat)
+- **project_sync.rs**: tool `sync_from_project` – project → test environment, only differing files, skips `workspace::SKIP` folders, no approval (target is always the test environment)
+- **nudge.rs**: `stalled()` spots answers that only announce a step or are cut after a few characters; `chat.rs` then adds `MESSAGE` as a user turn and continues the tool loop (max. `MAX`)
 - **reset.rs**: alles zurücksetzen
 - **container.rs**: Befehle der Testumgebung optional in Podman/Docker
 - **automations.rs / automations_ui.rs**: geplante Aufgaben, Zeitplan, Ausführung ohne Werkzeuge, Ergebnis als neuer Chat

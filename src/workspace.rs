@@ -73,7 +73,7 @@ pub fn test_env_note(dir: &Path, copied: bool) -> String {
         ""
     };
     format!(
-        "Test environment: {} is your own folder for this chat.{copy} You may create, change, build and run anything there; terminal commands run in it.{} Never change the user's original project folder. When you are done, tell the user which files you changed – the user takes them over with \"Apply to project\".",
+        "Test environment: {} is your own folder for this chat.{copy} You may create, change, build and run anything there; terminal commands run in it.{} Never change the user's original project folder. If a file here is missing or differs from the project, call sync_from_project to copy it over. After changing code, check it here (for example cargo check, a build or the tests) and fix errors before you show the result. When you are done, tell the user which files you changed – the user takes them over with \"Apply to project\".",
         dir.display(),
         crate::container::note().unwrap_or_default()
     )
@@ -159,7 +159,7 @@ pub fn changes(project: &Path, work: &Path) -> Vec<Change> {
         .collect()
 }
 
-fn list_files(root: &Path, dir: &Path, out: &mut Vec<PathBuf>) {
+pub fn list_files(root: &Path, dir: &Path, out: &mut Vec<PathBuf>) {
     let Ok(entries) = fs::read_dir(dir) else { return };
     for entry in entries.flatten() {
         let name = entry.file_name();

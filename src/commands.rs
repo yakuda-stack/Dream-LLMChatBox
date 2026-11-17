@@ -198,11 +198,13 @@ pub fn run(arguments: &Value, context: &Context) -> String {
         return "Error: no folder is shared in this chat, so commands can't run".to_string();
     };
     let directory = PathBuf::from(&folder.path);
+    let wrapped = crate::container::wrap(command, &directory);
+    let sandboxed = matches!(wrapped, Ok(Some(_)));
     match check(command, context.safe) {
         Check::Blocked(reason) => return format!("Error: blocked – {reason}"),
         Check::Safe => {}
         Check::Ask => {
-            if !allowed_in_chat(context.chat_id, command) {
+            if !sandboxed && !allowed_in_chat(context.chat_id, command) {
                 match (context.ask)(command, &directory, !folder.writable) {
                     Approval::Once => {}
                     Approval::Chat => allow_in_chat(context.chat_id, command),
@@ -211,7 +213,7 @@ pub fn run(arguments: &Value, context: &Context) -> String {
             }
         }
     }
-    let script = match crate::container::wrap(command, &directory) {
+    let script = match wrapped {
         Ok(wrapped) => wrapped.unwrap_or_else(|| command.to_string()),
         Err(e) => return format!("Error: {e}"),
     };

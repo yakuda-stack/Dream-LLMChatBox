@@ -235,6 +235,9 @@ export component AppWindow inherits Window {
     in-out property <string> data-info;
     in-out property <[string]> pending-attachments;
     in-out property <[SharedFolder]> shared-folders;
+    in-out property <bool> sync-available;
+    in-out property <bool> auto-sync;
+    callback auto-sync-changed(bool);
     in property <[ToolEntry]> builtin-tools;
     in property <[ToolEntry]> custom-tools;
     in-out property <bool> tool-form-open;
@@ -821,6 +824,9 @@ export component AppWindow inherits Window {
                                 attach-media => { root.attach-media(); }
                                 remove-attachment(index) => { root.remove-attachment(index); }
                                 shared-folders: root.shared-folders;
+                                sync-available: root.sync-available;
+                                auto-sync <=> root.auto-sync;
+                                auto-sync-changed(on) => { root.auto-sync-changed(on); }
                                 share-folder => { root.share-folder(); }
                                 test-env => { root.test-env(); }
                                 remove-shared-folder(index) => { root.remove-shared-folder(index); }

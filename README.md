@@ -77,6 +77,8 @@ Simple local chat apps (like Alpaca) are great for chatting. Dream-LLMChatBox go
 - Context length setting (default 64K); not enough VRAM → other models are unloaded, then the context is halved until it fits
 - Saves tokens in long tool runs: files are not read twice, old tool results are shortened, thinking is not sent back
 - Loop guard and a pause after 10 tool steps in a row, both with "▶ Continue"
+- No more typing "continue": if the model only announces a step ("Let me look at …") or stops after a word or two, the app tells it to go on (up to 2 times per answer, only in chats with a shared folder)
+- Short follow-ups like "weiter" are judged together with your last messages, so Thinking and Auto-Switch don't drop to "simple chat"; in Coding mode a task is never treated as simple chat
 - `pause_and_wait`: the model can wait for something and continues automatically at a set time
 
 ### Groups, memory and profiles
@@ -103,7 +105,10 @@ Simple local chat apps (like Alpaca) are great for chatting. Dream-LLMChatBox go
 
 - "🧪 Test environment" switch for a new chat: the model works on a copy of your project (`~/DreamWork/<group>/<chat>`)
 - "📝 n changes in work folder" shows a diff with "Apply to project"
+- No approval questions inside the test environment: the model may create and change files there freely (your project is only changed with "Apply to project"); with the container on, terminal commands run without asking too
 - Read-only projects: the app offers a work folder automatically
+- "🔄 Sync before each message" (next to the folders below the input): before every message the app copies your current project files into the test environment and tells the model – handy when you take over changes yourself in your project
+- `sync_from_project`: the model copies files from your original project into the test environment when they are missing or differ there (one file, a folder or everything; never changes your project, runs without asking)
 - Per group: a test environment for every chat
 - **Container** (Settings, off by default): commands run in Podman or Docker, image changeable (default `debian:stable-slim`)
 

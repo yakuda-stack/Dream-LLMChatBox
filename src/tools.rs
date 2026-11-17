@@ -16,7 +16,7 @@ use serde_json::{Value, json};
 
 pub const MAX_STEPS: usize = 10;
 
-pub const BUILTIN: [(&str, &str); 21] = [
+pub const BUILTIN: [(&str, &str); 22] = [
     ("get_current_time", "Current date, time and weekday of this computer"),
     ("calculate", "Exact math, e.g. (12.5 * 4) / 3 or sqrt(2)"),
     ("get_hardware_info", "Graphics card, VRAM and RAM of this computer"),
@@ -37,6 +37,7 @@ pub const BUILTIN: [(&str, &str); 21] = [
     ("memory_write", "Writes notes into the group memory – every change shows up in the chat"),
     ("web_search", "Searches the web with DuckDuckGo – asks you first"),
     ("open_web_page", "Opens a web page and reads it as clean text – asks you first"),
+    ("sync_from_project", "Copies files from your original project into the test environment (only there, without asking)"),
     ("run_terminal_command", "Runs commands in the first shared folder – asks you first (safe commands run directly)"),
 ];
 
@@ -89,6 +90,9 @@ fn builtin_definitions(folders: &[Folder], has_group: bool) -> Vec<Value> {
     }
     if !folders.is_empty() {
         items.push(commands::definition());
+    }
+    if crate::project_sync::available(folders) {
+        items.push(crate::project_sync::definition());
     }
     items.extend(web_tools::definitions());
     if has_group {
@@ -311,7 +315,7 @@ fn approve_write(arguments: &Value, context: &Context) -> Result<(), String> {
     let Ok(target) = sandbox::resolve(context.folders, path) else {
         return Ok(());
     };
-    if !target.writable {
+    if !target.writable || crate::workspace::is_inside(&target.path.to_string_lossy()) {
         return Ok(());
     }
     let editing = arguments.get("old_text").is_some();
@@ -387,6 +391,9 @@ fn run_builtin(call: &ToolCall, context: &Context) -> String {
         return output;
     }
     if let Some(output) = memory_tools::run(&call.function.name, &call.function.arguments, context.group) {
+        return output;
+    }
+    if let Some(output) = crate::project_sync::run(&call.function.name, &call.function.arguments, context.folders) {
         return output;
     }
     match call.function.name.as_str() {

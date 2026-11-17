@@ -131,7 +131,7 @@ pub fn system_note(folders: &[Folder]) -> String {
         ""
     };
     format!(
-        "The user shared these folders with you:\n{lines}\nUse list_folder, search_files and read_file to look at files before you answer questions about them; search first instead of reading many whole files. To change an existing file use edit_file with a small unique old_text. Paths are relative to the first folder. Never guess file contents.{documents}"
+        "The user shared these folders with you:\n{lines}\nUse list_folder, search_files and read_file to look at files before you answer questions about them; search first instead of reading many whole files. To change an existing file use edit_file with a small unique old_text. Paths are relative to the first folder. Never guess file contents. Never end an answer by only announcing a step like 'Let me look at …' – call the tool right away in the same answer and keep going until the task is done.{documents}"
     )
 }
 

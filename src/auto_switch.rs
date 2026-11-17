@@ -69,6 +69,24 @@ pub fn guess(prompt: &str) -> Task {
     }
 }
 
+const FOLLOW_UP: usize = 60;
+const LOOK_BACK: usize = 3;
+
+pub fn route_text(user_messages: &[&str]) -> String {
+    let Some(last) = user_messages.last() else {
+        return String::new();
+    };
+    if last.trim().chars().count() >= FOLLOW_UP {
+        return last.to_string();
+    }
+    let start = user_messages.len().saturating_sub(LOOK_BACK);
+    user_messages[start..].join("\n\n")
+}
+
+pub fn adjust(task: Task, coding: bool) -> Task {
+    if coding && task == Task::Simple { Task::Coding } else { task }
+}
+
 pub fn parse_answer(answer: &str) -> Option<Task> {
     let lower = answer.trim().to_lowercase();
     if lower.contains("coding") || lower.contains("code") {
@@ -144,7 +162,7 @@ pub fn pick<'a>(task: Task, models: &'a [InstalledModel], loaded: &[String]) -> 
 
 const ROUTER_PROMPT: &str = "Classify the user request below. Answer with exactly one word:\nsimple = small talk, short questions, everyday facts, translations\ncoding = writing, fixing or explaining program code, commands or configs\ncomplex = architecture, planning, long analysis, hard reasoning\n\nRequest:\n";
 
-pub fn choose(prompt: &str, current: &str) -> Option<Choice> {
+pub fn choose(prompt: &str, current: &str, coding: bool) -> Option<Choice> {
     let models = ollama::list_models().ok()?;
     let loaded: Vec<String> = ollama::running_models()
         .map(|list| list.into_iter().map(|model| model.name).collect())
@@ -154,6 +172,7 @@ pub fn choose(prompt: &str, current: &str) -> Option<Choice> {
         .and_then(|router| ollama::classify(&router.name, &format!("{ROUTER_PROMPT}{short}"), ROUTER_KEEP_ALIVE).ok())
         .and_then(|answer| parse_answer(&answer))
         .unwrap_or_else(|| guess(prompt));
+    let task = adjust(task, coding);
     let chosen = pick(task, &models, &loaded)?;
     let current_ok = models.iter().any(|model| model.name == current)
         && pick_contains(task, &models, &loaded, current);
@@ -183,6 +202,15 @@ mod tests {
             parameter_size: String::new(),
             quantization: String::new(),
         }
+    }
+
+    #[test]
+    fn short_follow_ups_keep_the_topic() {
+        let messages = ["Write a Rust function that parses the config file", "weiter"];
+        assert!(route_text(&messages).contains("Rust function"));
+        assert_eq!(route_text(&["old", "a long enough message that stands on its own and needs no earlier context"]), "a long enough message that stands on its own and needs no earlier context");
+        assert_eq!(adjust(Task::Simple, true), Task::Coding);
+        assert_eq!(adjust(Task::Simple, false), Task::Simple);
     }
 
     #[test]
