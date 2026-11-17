@@ -1,0 +1,138 @@
+import { Button, LineEdit, Palette } from "std-widgets.slint";
+import { ProfileEntry } from "types.slint";
+import { Avatar, ProfileRow } from "avatar.slint";
+
+export component UnlockScreen inherits Rectangle {
+    in property <string> profile-id;
+    in property <string> name;
+    in property <string> initial;
+    in property <image> picture;
+    in property <bool> has-picture;
+    in property <string> error;
+    in property <bool> can-cancel;
+    in property <[ProfileEntry]> profiles;
+    in-out property <string> password;
+    property <bool> creating: false;
+    property <string> new-name;
+    callback unlock(string);
+    callback switch(string);
+    callback create(string);
+    callback cancel();
+
+    background: Palette.background;
+
+    TouchArea { }
+
+    VerticalLayout {
+        alignment: center;
+
+        HorizontalLayout {
+            alignment: center;
+
+            VerticalLayout {
+                width: min(340px, root.width - 40px);
+                spacing: 12px;
+
+                HorizontalLayout {
+                    alignment: center;
+
+                    Avatar {
+                        size: 96px;
+                        picture: root.picture;
+                        has-picture: root.has-picture;
+                        initial: root.initial;
+                    }
+                }
+
+                Text {
+                    text: root.name;
+                    font-size: 20px;
+                    font-weight: 700;
+                    horizontal-alignment: center;
+                    overflow: elide;
+                }
+
+                Text {
+                    text: @tr("🔒 This profile still has an old password. Enter it once – the password is removed afterwards.");
+                    horizontal-alignment: center;
+                    opacity: 0.6;
+                }
+
+                LineEdit {
+                    input-type: InputType.password;
+                    placeholder-text: @tr("Password");
+                    text <=> root.password;
+                    init => { self.focus(); }
+                    accepted => { root.unlock(root.password); }
+                }
+
+                if root.error != "": Text {
+                    text: root.error;
+                    color: #cf222e;
+                    horizontal-alignment: center;
+                    overflow: elide;
+                }
+
+                HorizontalLayout {
+                    spacing: 8px;
+                    alignment: center;
+
+                    if root.can-cancel: Button {
+                        text: @tr("Cancel");
+                        clicked => { root.cancel(); }
+                    }
+
+                    Button {
+                        text: @tr("Unlock");
+                        primary: true;
+                        clicked => { root.unlock(root.password); }
+                    }
+                }
+
+                if root.profiles.length > 1: Text {
+                    text: @tr("Other profiles");
+                    font-weight: 600;
+                    opacity: 0.7;
+                }
+
+                VerticalLayout {
+                    for profile in root.profiles: ProfileRow {
+                        height: profile.id == root.profile-id ? 0px : 48px;
+                        visible: profile.id != root.profile-id;
+                        entry: profile;
+                        clicked => { root.switch(profile.id); }
+                    }
+                }
+
+                if !root.creating: HorizontalLayout {
+                    alignment: center;
+
+                    Button {
+                        text: @tr("New profile");
+                        clicked => {
+                            root.new-name = "";
+                            root.creating = true;
+                        }
+                    }
+                }
+
+                if root.creating: HorizontalLayout {
+                    spacing: 8px;
+
+                    LineEdit {
+                        text <=> root.new-name;
+                        placeholder-text: @tr("Name of the new profile");
+                        horizontal-stretch: 1;
+                        accepted => { root.create(root.new-name); }
+                    }
+
+                    Button {
+                        text: @tr("Create");
+                        primary: true;
+                        clicked => { root.create(root.new-name); }
+                    }
+                }
+            }
+        }
+    }
+}

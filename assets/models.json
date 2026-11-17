@@ -1,0 +1,402 @@
+[
+  {
+    "name": "gemma4",
+    "group": "Gemma",
+    "categories": [
+      "everyday",
+      "vision",
+      "reasoning",
+      "all-in-one"
+    ],
+    "description": "Google's Gemma 4 family for reasoning, agents, coding and images.",
+    "capabilities": [
+      "vision",
+      "tools",
+      "thinking"
+    ],
+    "strengths": [
+      "Good all-rounder for chat and reasoning",
+      "Understands images",
+      "Many sizes, from small to large"
+    ],
+    "weaknesses": [
+      "Thinking makes answers slower",
+      "The large variants need a lot of VRAM"
+    ],
+    "variants": [
+      {
+        "tag": "gemma4:e2b",
+        "size_gb": 7.5
+      },
+      {
+        "tag": "gemma4:e4b",
+        "size_gb": 9.5
+      },
+      {
+        "tag": "gemma4:12b",
+        "size_gb": 8.0
+      },
+      {
+        "tag": "gemma4:26b",
+        "size_gb": 18.0
+      },
+      {
+        "tag": "gemma4:31b",
+        "size_gb": 20.0
+      }
+    ]
+  },
+  {
+    "name": "qwen3.8",
+    "group": "Qwen",
+    "categories": [
+      "coding",
+      "reasoning",
+      "vision",
+      "all-in-one"
+    ],
+    "description": "Newest Qwen update with gains in coding, research and agentic tasks.",
+    "capabilities": [
+      "vision",
+      "tools",
+      "thinking"
+    ],
+    "strengths": [
+      "Strong at coding and research tasks",
+      "Understands images",
+      "Very long context (256K)"
+    ],
+    "weaknesses": [
+      "Only one size (27b), 18 GB download",
+      "Does not fit fully into 16 GB VRAM"
+    ],
+    "variants": [
+      {
+        "tag": "qwen3.8:27b",
+        "size_gb": 18.0
+      }
+    ]
+  },
+  {
+    "name": "qwen3.6",
+    "group": "Qwen",
+    "categories": [
+      "coding",
+      "reasoning",
+      "vision",
+      "all-in-one"
+    ],
+    "description": "Qwen update focused on agentic coding and thinking.",
+    "capabilities": [
+      "vision",
+      "tools",
+      "thinking"
+    ],
+    "strengths": [
+      "Strong at agentic coding",
+      "Good reasoning",
+      "Understands images"
+    ],
+    "weaknesses": [
+      "Large downloads (18 GB and more)",
+      "No small variants"
+    ],
+    "variants": [
+      {
+        "tag": "qwen3.6:27b",
+        "size_gb": 18.0
+      },
+      {
+        "tag": "qwen3.6:35b",
+        "size_gb": 23.0
+      }
+    ]
+  },
+  {
+    "name": "qwen3.5",
+    "group": "Qwen",
+    "categories": [
+      "everyday",
+      "vision",
+      "all-in-one"
+    ],
+    "description": "Multimodal Qwen family with many sizes.",
+    "capabilities": [
+      "vision",
+      "tools",
+      "thinking"
+    ],
+    "strengths": [
+      "Sizes for almost every graphics card",
+      "Understands images",
+      "Good multilingual chat"
+    ],
+    "weaknesses": [
+      "Older than qwen3.6 and qwen3.8",
+      "Small variants make more mistakes"
+    ],
+    "variants": [
+      {
+        "tag": "qwen3.5:2b",
+        "size_gb": 2.7
+      },
+      {
+        "tag": "qwen3.5:4b",
+        "size_gb": 3.4
+      },
+      {
+        "tag": "qwen3.5:9b",
+        "size_gb": 6.6
+      },
+      {
+        "tag": "qwen3.5:27b",
+        "size_gb": 17.0
+      },
+      {
+        "tag": "qwen3.5:35b",
+        "size_gb": 22.0
+      }
+    ]
+  },
+  {
+    "name": "gpt-oss",
+    "group": "OpenAI",
+    "categories": [
+      "reasoning",
+      "everyday"
+    ],
+    "description": "OpenAI's open-weight models for reasoning and agentic tasks.",
+    "capabilities": [
+      "tools",
+      "thinking"
+    ],
+    "strengths": [
+      "Strong reasoning",
+      "Reliable tool use",
+      "The 20b variant targets 16 GB cards"
+    ],
+    "weaknesses": [
+      "No image input",
+      "The 120b variant needs very large hardware"
+    ],
+    "variants": [
+      {
+        "tag": "gpt-oss:20b",
+        "size_gb": 14.0
+      },
+      {
+        "tag": "gpt-oss:120b",
+        "size_gb": 65.0
+      }
+    ]
+  },
+  {
+    "name": "qwen3-coder",
+    "group": "Qwen",
+    "categories": [
+      "coding"
+    ],
+    "description": "Qwen model for long-context agentic and coding work.",
+    "capabilities": [
+      "tools"
+    ],
+    "strengths": [
+      "Made for coding and code agents",
+      "Very long context (256K)",
+      "Fast for its size (only part of the model is active)"
+    ],
+    "weaknesses": [
+      "19 GB download",
+      "Less suited for normal chat",
+      "No image input"
+    ],
+    "variants": [
+      {
+        "tag": "qwen3-coder:30b",
+        "size_gb": 19.0
+      }
+    ]
+  },
+  {
+    "name": "qwen2.5-coder",
+    "group": "Qwen",
+    "categories": [
+      "coding"
+    ],
+    "description": "Code-focused Qwen models for generation, reasoning and fixing code.",
+    "capabilities": [
+      "tools"
+    ],
+    "strengths": [
+      "Good coding help even in small sizes",
+      "Fits small graphics cards",
+      "Fast"
+    ],
+    "weaknesses": [
+      "Older generation",
+      "Short context (32K)",
+      "No image input"
+    ],
+    "variants": [
+      {
+        "tag": "qwen2.5-coder:3b",
+        "size_gb": 1.9
+      },
+      {
+        "tag": "qwen2.5-coder:7b",
+        "size_gb": 4.7
+      },
+      {
+        "tag": "qwen2.5-coder:14b",
+        "size_gb": 9.0
+      },
+      {
+        "tag": "qwen2.5-coder:32b",
+        "size_gb": 20.0
+      }
+    ]
+  },
+  {
+    "name": "deepseek-r1",
+    "group": "DeepSeek",
+    "categories": [
+      "reasoning"
+    ],
+    "description": "Open reasoning models that think step by step.",
+    "capabilities": [
+      "tools",
+      "thinking"
+    ],
+    "strengths": [
+      "Good at math and logic",
+      "Shows its reasoning step by step"
+    ],
+    "weaknesses": [
+      "Slow because of long thinking",
+      "No image input",
+      "Wordy answers"
+    ],
+    "variants": [
+      {
+        "tag": "deepseek-r1:8b",
+        "size_gb": 5.2
+      },
+      {
+        "tag": "deepseek-r1:14b",
+        "size_gb": 9.0
+      },
+      {
+        "tag": "deepseek-r1:32b",
+        "size_gb": 20.0
+      }
+    ]
+  },
+  {
+    "name": "llama3.2",
+    "group": "Llama",
+    "categories": [
+      "everyday"
+    ],
+    "description": "Meta's small models for lightweight use.",
+    "capabilities": [
+      "tools"
+    ],
+    "strengths": [
+      "Very small and fast",
+      "Runs on almost any hardware",
+      "Good for quick, simple questions"
+    ],
+    "weaknesses": [
+      "Limited knowledge and reasoning",
+      "Weak at coding",
+      "No image input"
+    ],
+    "variants": [
+      {
+        "tag": "llama3.2:1b",
+        "size_gb": 1.3
+      },
+      {
+        "tag": "llama3.2:3b",
+        "size_gb": 2.0
+      }
+    ]
+  },
+  {
+    "name": "llama3.1",
+    "group": "Llama",
+    "categories": [
+      "everyday"
+    ],
+    "description": "Meta's widely used general model.",
+    "capabilities": [
+      "tools"
+    ],
+    "strengths": [
+      "Solid default for chat",
+      "Small and fast (8b)",
+      "Very widely supported"
+    ],
+    "weaknesses": [
+      "Older than the current Qwen and Gemma models",
+      "No image input"
+    ],
+    "variants": [
+      {
+        "tag": "llama3.1:8b",
+        "size_gb": 4.9
+      }
+    ]
+  },
+  {
+    "name": "mistral-nemo",
+    "group": "Mistral",
+    "categories": [
+      "everyday"
+    ],
+    "description": "12B model from Mistral AI, built with NVIDIA.",
+    "capabilities": [
+      "tools"
+    ],
+    "strengths": [
+      "Good multilingual chat",
+      "Fits 12 GB cards",
+      "Fast"
+    ],
+    "weaknesses": [
+      "Older model",
+      "No image input",
+      "No thinking mode"
+    ],
+    "variants": [
+      {
+        "tag": "mistral-nemo:12b",
+        "size_gb": 7.1
+      }
+    ]
+  },
+  {
+    "name": "phi4",
+    "group": "Microsoft",
+    "categories": [
+      "reasoning"
+    ],
+    "description": "Microsoft's 14B open model.",
+    "capabilities": [],
+    "strengths": [
+      "Good at analytic and STEM questions",
+      "Fits 12 GB cards"
+    ],
+    "weaknesses": [
+      "Short context (16K)",
+      "Weak tool calling",
+      "No image input"
+    ],
+    "variants": [
+      {
+        "tag": "phi4:14b",
+        "size_gb": 9.1
+      }
+    ]
+  }
+]

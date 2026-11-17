@@ -1,0 +1,619 @@
+import { Button, CheckBox, ComboBox, LineEdit, Palette, ScrollView, SpinBox, TextEdit } from "std-widgets.slint";
+import { Avatar } from "avatar.slint";
+
+component Field inherits VerticalLayout {
+    in property <string> label;
+    in property <string> hint;
+
+    spacing: 4px;
+
+    Text {
+        text: root.label;
+        font-weight: 600;
+    }
+
+    @children
+
+    if root.hint != "": Rectangle {
+        height: hint-text.preferred-height;
+
+        hint-text := Text {
+            x: 0;
+            y: 0;
+            width: parent.width;
+            text: root.hint;
+            font-size: 11px;
+            opacity: 0.6;
+            wrap: word-wrap;
+        }
+    }
+}
+
+export component SettingsDialog inherits Rectangle {
+    in-out property <int> page;
+    in-out property <string> profile-name;
+    in-out property <string> profile-about;
+    in property <image> profile-picture;
+    in property <bool> has-profile-picture;
+    in property <string> profile-initial;
+    in property <bool> profile-can-delete;
+    in property <string> profile-message;
+    property <bool> confirm-delete-profile: false;
+    callback pick-picture();
+    callback remove-picture();
+    callback delete-profile();
+    in-out property <string> ollama-url;
+    in-out property <int> context-index;
+    in-out property <int> keep-alive-index;
+    in-out property <string> system-prompt-text;
+    in property <[string]> context-options;
+    in property <[string]> keep-alive-options;
+    in property <[string]> language-options;
+    in-out property <int> language-index;
+    in-out property <bool> tools-enabled;
+    in-out property <bool> show-context-bar;
+    in-out property <bool> auto-switch;
+    in-out property <bool> auto-continue;
+    in-out property <bool> auto-compact;
+    in-out property <int> compact-at;
+    in-out property <string> work-dir;
+    in-out property <int> container-index;
+    in-out property <string> container-image;
+    in property <string> container-status;
+    callback container-changed(int);
+    in-out property <string> embed-model;
+    callback pick-work-dir();
+    in property <string> data-info;
+    in property <bool> busy;
+    property <bool> confirm-delete: false;
+    callback save-profile(string, string);
+    callback save-general(int, bool);
+    callback delete-all-chats();
+    callback open-reset();
+    in-out property <int> backend-index;
+    in property <string> backend-status;
+    in property <bool> backend-busy;
+    callback backend-apply(int);
+    in-out property <int> ui-language-index;
+    in-out property <int> theme-index;
+    callback theme-changed(int);
+    callback ui-language-changed(int);
+    callback start-tour();
+    callback save-ollama(string, int, int, string);
+
+    background: #00000080;
+
+    TouchArea {
+        clicked => { root.page = 0; }
+    }
+
+    Rectangle {
+        width: min(560px, root.width - 40px);
+        height: min(card.preferred-height, root.height - 40px);
+        border-radius: 14px;
+        background: Palette.background;
+        border-width: 1px;
+        border-color: Palette.border;
+        drop-shadow-blur: 24px;
+        drop-shadow-color: #00000060;
+
+        TouchArea { }
+
+        card := VerticalLayout {
+            padding: 20px;
+            spacing: 14px;
+
+            Text {
+                text: root.page == 1 ? @tr("Profile") : root.page == 3 ? @tr("Settings") : @tr("Ollama settings");
+                font-size: 18px;
+                font-weight: 700;
+            }
+
+            if root.page == 1: VerticalLayout {
+                spacing: 12px;
+
+                HorizontalLayout {
+                    spacing: 14px;
+
+                    VerticalLayout {
+                        alignment: start;
+
+                        Avatar {
+                            size: 64px;
+                            picture: root.profile-picture;
+                            has-picture: root.has-profile-picture;
+                            initial: root.profile-initial;
+                        }
+                    }
+
+                    VerticalLayout {
+                        spacing: 8px;
+                        horizontal-stretch: 1;
+
+                        Field {
+                            label: @tr("Name");
+
+                            LineEdit {
+                                text <=> root.profile-name;
+                                placeholder-text: @tr("You");
+                            }
+                        }
+
+                        HorizontalLayout {
+                            spacing: 8px;
+                            alignment: start;
+
+                            Button {
+                                text: @tr("Choose picture…");
+                                clicked => { root.pick-picture(); }
+                            }
+
+                            if root.has-profile-picture: Button {
+                                text: @tr("Remove picture");
+                                clicked => { root.remove-picture(); }
+                            }
+                        }
+                    }
+                }
+
+                Field {
+                    label: @tr("ⓘ About you");
+                    hint: @tr("The AI gets this in every chat, e.g. what you work on or how it should answer.");
+
+                    TextEdit {
+                        height: 80px;
+                        text <=> root.profile-about;
+                        wrap: word-wrap;
+                    }
+                }
+
+                if root.profile-message != "": Text {
+                    text: root.profile-message;
+                    font-weight: 600;
+                    overflow: elide;
+                }
+
+                Rectangle {
+                    height: 1px;
+                    background: Palette.border;
+                }
+
+                if !root.confirm-delete-profile: HorizontalLayout {
+                    alignment: start;
+
+                    Button {
+                        text: @tr("Delete profile…");
+                        enabled: root.profile-can-delete && !root.busy;
+                        clicked => { root.confirm-delete-profile = true; }
+                    }
+                }
+
+                if root.confirm-delete-profile: Rectangle {
+                    border-radius: 8px;
+                    border-width: 1px;
+                    border-color: #cf222e;
+                    background: #cf222e22;
+
+                    VerticalLayout {
+                        padding: 12px;
+                        spacing: 10px;
+
+                        Text {
+                            text: @tr("Really delete this profile with all its chats, groups, memory and start arguments?");
+                            font-weight: 600;
+                            overflow: elide;
+                        }
+
+                        HorizontalLayout {
+                            spacing: 8px;
+                            alignment: end;
+
+                            Button {
+                                text: @tr("Cancel");
+                                clicked => { root.confirm-delete-profile = false; }
+                            }
+
+                            Button {
+                                text: @tr("Delete profile");
+                                primary: true;
+                                clicked => {
+                                    root.confirm-delete-profile = false;
+                                    root.delete-profile();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if root.page == 3: settings-scroll := ScrollView {
+                vertical-stretch: 1;
+                min-height: 160px;
+                preferred-height: settings-content.preferred-height;
+
+                settings-content := VerticalLayout {
+                    width: settings-scroll.visible-width;
+                    padding-right: 12px;
+                    spacing: 14px;
+
+                    Field {
+                        label: @tr("Answer language");
+                        hint: @tr("Every model is told to always answer in this language. “Automatic” lets the model answer in the language you write in.");
+
+                        ComboBox {
+                            model: root.language-options;
+                            current-index <=> root.language-index;
+                        }
+                    }
+
+                    Field {
+                        label: @tr("Tools");
+                        hint: @tr("Time, calculator and hardware info for models that support tools. Every call is shown in the chat.");
+
+                        CheckBox {
+                            text: @tr("Let models use tools");
+                            checked <=> root.tools-enabled;
+                        }
+                    }
+
+                    Field {
+                        label: @tr("Model");
+                        hint: @tr("A small installed model first rates your message (simple chat, coding, complex) and the best fitting installed model answers. A model that is already loaded is kept when it fits, so the VRAM is not emptied for nothing.");
+
+                        HorizontalLayout {
+                            spacing: 8px;
+                            alignment: start;
+
+                            CheckBox {
+                                text: @tr("Auto-Switch AI Model");
+                                checked <=> root.auto-switch;
+                            }
+
+                            Rectangle {
+                                width: beta.preferred-width + 12px;
+                                height: 18px;
+                                y: (parent.height - self.height) / 2;
+                                border-radius: 9px;
+                                background: #8250df;
+
+                                beta := Text {
+                                    text: "BETA";
+                                    color: white;
+                                    font-size: 10px;
+                                    font-weight: 700;
+                                }
+                            }
+                        }
+                    }
+
+                    Field {
+                        label: @tr("Pauses");
+                        hint: @tr("When the model pauses to wait for something (⏸), the answer continues by itself after the time it asked for. Off: only with the Continue button.");
+
+                        CheckBox {
+                            text: @tr("Continue automatically after a pause");
+                            checked <=> root.auto-continue;
+                        }
+                    }
+
+                    Field {
+                        label: @tr("Context bar");
+                        hint: @tr("Small bar below the input: how full the context of this chat is. Green, then orange, then red.");
+
+                        CheckBox {
+                            text: @tr("Show the context bar");
+                            checked <=> root.show-context-bar;
+                        }
+                    }
+
+                    Field {
+                        label: @tr("Long chats");
+                        hint: @tr("When the context is this full after an answer, older messages are summarized so you can keep chatting. The newest messages stay word for word, the originals stay visible. Also by hand with 🗜 next to the context bar.");
+
+                        HorizontalLayout {
+                            spacing: 10px;
+                            alignment: start;
+
+                            CheckBox {
+                                text: @tr("Compress automatically at");
+                                checked <=> root.auto-compact;
+                            }
+
+                            SpinBox {
+                                width: 90px;
+                                minimum: 30;
+                                maximum: 95;
+                                step-size: 5;
+                                enabled: root.auto-compact;
+                                value <=> root.compact-at;
+                            }
+
+                            Text {
+                                text: "%";
+                                vertical-alignment: center;
+                            }
+                        }
+                    }
+
+                    Field {
+                        label: @tr("Embedding model");
+                        hint: @tr("Ollama model for searchable documents (groups). Install it once with: ollama pull nomic-embed-text");
+
+                        LineEdit {
+                            text <=> root.embed-model;
+                            placeholder-text: "nomic-embed-text";
+                        }
+                    }
+
+                    Field {
+                        label: @tr("Work folder");
+                        hint: @tr("Base folder for test copies. Every group gets its own folder in it, every chat a folder inside the group folder. When the model may not write to your project, it can work on a copy there.");
+
+                        HorizontalLayout {
+                            spacing: 6px;
+
+                            LineEdit {
+                                text <=> root.work-dir;
+                                placeholder-text: @tr("Default: ~/DreamWork");
+                            }
+
+                            Button {
+                                text: @tr("Choose…");
+                                clicked => { root.pick-work-dir(); }
+                            }
+                        }
+                    }
+
+                    Field {
+                        label: @tr("Container (optional)");
+                        hint: @tr("Off by default. When on, the model's terminal commands in a test environment run inside a Podman or Docker container: the test folder is mounted at /work, the rest of your computer stays out of reach. The image needs the tools your project uses (e.g. rust, python).");
+
+                        VerticalLayout {
+                            spacing: 6px;
+
+                            HorizontalLayout {
+                                spacing: 6px;
+
+                                ComboBox {
+                                    width: 120px;
+                                    model: [@tr("Off"), "Podman", "Docker"];
+                                    current-index <=> root.container-index;
+                                    selected => { root.container-changed(self.current-index); }
+                                }
+
+                                LineEdit {
+                                    enabled: root.container-index > 0;
+                                    text <=> root.container-image;
+                                    placeholder-text: "docker.io/library/debian:stable-slim";
+                                }
+                            }
+
+                            Text {
+                                text: root.container-status;
+                                font-size: 11px;
+                                opacity: 0.7;
+                                wrap: word-wrap;
+                            }
+                        }
+                    }
+
+                    Rectangle {
+                        height: 1px;
+                        background: Palette.border;
+                    }
+
+                    Field {
+                        label: @tr("Appearance");
+                        hint: @tr("System follows the light or dark mode of your desktop.");
+
+                        HorizontalLayout {
+                            alignment: start;
+
+                            ComboBox {
+                                width: 160px;
+                                model: [@tr("System"), @tr("Light"), @tr("Dark")];
+                                current-index <=> root.theme-index;
+                                selected => { root.theme-changed(self.current-index); }
+                            }
+                        }
+                    }
+
+                    Field {
+                        label: @tr("Language");
+                        hint: @tr("Language of the app. The model answers in the language set under “Answer language”.");
+
+                        HorizontalLayout {
+                            spacing: 8px;
+                            alignment: start;
+
+                            ComboBox {
+                                width: 160px;
+                                model: ["English", "Deutsch"];
+                                current-index <=> root.ui-language-index;
+                                selected => { root.ui-language-changed(self.current-index); }
+                            }
+
+                            Button {
+                                text: "ⓘ " + @tr("Start the tour again");
+                                clicked => { root.start-tour(); }
+                            }
+                        }
+                    }
+
+                    Field {
+                        label: @tr("Reset the app");
+                        hint: @tr("Deletes everything of Dream-LLMChatBox: all profiles, chats, groups, memories, test environments, automations, settings and downloaded voices and speech models. Your own project folders and your Ollama models stay.");
+
+                        HorizontalLayout {
+                            alignment: start;
+
+                            Button {
+                                text: "⚠ " + @tr("Reset everything…");
+                                enabled: !root.busy;
+                                clicked => { root.open-reset(); }
+                            }
+                        }
+                    }
+
+                    Field {
+                        label: @tr("Chat data");
+                        hint: root.data-info;
+
+                        if !root.confirm-delete: HorizontalLayout {
+                            alignment: start;
+
+                            Button {
+                                text: @tr("Delete all chats…");
+                                enabled: !root.busy;
+                                clicked => { root.confirm-delete = true; }
+                            }
+                        }
+
+                        if root.confirm-delete: Rectangle {
+                            border-radius: 8px;
+                            border-width: 1px;
+                            border-color: #cf222e;
+                            background: #cf222e22;
+
+                            VerticalLayout {
+                                padding: 12px;
+                                spacing: 10px;
+
+                                Text {
+                                    text: @tr("Really delete all chats with all images, files and transcripts? This cannot be undone.");
+                                    wrap: word-wrap;
+                                    font-weight: 600;
+                                }
+
+                                HorizontalLayout {
+                                    spacing: 8px;
+                                    alignment: end;
+
+                                    Button {
+                                        text: @tr("Cancel");
+                                        clicked => { root.confirm-delete = false; }
+                                    }
+
+                                    Button {
+                                        text: @tr("Delete everything");
+                                        primary: true;
+                                        clicked => {
+                                            root.confirm-delete = false;
+                                            root.delete-all-chats();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if root.page == 2: VerticalLayout {
+                spacing: 14px;
+
+                Field {
+                    label: @tr("Server address");
+                    hint: @tr("Default: http://localhost:11434");
+
+                    LineEdit {
+                        text <=> root.ollama-url;
+                        placeholder-text: "http://localhost:11434";
+                    }
+                }
+
+                HorizontalLayout {
+                    spacing: 12px;
+
+                    Field {
+                        label: @tr("Context length");
+                        hint: @tr("More context = longer chats, but more VRAM. Near the limit the answer stops and offers “Continue”.");
+
+                        ComboBox {
+                            model: root.context-options;
+                            current-index <=> root.context-index;
+                        }
+                    }
+
+                    Field {
+                        label: @tr("Keep model loaded");
+                        hint: @tr("How long the model stays in VRAM after an answer.");
+
+                        ComboBox {
+                            model: root.keep-alive-options;
+                            current-index <=> root.keep-alive-index;
+                        }
+                    }
+                }
+
+                Field {
+                    label: @tr("Graphics backend");
+                    hint: @tr("Which library Ollama uses for the graphics card. Vulkan is often faster and more stable on AMD RX 9000 cards, ROCm can be faster for big models. Applying asks for your password and restarts Ollama.");
+
+                    VerticalLayout {
+                        spacing: 6px;
+
+                        HorizontalLayout {
+                            spacing: 8px;
+                            alignment: start;
+
+                            ComboBox {
+                                width: 180px;
+                                model: [@tr("Automatic"), "Vulkan", "ROCm", @tr("CPU only")];
+                                current-index <=> root.backend-index;
+                            }
+
+                            Button {
+                                text: root.backend-busy ? @tr("Applying…") : @tr("Apply");
+                                enabled: !root.backend-busy;
+                                clicked => { root.backend-apply(root.backend-index); }
+                            }
+                        }
+
+                        Text {
+                            text: root.backend-status;
+                            font-size: 11px;
+                            opacity: 0.7;
+                            wrap: word-wrap;
+                        }
+                    }
+                }
+
+                Field {
+                    label: @tr("Extra instructions for every chat");
+                    hint: @tr("Optional. Added to the system prompt of every model.");
+
+                    TextEdit {
+                        height: 90px;
+                        text <=> root.system-prompt-text;
+                        wrap: word-wrap;
+                    }
+                }
+            }
+
+            HorizontalLayout {
+                spacing: 8px;
+                alignment: end;
+
+                Button {
+                    text: @tr("Cancel");
+                    clicked => { root.page = 0; }
+                }
+
+                Button {
+                    text: @tr("Save");
+                    primary: true;
+                    clicked => {
+                        if (root.page == 1) {
+                            root.save-profile(root.profile-name, root.profile-about);
+                        } else if (root.page == 3) {
+                            root.save-general(root.language-index, root.tools-enabled);
+                        } else {
+                            root.save-ollama(root.ollama-url, root.context-index, root.keep-alive-index, root.system-prompt-text);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

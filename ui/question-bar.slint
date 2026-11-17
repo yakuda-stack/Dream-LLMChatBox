@@ -1,0 +1,101 @@
+import { Button, LineEdit, Palette } from "std-widgets.slint";
+
+component Choice inherits Rectangle {
+    in property <string> text;
+    in property <int> number;
+    callback clicked();
+
+    height: label.preferred-height + 16px;
+    border-radius: 8px;
+    border-width: 1px;
+    border-color: touch.has-hover ? Palette.accent-background : Palette.border;
+    background: touch.has-hover ? Palette.alternate-background : Palette.background;
+
+    touch := TouchArea {
+        mouse-cursor: pointer;
+        clicked => { root.clicked(); }
+    }
+
+    label := Text {
+        x: 12px;
+        y: 8px;
+        width: parent.width - 24px;
+        text: root.number + "  " + root.text;
+        wrap: word-wrap;
+    }
+}
+
+export component QuestionBar inherits VerticalLayout {
+    in property <string> question;
+    in property <[string]> options;
+    callback answer(string);
+
+    vertical-stretch: 0;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-bottom: 8px;
+
+    Rectangle {
+        border-radius: 12px;
+        border-width: 2px;
+        border-color: Palette.accent-background;
+        background: Palette.control-background;
+
+        VerticalLayout {
+            padding: 12px;
+            spacing: 8px;
+            alignment: start;
+
+            Text {
+                text: "❓ " + @tr("The model asks you");
+                font-size: 11px;
+                font-weight: 600;
+                opacity: 0.65;
+            }
+
+            Rectangle {
+                height: asked.preferred-height;
+
+                asked := Text {
+                    x: 0;
+                    y: 0;
+                    width: parent.width;
+                    text: root.question;
+                    font-weight: 700;
+                    wrap: word-wrap;
+                }
+            }
+
+            for option[index] in root.options: Choice {
+                text: option;
+                number: index + 1;
+                clicked => { root.answer(option); }
+            }
+
+            HorizontalLayout {
+                spacing: 8px;
+
+                own := LineEdit {
+                    placeholder-text: root.options.length > 0 ? (root.options.length + 1) + "  " + @tr("Your own answer…") : @tr("Your answer…");
+                    accepted(text) => {
+                        if (text != "") {
+                            root.answer(text);
+                        }
+                    }
+                }
+
+                Button {
+                    text: @tr("Send");
+                    primary: true;
+                    enabled: own.text != "";
+                    clicked => { root.answer(own.text); }
+                }
+
+                Button {
+                    text: @tr("Skip");
+                    clicked => { root.answer(""); }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,93 @@
+import { Palette } from "std-widgets.slint";
+import { ProfileEntry } from "types.slint";
+
+export component Avatar inherits Rectangle {
+    in property <image> picture;
+    in property <bool> has-picture;
+    in property <string> initial;
+    in property <length> size: 30px;
+
+    width: root.size;
+    height: root.size;
+    border-radius: root.size / 2;
+    background: Palette.accent-background;
+    clip: true;
+
+    if root.has-picture: Image {
+        width: root.size;
+        height: root.size;
+        source: root.picture;
+        image-fit: cover;
+    }
+
+    if !root.has-picture && root.initial != "": Text {
+        width: root.size;
+        height: root.size;
+        text: root.initial;
+        color: Palette.accent-foreground;
+        font-weight: 700;
+        font-size: root.size * 0.45;
+        horizontal-alignment: center;
+        vertical-alignment: center;
+    }
+
+    if !root.has-picture && root.initial == "": Path {
+        width: root.size * 0.53;
+        height: root.size * 0.53;
+        viewbox-width: 24;
+        viewbox-height: 24;
+        commands: "M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8z M4 21a8 8 0 0 1 16 0";
+        stroke: Palette.accent-foreground;
+        stroke-width: 2px;
+        fill: transparent;
+    }
+}
+
+export component ProfileRow inherits Rectangle {
+    in property <ProfileEntry> entry;
+    callback clicked();
+
+    height: 48px;
+    border-radius: 8px;
+    background: root.entry.active ? Palette.alternate-background : touch.has-hover ? Palette.control-background : transparent;
+
+    touch := TouchArea {
+        clicked => { root.clicked(); }
+    }
+
+    HorizontalLayout {
+        padding-left: 8px;
+        padding-right: 10px;
+        spacing: 10px;
+
+        VerticalLayout {
+            alignment: center;
+
+            Avatar {
+                size: 32px;
+                picture: root.entry.picture;
+                has-picture: root.entry.has-picture;
+                initial: root.entry.initial;
+            }
+        }
+
+        Text {
+            text: root.entry.name;
+            font-weight: root.entry.active ? 700 : 400;
+            vertical-alignment: center;
+            overflow: elide;
+            horizontal-stretch: 1;
+        }
+
+        if root.entry.locked: Text {
+            text: "🔒";
+            vertical-alignment: center;
+        }
+
+        if root.entry.active: Text {
+            text: "✓";
+            vertical-alignment: center;
+            font-weight: 700;
+        }
+    }
+}

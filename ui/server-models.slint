@@ -1,0 +1,168 @@
+import { Button, LineEdit, Palette, ScrollView, Switch } from "std-widgets.slint";
+
+export struct ServerEntry {
+    name: string,
+    url: string,
+    status: string,
+    enabled: bool,
+}
+
+export global ServerModels {
+    in property <[ServerEntry]> entries;
+    in property <[string]> presets;
+    in property <string> message;
+    in-out property <string> form-name;
+    in-out property <string> form-url;
+    in-out property <string> form-key;
+    callback add();
+    callback preset(int);
+    callback remove(int);
+    callback toggle(int, bool);
+    callback test(int);
+}
+
+component ServerRow inherits Rectangle {
+    in property <ServerEntry> entry;
+    in property <int> index;
+
+    border-radius: 10px;
+    border-width: 1px;
+    border-color: entry.enabled ? Palette.accent-background : Palette.border;
+    background: Palette.background;
+    height: row.preferred-height;
+
+    row := HorizontalLayout {
+        padding: 14px;
+        spacing: 10px;
+
+        VerticalLayout {
+            horizontal-stretch: 1;
+            spacing: 4px;
+            alignment: center;
+
+            Text {
+                text: "⇄ " + entry.name;
+                font-size: 15px;
+                font-weight: 700;
+            }
+
+            Text {
+                text: entry.url + (entry.status != "" ? "  ·  " + entry.status : "");
+                font-size: 12px;
+                opacity: 0.7;
+                overflow: elide;
+            }
+        }
+
+        Button {
+            text: @tr("Test");
+            clicked => { ServerModels.test(index); }
+        }
+
+        Button {
+            text: "✕";
+            clicked => { ServerModels.remove(index); }
+        }
+
+        VerticalLayout {
+            alignment: center;
+
+            Switch {
+                text: @tr("Active");
+                checked: entry.enabled;
+                toggled => { ServerModels.toggle(index, self.checked); }
+            }
+        }
+    }
+}
+
+export component ServerPage inherits ScrollView {
+    VerticalLayout {
+        padding: 12px;
+        padding-top: 0px;
+        spacing: 10px;
+        alignment: start;
+
+        Rectangle {
+            height: intro.preferred-height;
+
+            intro := Text {
+                x: 0;
+                y: 0;
+                width: parent.width;
+                text: @tr("Other local servers with an OpenAI-compatible API – LM Studio, llama.cpp, vLLM, LocalAI or another PC. Their models show up in the model list with ⇄ and can use the app's tools. Start the server first, then press Test.");
+                font-size: 12px;
+                opacity: 0.75;
+                wrap: word-wrap;
+            }
+        }
+
+        for entry[index] in ServerModels.entries: ServerRow {
+            entry: entry;
+            index: index;
+        }
+
+        Rectangle {
+            border-radius: 10px;
+            border-width: 1px;
+            border-color: Palette.border;
+            height: form.preferred-height;
+
+            form := VerticalLayout {
+                padding: 14px;
+                spacing: 8px;
+
+                Text {
+                    text: @tr("Add a server");
+                    font-weight: 700;
+                }
+
+                HorizontalLayout {
+                    spacing: 6px;
+                    alignment: start;
+
+                    for label[index] in ServerModels.presets: Button {
+                        text: label;
+                        clicked => { ServerModels.preset(index); }
+                    }
+                }
+
+                HorizontalLayout {
+                    spacing: 6px;
+
+                    LineEdit {
+                        width: 160px;
+                        placeholder-text: @tr("Name");
+                        text <=> ServerModels.form-name;
+                    }
+
+                    LineEdit {
+                        horizontal-stretch: 1;
+                        placeholder-text: "http://localhost:1234/v1";
+                        text <=> ServerModels.form-url;
+                    }
+
+                    LineEdit {
+                        width: 160px;
+                        placeholder-text: @tr("API key (optional)");
+                        input-type: password;
+                        text <=> ServerModels.form-key;
+                    }
+
+                    Button {
+                        text: @tr("Add");
+                        primary: true;
+                        enabled: ServerModels.form-name != "" && ServerModels.form-url != "";
+                        clicked => { ServerModels.add(); }
+                    }
+                }
+
+                if ServerModels.message != "": Text {
+                    text: ServerModels.message;
+                    font-size: 12px;
+                    opacity: 0.75;
+                }
+            }
+        }
+    }
+}

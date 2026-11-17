@@ -1,0 +1,88 @@
+import { Button, Palette } from "std-widgets.slint";
+
+export component ApprovalBar inherits VerticalLayout {
+    in property <string> command;
+    in property <string> folder;
+    in property <string> title;
+    in property <string> warning;
+    callback answer(int);
+
+    vertical-stretch: 0;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-bottom: 8px;
+
+    Rectangle {
+        border-radius: 12px;
+        border-width: 2px;
+        border-color: #d4a72c;
+        background: Palette.control-background;
+
+        VerticalLayout {
+            padding: 12px;
+            spacing: 8px;
+            alignment: start;
+
+            Text {
+                text: root.title;
+                font-weight: 700;
+            }
+
+            Rectangle {
+                border-radius: 6px;
+                background: #1e1e1e;
+                height: shown.preferred-height + 16px;
+
+                shown := Text {
+                    x: 10px;
+                    y: 8px;
+                    width: parent.width - 20px;
+                    text: root.command;
+                    color: #e6e6e6;
+                    font-family: "monospace";
+                    font-size: 13px;
+                    wrap: word-wrap;
+                }
+            }
+
+            HorizontalLayout {
+                spacing: 8px;
+
+                VerticalLayout {
+                    alignment: center;
+                    horizontal-stretch: 1;
+
+                    Text {
+                        text: root.folder;
+                        font-size: 11px;
+                        opacity: 0.65;
+                        overflow: elide;
+                    }
+
+                    if root.warning != "": Text {
+                        text: root.warning;
+                        font-size: 11px;
+                        color: #d4a72c;
+                        overflow: elide;
+                    }
+                }
+
+                Button {
+                    text: @tr("No");
+                    clicked => { root.answer(2); }
+                }
+
+                Button {
+                    text: @tr("Allow in this chat");
+                    clicked => { root.answer(1); }
+                }
+
+                Button {
+                    text: @tr("Yes, once");
+                    primary: true;
+                    clicked => { root.answer(0); }
+                }
+            }
+        }
+    }
+}

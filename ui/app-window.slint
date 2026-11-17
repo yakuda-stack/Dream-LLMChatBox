@@ -1,0 +1,1152 @@
+import { CloudModels, CloudEntry } from "cloud-models.slint";
+import { ServerModels, ServerEntry } from "server-models.slint";
+import { Automations, AutomationEntry, AutomationsPage } from "automations-page.slint";
+import { PreviewState } from "preview.slint";
+import { QuestionBar } from "question-bar.slint";
+import { WorkDialog, TestEnvDialog } from "work-dialog.slint";
+import { ChatList } from "chat-list.slint";
+import { Button, CheckBox, ComboBox, Palette, ScrollView } from "std-widgets.slint";
+import { Hint, Spot, Tutorial, TourOverlay } from "hint.slint";
+import { ResetDialog } from "reset-dialog.slint";
+import { ChatMessage, ChatEntry, InstalledEntry, CatalogEntry, ModelVariant, AvailableRow, MessageSegment, VoiceEntry, SharedFolder, ToolEntry, StartArgEntry, ActivityEntry, BrowserLink, GroupEntry, ProfileEntry, GroupArg } from "types.slint";
+import { MessageBubble } from "message-bubble.slint";
+import { Sidebar } from "sidebar.slint";
+import { InputBar } from "input-bar.slint";
+import { ModelsPage } from "models-page.slint";
+import { ToolsPage, McpPage } from "tools-page.slint";
+import { StartArgsPage } from "start-args-page.slint";
+import { ApprovalBar } from "approval-bar.slint";
+import { SidePanel } from "side-panel.slint";
+import { GroupDialog } from "group-dialog.slint";
+import { GroupsPage } from "groups-page.slint";
+import { SettingsDialog } from "settings-dialog.slint";
+import { ProfilesDialog } from "profiles-dialog.slint";
+import { UnlockScreen } from "unlock-screen.slint";
+import { Segmented } from "segmented.slint";
+
+export { ChatMessage, ChatEntry, InstalledEntry, CatalogEntry, ModelVariant, AvailableRow, MessageSegment, VoiceEntry, SharedFolder, ToolEntry, StartArgEntry, ActivityEntry, BrowserLink, GroupEntry, ProfileEntry, McpPage, ChatList, GroupArg, PreviewState, CloudModels, CloudEntry, ServerModels, ServerEntry, Automations, AutomationEntry, Tutorial }
+
+component MenuToggle inherits Rectangle {
+    callback clicked();
+
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    background: touch.has-hover ? Palette.control-background : transparent;
+
+    touch := TouchArea {
+        clicked => { root.clicked(); }
+    }
+
+    for i in 3: Rectangle {
+        x: 8px;
+        y: 10px + i * 5px;
+        width: 16px;
+        height: 2px;
+        border-radius: 1px;
+        background: Palette.foreground;
+    }
+}
+
+component TopIcon inherits Rectangle {
+    in property <string> icon;
+    in property <string> tooltip;
+    in property <bool> active;
+    callback clicked();
+
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    background: root.active ? Palette.accent-background : touch.has-hover ? Palette.control-background : transparent;
+
+    touch := TouchArea {
+        clicked => { root.clicked(); }
+    }
+
+    Path {
+        width: 18px;
+        height: 18px;
+        viewbox-width: 24;
+        viewbox-height: 24;
+        commands: root.icon;
+        stroke: root.active ? Palette.accent-foreground : Palette.foreground;
+        stroke-width: 1.8px;
+        fill: transparent;
+    }
+
+    if touch.has-hover && root.tooltip != "": Rectangle {
+        x: parent.width - self.width;
+        y: parent.height + 4px;
+        width: tip.preferred-width + 12px;
+        height: 22px;
+        border-radius: 4px;
+        background: #000000cc;
+
+        tip := Text {
+            text: root.tooltip;
+            color: white;
+            font-size: 11px;
+            horizontal-alignment: center;
+            vertical-alignment: center;
+        }
+    }
+}
+
+component ActivityChip inherits Rectangle {
+    in property <string> text;
+    in property <bool> waiting;
+    in property <bool> dots: true;
+    callback clicked();
+
+    height: 28px;
+    width: min(row.preferred-width, 360px);
+    border-radius: 14px;
+    background: root.waiting ? #d4a72c40 : touch.has-hover ? Palette.control-background : Palette.background;
+    border-width: 1px;
+    border-color: root.waiting ? #d4a72c : Palette.border;
+
+    touch := TouchArea {
+        clicked => { root.clicked(); }
+    }
+
+    row := HorizontalLayout {
+        padding-left: 10px;
+        padding-right: 12px;
+        spacing: 8px;
+
+        if root.dots: HorizontalLayout {
+            spacing: 3px;
+            alignment: center;
+
+            for index in 3: Rectangle {
+                width: 5px;
+
+                Rectangle {
+                    property <float> phase: mod(animation-tick() / 1ms + 1200 - index * 160, 1200);
+
+                    x: 0;
+                    y: (parent.height - 5px) / 2 + 2px - (self.phase < 600 ? sin(self.phase / 600 * 180deg) * 4px : 0px);
+                    width: 5px;
+                    height: 5px;
+                    border-radius: 2.5px;
+                    background: root.waiting ? #d4a72c : Palette.accent-background;
+                }
+            }
+        }
+
+        Text {
+            text: root.text;
+            font-size: 12px;
+            vertical-alignment: center;
+            overflow: elide;
+        }
+    }
+}
+
+export component AppWindow inherits Window {
+    title: "Dream-LLMChatBox";
+    icon: @image-url("../assets/icon.png");
+    preferred-width: 1000px;
+    preferred-height: 700px;
+    min-width: 600px;
+    min-height: 400px;
+
+    in-out property <[string]> models;
+    in-out property <string> selected-model;
+    in-out property <[ChatMessage]> messages;
+    in-out property <[ChatEntry]> chats;
+    in-out property <string> current-chat-id;
+    in-out property <string> current-chat-title;
+    in-out property <bool> busy: false;
+    in-out property <string> status;
+    in-out property <string> usage-text;
+    in-out property <float> context-used;
+    in-out property <string> context-label;
+    in-out property <bool> show-context-bar: true;
+    in-out property <bool> auto-switch;
+    in-out property <bool> auto-continue: true;
+    in-out property <bool> auto-compact: true;
+    in-out property <int> compact-at: 80;
+    callback compact-chat();
+    in-out property <int> think-mode: 0;
+    in-out property <int> work-changes;
+    in-out property <string> work-diff;
+    in-out property <string> work-project;
+    in-out property <bool> work-open;
+    callback open-work-changes();
+    callback apply-work-changes();
+    callback think-changed(int);
+    in-out property <string> work-dir;
+    in-out property <int> container-index;
+    in-out property <string> container-image;
+    in-out property <string> container-status;
+    callback container-changed(int);
+    in-out property <string> embed-model;
+    callback pick-work-dir();
+    in-out property <string> draft;
+    in-out property <int> speaking-index: -1;
+    in-out property <[VoiceEntry]> voices;
+    in-out property <bool> voice-downloading;
+    in-out property <string> user-name: "You";
+    in-out property <int> settings-page: 0;
+    in-out property <string> profile-name;
+    in-out property <string> profile-about;
+    in-out property <image> profile-picture;
+    in-out property <bool> has-profile-picture;
+    in-out property <string> profile-initial;
+    in-out property <bool> profile-locked;
+    in-out property <int> profile-count;
+    in-out property <string> profile-message;
+    in-out property <[ProfileEntry]> profiles;
+    in-out property <bool> profiles-open;
+    in-out property <string> profiles-error;
+    in-out property <bool> unlock-open;
+    in-out property <string> unlock-id;
+    in-out property <string> unlock-name;
+    in-out property <string> unlock-initial;
+    in-out property <image> unlock-picture;
+    in-out property <bool> unlock-has-picture;
+    in-out property <string> unlock-error;
+    in-out property <bool> unlock-can-cancel;
+    in-out property <string> unlock-password;
+    callback open-profiles();
+    callback switch-profile(string);
+    callback create-profile(string);
+    callback unlock-profile(string);
+    callback profile-pick-picture();
+    callback profile-remove-picture();
+    callback profile-delete();
+    in-out property <string> ollama-url;
+    in-out property <int> context-index;
+    in-out property <int> keep-alive-index;
+    in-out property <string> system-prompt-text;
+    in-out property <[string]> context-options;
+    in-out property <[string]> keep-alive-options;
+    in-out property <[string]> language-options;
+    in-out property <int> language-index;
+    in-out property <bool> tools-enabled;
+    in-out property <bool> ollama-running;
+    in-out property <bool> ollama-switching;
+    in-out property <bool> ollama-installed: true;
+    callback ollama-install();
+    in-out property <bool> piper-dialog-open;
+    in-out property <string> piper-command;
+    in-out property <string> kill-command;
+    in-out property <string> data-info;
+    in-out property <[string]> pending-attachments;
+    in-out property <[SharedFolder]> shared-folders;
+    in property <[ToolEntry]> builtin-tools;
+    in property <[ToolEntry]> custom-tools;
+    in-out property <bool> tool-form-open;
+    in property <string> tool-form-error;
+    in-out property <string> tool-form-old-name;
+    in-out property <bool> tool-form-builtin;
+    in-out property <string> tool-form-name;
+    in-out property <string> tool-form-description;
+    in-out property <string> tool-form-params;
+    in-out property <string> tool-form-command;
+    callback tools-global(bool);
+    callback tool-toggle(string, bool);
+    callback tool-save(string, string, string, string, string);
+    callback tool-delete(string);
+    callback tool-edit(string);
+    callback tool-reset(string);
+    callback tools-import();
+    callback tools-export();
+    callback tools-open-folder();
+    in-out property <string> safe-commands;
+    callback save-safe-commands(string);
+    callback reset-safe-commands();
+    in property <string> tools-message;
+    in property <[StartArgEntry]> start-args;
+    callback arg-choose(int, int);
+    callback arg-open-styles();
+    callback arg-toggle(int, bool);
+    callback arg-save(int, string);
+    callback arg-delete(int);
+    callback arg-reset(int);
+    in property <bool> approval-open;
+    in property <string> approval-command;
+    in property <string> approval-folder;
+    in property <string> approval-title;
+    in property <string> approval-warning;
+    callback approval-answer(int);
+    in-out property <bool> question-open;
+    in-out property <string> question-text;
+    in-out property <[string]> question-options;
+    callback question-answer(string);
+    in-out property <bool> side-open;
+    in-out property <int> side-tab;
+    in property <string> activity-text;
+    in property <[ActivityEntry]> activity;
+    in property <string> browser-url;
+    in property <string> browser-title;
+    in property <string> browser-text;
+    in property <[BrowserLink]> browser-links;
+    in property <bool> browser-loading;
+    in property <string> browser-error;
+    in property <bool> browser-can-back;
+    in property <bool> browser-by-model;
+    in-out property <string> browser-address;
+    callback browser-go(string);
+    callback browser-back();
+    callback browser-external();
+    callback clear-activity();
+    in property <[GroupEntry]> groups;
+    in-out property <string> current-group;
+    in property <string> current-group-name;
+    in property <[string]> group-options;
+    in-out property <int> group-index;
+    callback chat-group-selected(int);
+    callback group-toggle(string);
+    callback group-new-chat(string);
+    callback group-settings(string);
+    callback group-open-memory(string);
+    callback group-export(string, bool);
+    callback group-create();
+    callback group-import();
+    in-out property <bool> group-dialog-open;
+    in-out property <bool> group-dialog-new;
+    in-out property <string> group-dialog-name;
+    in-out property <string> group-dialog-folder;
+    in-out property <bool> group-dialog-writable;
+    in-out property <string> group-dialog-rules;
+    in-out property <bool> group-dialog-use-rules;
+    in-out property <bool> group-dialog-use-global;
+    in-out property <[GroupArg]> group-dialog-extra-args;
+    callback group-dialog-toggle-extra(int);
+    in-out property <[GroupArg]> group-dialog-removed-args;
+    callback group-dialog-toggle-removed(int);
+    in-out property <bool> group-dialog-test-env;
+    in-out property <string> group-dialog-docs;
+    in-out property <string> group-dialog-docs-status;
+    callback group-dialog-pick-docs();
+    callback group-dialog-index-docs();
+    in-out property <bool> group-dialog-memory;
+    in-out property <int> group-dialog-purpose;
+    in-out property <int> purpose-index;
+    in-out property <int> coding-choice;
+    in property <string> coding-folder;
+    in property <string> coding-hint;
+    in property <string> coding-warning;
+    callback purpose-selected(int);
+    callback coding-choice-selected(int);
+    in-out property <string> group-dialog-error;
+    callback group-dialog-save();
+    callback group-dialog-pick-folder();
+    callback group-dialog-delete();
+    in-out property <bool> mic-recording;
+    in-out property <bool> mic-busy;
+    in-out property <string> mic-status;
+    in-out property <float> mic-level;
+    in-out property <bool> mic-panel-open;
+    in-out property <[string]> mic-devices;
+    in-out property <int> mic-device-index;
+    in-out property <[string]> mic-languages;
+    in-out property <int> mic-language-index;
+    in-out property <[string]> speech-models;
+    in-out property <int> speech-model-index;
+    in-out property <float> mic-gain: 1.0;
+    in-out property <bool> mic-live: true;
+    callback mic-live-changed(bool);
+    in-out property <bool> sidebar-open: true;
+    in-out property <int> page: 0;
+    in-out property <int> chat-offset: 0;
+    in-out property <int> chat-total: 0;
+    in-out property <int> chat-page-size: 30;
+    in-out property <[InstalledEntry]> installed-models;
+    in-out property <[AvailableRow]> available-rows;
+    in-out property <CatalogEntry> available-detail;
+    in-out property <bool> has-available-detail;
+    in-out property <string> available-message;
+    in-out property <string> testing-model;
+    in-out property <string> hardware-text;
+
+    callback refresh-models();
+    callback model-changed(string);
+    callback new-chat();
+    callback chat-page(int);
+    callback load-chat(string);
+    callback rename-chat(string, string);
+    callback delete-chat(string);
+    callback send(string);
+    callback stop();
+    callback speak(int);
+    callback continue-reply();
+    callback undo-changes(int);
+    callback global-memory();
+    callback edit-prompt(int);
+    callback voice-selected(string);
+    callback voice-add-file();
+    callback open-settings(int);
+    callback save-profile(string, string);
+    callback save-ollama(string, int, int, string);
+    callback save-general(int, bool);
+    callback delete-all-chats();
+    in-out property <bool> reset-open;
+    in-out property <string> reset-folders;
+    callback open-reset();
+    in-out property <int> backend-index;
+    in-out property <string> backend-status;
+    in-out property <bool> backend-busy;
+    callback backend-apply(int);
+    in-out property <int> ui-language-index;
+    in-out property <int> theme-index;
+    callback theme-changed(int);
+    changed theme-index => {
+        Palette.color-scheme = root.theme-index == 1 ? ColorScheme.light : root.theme-index == 2 ? ColorScheme.dark : ColorScheme.unknown;
+    }
+    callback ui-language-changed(int);
+    callback start-tour();
+    callback reset-all();
+    callback ollama-toggle();
+    callback install-piper(string);
+    callback kill-in-terminal();
+    callback attach-files();
+    callback paste-clipboard() -> bool;
+    callback attach-folder();
+    callback attach-media();
+    callback remove-attachment(int);
+    callback share-folder();
+    callback test-env();
+    callback test-env-accept();
+    in-out property <bool> test-env-open;
+    in-out property <bool> test-env-on;
+    in-out property <string> test-env-text;
+    callback remove-shared-folder(int);
+    callback toggle-folder-write(int);
+    callback mic-toggle();
+    callback mic-panel(bool);
+    callback mic-device-selected(int);
+    callback mic-language-selected(int);
+    callback speech-model-selected(int);
+    callback mic-gain-changed(float);
+    callback install-model(string);
+    callback test-model(string);
+    callback available-search(string);
+    callback available-source(int);
+    callback available-category(int);
+    callback available-toggle-group(string);
+    callback available-select(string);
+
+    public function open-side(tab: int) {
+        root.side-tab = tab;
+        if (!root.side-open && root.width < 1200px) {
+            root.sidebar-open = false;
+        }
+        root.side-open = true;
+    }
+
+    public function scroll-to-bottom() {
+        chat-list.content-y = min(0px, chat-list.visible-height - chat-list.content-height);
+    }
+
+    VerticalLayout {
+        Rectangle {
+            height: 48px;
+            background: Palette.alternate-background;
+
+            HorizontalLayout {
+                padding-left: 12px;
+                padding-right: 16px;
+                spacing: 12px;
+
+                VerticalLayout {
+                    alignment: center;
+
+                    MenuToggle {
+                        clicked => { root.sidebar-open = !root.sidebar-open; }
+                    }
+                }
+
+                Image {
+                    source: @image-url("../assets/icon.png");
+                    width: 26px;
+                    height: 26px;
+                    y: (parent.height - self.height) / 2;
+                }
+
+                Text {
+                    text: "Dream-LLMChatBox";
+                    font-size: 16px;
+                    font-weight: 700;
+                    vertical-alignment: center;
+                    horizontal-stretch: 0;
+                }
+
+                VerticalLayout {
+                    alignment: center;
+
+                    Rectangle {
+                        width: 1px;
+                        height: 20px;
+                        background: Palette.border;
+                    }
+                }
+
+                Text {
+                    text: root.page == 1 ? @tr("Models") : root.page == 2 ? @tr("Tools") : root.page == 3 ? @tr("Start arguments") : root.page == 4 ? @tr("Groups") : root.page == 5 ? @tr("Automations") : (root.current-group-name != "" ? "📁 " + root.current-group-name + "  ›  " : "") + (root.current-chat-title != "" ? root.current-chat-title : @tr("New chat"));
+                    vertical-alignment: center;
+                    overflow: elide;
+                    opacity: 0.8;
+                    horizontal-stretch: 1;
+                }
+
+                if root.page == 0 && root.purpose-index == 1: VerticalLayout {
+                    alignment: center;
+
+                    Rectangle {
+                        height: 24px;
+                        width: chip-text.preferred-width + 20px;
+                        border-radius: 12px;
+                        background: Palette.control-background;
+                        border-width: 1px;
+                        border-color: Palette.border;
+
+                        chip-text := Text {
+                            text: @tr("💻 Coding");
+                            font-size: 12px;
+                            vertical-alignment: center;
+                            horizontal-alignment: center;
+                        }
+                    }
+                }
+
+                if root.work-changes > 0: VerticalLayout {
+                    alignment: center;
+
+                    ActivityChip {
+                        text: "📝 " + root.work-changes + " " + @tr("changes in work folder");
+                        waiting: false;
+                        dots: false;
+                        clicked => { root.open-work-changes(); }
+                    }
+                }
+
+                if root.activity-text != "" || root.approval-open || root.question-open: VerticalLayout {
+                    alignment: center;
+
+                    ActivityChip {
+                        text: root.question-open ? @tr("Waiting for your answer") : root.approval-open ? @tr("Waiting for your OK") : root.activity-text;
+                        waiting: root.approval-open || root.question-open;
+                        clicked => { root.open-side(1); }
+                    }
+                }
+
+                VerticalLayout {
+                    alignment: center;
+
+                    Spot {
+                        name: "activity";
+
+                        TopIcon {
+                            icon: "M3 12h4l3-8 4 16 3-8h4";
+                            tooltip: @tr("Activity & browser");
+                            active: root.side-open && root.side-tab == 1;
+                            clicked => {
+                                if (root.side-open && root.side-tab == 1) {
+                                    root.side-open = false;
+                                } else {
+                                    root.open-side(1);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        HorizontalLayout {
+            Sidebar {
+                width: root.sidebar-open ? 240px : 0px;
+                animate width { duration: 150ms; easing: ease-out; }
+                chats: root.chats;
+                current-chat-id: root.current-chat-id;
+                busy: root.busy;
+                page <=> root.page;
+                chat-offset: root.chat-offset;
+                chat-total: root.chat-total;
+                chat-page-size: root.chat-page-size;
+                chat-page(offset) => { root.chat-page(offset); }
+                new-chat => {
+                    root.page = 0;
+                    root.new-chat();
+                }
+                load-chat(id) => {
+                    root.page = 0;
+                    root.load-chat(id);
+                }
+                rename-chat(id, title) => { root.rename-chat(id, title); }
+                delete-chat(id) => { root.delete-chat(id); }
+                groups: root.groups;
+                group-toggle(id) => { root.group-toggle(id); }
+                group-new-chat(id) => {
+                    root.page = 0;
+                    root.group-new-chat(id);
+                }
+                group-settings(id) => { root.group-settings(id); }
+                group-open-memory(id) => { root.group-open-memory(id); }
+                group-export(id, with-chats) => { root.group-export(id, with-chats); }
+                group-create => { root.group-create(); }
+                group-import => { root.group-import(); }
+                user-name: root.user-name;
+                user-picture: root.profile-picture;
+                has-user-picture: root.has-profile-picture;
+                open-profiles => { root.open-profiles(); }
+                ollama-running: root.ollama-running;
+                ollama-switching: root.ollama-switching;
+                ollama-toggle => { root.ollama-toggle(); }
+                ollama-installed: root.ollama-installed;
+                ollama-install => { root.ollama-install(); }
+                open-settings(page) => { root.open-settings(page); }
+            }
+
+            VerticalLayout {
+                if root.status != "": Rectangle {
+                    height: status-text.preferred-height + 16px;
+                    background: #a8323233;
+
+                    status-text := Text {
+                        x: 12px;
+                        width: parent.width - 24px;
+                        text: root.status;
+                        wrap: word-wrap;
+                        vertical-alignment: center;
+                    }
+                }
+
+                Rectangle {
+                    vertical-stretch: 1;
+
+                    Rectangle {
+                        visible: root.page == 0;
+
+                        VerticalLayout {
+                            if root.messages.length == 0: HorizontalLayout {
+                                padding: 12px;
+                                padding-bottom: 0px;
+                                spacing: 8px;
+                                alignment: start;
+
+                                Text {
+                                    text: @tr("Group:");
+                                    vertical-alignment: center;
+                                    opacity: 0.75;
+                                }
+
+                                Spot {
+                                    name: "group";
+
+                                    ComboBox {
+                                        width: 240px;
+                                        model: root.group-options;
+                                        current-index <=> root.group-index;
+                                        selected => { root.chat-group-selected(self.current-index); }
+                                    }
+                                }
+
+                                Button {
+                                    text: @tr("+ New group…");
+                                    clicked => { root.group-create(); }
+                                }
+
+                                Text {
+                                    text: @tr("Purpose:");
+                                    vertical-alignment: center;
+                                    opacity: 0.75;
+                                }
+
+                                Spot {
+                                    name: "purpose";
+
+                                    Segmented {
+                                        width: 180px;
+                                        labels: [@tr("Other"), @tr("Coding")];
+                                        current <=> root.purpose-index;
+                                        changed(index) => { root.purpose-selected(index); }
+                                    }
+                                }
+                            }
+
+                            if root.messages.length == 0: HorizontalLayout {
+                                padding-left: 12px;
+                                padding-right: 12px;
+                                padding-top: 6px;
+                                spacing: 8px;
+                                alignment: start;
+
+                                Spot {
+                                    name: "test-env";
+
+                                    CheckBox {
+                                        text: "🧪 " + @tr("Test environment");
+                                        checked <=> root.test-env-on;
+                                    }
+                                }
+
+                                VerticalLayout {
+                                    alignment: center;
+
+                                    Hint {
+                                        title: @tr("Test environment");
+                                        text: @tr("The model works in its own folder instead of your real project: a copy of the shared project is made there when you send the first message. It may build, test and change everything inside. Your project stays untouched – take the changes over with “Apply to project”. The folder is deleted together with the chat.");
+                                    }
+                                }
+
+                                Text {
+                                    text: root.test-env-on ? @tr("On: the model works on a copy of your project, your files stay untouched.") : @tr("Off: the model works directly in the folders you share.");
+                                    font-size: 12px;
+                                    opacity: 0.65;
+                                    vertical-alignment: center;
+                                    overflow: elide;
+                                }
+                            }
+
+                            if root.messages.length == 0 && root.purpose-index == 1: VerticalLayout {
+                                padding: 12px;
+                                padding-bottom: 0px;
+                                spacing: 6px;
+
+                                Segmented {
+                                    labels: [@tr("I have an ARCHITEKTUR.md"), @tr("No ARCHITEKTUR.md yet"), @tr("Brand new project")];
+                                    current <=> root.coding-choice;
+                                    changed(index) => { root.coding-choice-selected(index); }
+                                }
+
+                                HorizontalLayout {
+                                    spacing: 8px;
+
+                                    if root.coding-folder != "": Text {
+                                        text: "📁 " + root.coding-folder;
+                                        font-weight: 600;
+                                        vertical-alignment: center;
+                                        horizontal-stretch: 0;
+                                    }
+
+                                    Text {
+                                        text: root.coding-hint;
+                                        vertical-alignment: center;
+                                        overflow: elide;
+                                        opacity: 0.75;
+                                        horizontal-stretch: 1;
+                                    }
+
+                                    if root.coding-folder == "": Button {
+                                        text: @tr("Choose project folder…");
+                                        clicked => { root.share-folder(); }
+                                    }
+                                }
+
+                                if root.coding-warning != "": Text {
+                                    text: "⚠ " + root.coding-warning;
+                                    color: #d4a72c;
+                                    font-size: 12px;
+                                    overflow: elide;
+                                }
+                            }
+
+                            chat-list := ScrollView {
+                                vertical-stretch: 1;
+
+                                VerticalLayout {
+                                    width: chat-list.visible-width;
+                                    alignment: start;
+                                    padding-bottom: 32px;
+
+                                    for message[index] in root.messages: MessageBubble {
+                                        max-bubble-width: chat-list.visible-width * 0.75;
+                                        message: message;
+                                        is-last: index == root.messages.length - 1;
+                                        can-edit: message.is-user && index >= root.messages.length - 2;
+                                        busy: root.busy;
+                                        speaking: root.speaking-index == index;
+                                        user-name: root.user-name;
+                                        voices: root.voices;
+                                        speak => { root.speak(index); }
+                                        continue-reply => { root.continue-reply(); }
+                                        undo-changes => { root.undo-changes(index); }
+                                        edit-prompt => { root.edit-prompt(index); }
+                                        voice-selected(id) => { root.voice-selected(id); }
+                                        voice-add-file => { root.voice-add-file(); }
+                                    }
+                                }
+                            }
+
+                            if root.question-open: QuestionBar {
+                                question: root.question-text;
+                                options: root.question-options;
+                                answer(text) => { root.question-answer(text); }
+                            }
+
+                            if root.approval-open: ApprovalBar {
+                                command: root.approval-command;
+                                folder: root.approval-folder;
+                                title: root.approval-title;
+                                warning: root.approval-warning;
+                                answer(choice) => { root.approval-answer(choice); }
+                            }
+
+                            InputBar {
+                                models: root.models;
+                                selected-model <=> root.selected-model;
+                                busy: root.busy;
+                                usage-text: root.usage-text;
+                                context-used: root.context-used;
+                                think-mode <=> root.think-mode;
+                                think-changed(mode) => { root.think-changed(mode); }
+                                context-label: root.context-label;
+                                show-context-bar: root.show-context-bar;
+                                compact-chat => { root.compact-chat(); }
+                                draft <=> root.draft;
+                                kill-command: root.kill-command;
+                                kill-in-terminal => { root.kill-in-terminal(); }
+                                pending-attachments: root.pending-attachments;
+                                mic-recording: root.mic-recording;
+                                mic-busy: root.mic-busy;
+                                mic-status: root.mic-status;
+                                mic-level: root.mic-level;
+                                mic-panel-open <=> root.mic-panel-open;
+                                mic-devices: root.mic-devices;
+                                mic-device-index <=> root.mic-device-index;
+                                mic-languages: root.mic-languages;
+                                mic-language-index <=> root.mic-language-index;
+                                speech-models: root.speech-models;
+                                speech-model-index <=> root.speech-model-index;
+                                mic-gain <=> root.mic-gain;
+                                mic-live <=> root.mic-live;
+                                mic-live-changed(on) => { root.mic-live-changed(on); }
+                                attach-files => { root.attach-files(); }
+                                paste-clipboard => { return root.paste-clipboard(); }
+                                attach-folder => { root.attach-folder(); }
+                                attach-media => { root.attach-media(); }
+                                remove-attachment(index) => { root.remove-attachment(index); }
+                                shared-folders: root.shared-folders;
+                                share-folder => { root.share-folder(); }
+                                test-env => { root.test-env(); }
+                                remove-shared-folder(index) => { root.remove-shared-folder(index); }
+                                toggle-folder-write(index) => { root.toggle-folder-write(index); }
+                                mic-toggle => { root.mic-toggle(); }
+                                mic-panel(open) => { root.mic-panel(open); }
+                                mic-device-selected(index) => { root.mic-device-selected(index); }
+                                mic-language-selected(index) => { root.mic-language-selected(index); }
+                                speech-model-selected(index) => { root.speech-model-selected(index); }
+                                mic-gain-changed(gain) => { root.mic-gain-changed(gain); }
+                                send(text) => { root.send(text); }
+                                stop => { root.stop(); }
+                                refresh-models => { root.refresh-models(); }
+                                model-selected(model) => { root.model-changed(model); }
+                            }
+                        }
+                    }
+
+                    if root.page == 2: ToolsPage {
+                        builtin-tools: root.builtin-tools;
+                        custom-tools: root.custom-tools;
+                        tools-enabled <=> root.tools-enabled;
+                        form-open <=> root.tool-form-open;
+                        form-error: root.tool-form-error;
+                        form-old-name <=> root.tool-form-old-name;
+                        form-builtin <=> root.tool-form-builtin;
+                        form-name <=> root.tool-form-name;
+                        form-description <=> root.tool-form-description;
+                        form-params <=> root.tool-form-params;
+                        form-command <=> root.tool-form-command;
+                        tools-global(on) => { root.tools-global(on); }
+                        tool-toggle(name, on) => { root.tool-toggle(name, on); }
+                        tool-save(old, name, description, params, command) => { root.tool-save(old, name, description, params, command); }
+                        tool-delete(name) => { root.tool-delete(name); }
+                        tool-edit(name) => { root.tool-edit(name); }
+                        tool-reset(name) => { root.tool-reset(name); }
+                        tools-import => { root.tools-import(); }
+                        tools-export => { root.tools-export(); }
+                        tools-open-folder => { root.tools-open-folder(); }
+                        safe-commands <=> root.safe-commands;
+                        save-safe-commands(text) => { root.save-safe-commands(text); }
+                        reset-safe-commands => { root.reset-safe-commands(); }
+                        message: root.tools-message;
+                    }
+
+                    if root.page == 4: GroupsPage {
+                        groups: root.groups;
+                        open-group(id) => { root.group-settings(id); }
+                        create => { root.group-create(); }
+                        import => { root.group-import(); }
+                        global-memory => { root.global-memory(); }
+                    }
+
+                    if root.page == 5: AutomationsPage {}
+
+                    if root.page == 3: StartArgsPage {
+                        entries: root.start-args;
+                        arg-toggle(index, on) => { root.arg-toggle(index, on); }
+                        arg-save(index, text) => { root.arg-save(index, text); }
+                        arg-delete(index) => { root.arg-delete(index); }
+                        arg-reset(index) => { root.arg-reset(index); }
+                        arg-choose(index, choice) => { root.arg-choose(index, choice); }
+                        arg-open-styles => { root.arg-open-styles(); }
+                    }
+
+                    if root.page == 1: ModelsPage {
+                        installed: root.installed-models;
+                        available-rows: root.available-rows;
+                        available-detail: root.available-detail;
+                        has-available-detail: root.has-available-detail;
+                        available-message: root.available-message;
+                        testing-model: root.testing-model;
+                        chat-busy: root.busy;
+                        hardware-text: root.hardware-text;
+                        install(tag) => { root.install-model(tag); }
+                        test(name) => { root.test-model(name); }
+                        search(query) => { root.available-search(query); }
+                        source-changed(index) => { root.available-source(index); }
+                        category-changed(index) => { root.available-category(index); }
+                        toggle-group(group) => { root.available-toggle-group(group); }
+                        select(key) => { root.available-select(key); }
+                        refresh => { root.refresh-models(); }
+                    }
+                }
+            }
+
+            if root.side-open: SidePanel {
+                width: 360px;
+                tab <=> root.side-tab;
+                url: root.browser-url;
+                title: root.browser-title;
+                page-text: root.browser-text;
+                links: root.browser-links;
+                loading: root.browser-loading;
+                error: root.browser-error;
+                can-back: root.browser-can-back;
+                by-model: root.browser-by-model;
+                address <=> root.browser-address;
+                activity: root.activity;
+                go(text) => { root.browser-go(text); }
+                back => { root.browser-back(); }
+                open-external => { root.browser-external(); }
+                open-link(url) => { root.browser-go(url); }
+                clear-activity => { root.clear-activity(); }
+                close => { root.side-open = false; }
+            }
+        }
+    }
+
+    if root.group-dialog-open: GroupDialog {
+        width: root.width;
+        height: root.height;
+        is-new: root.group-dialog-new;
+        name <=> root.group-dialog-name;
+        folder: root.group-dialog-folder;
+        folder-writable <=> root.group-dialog-writable;
+        rules <=> root.group-dialog-rules;
+        use-rules <=> root.group-dialog-use-rules;
+        use-global <=> root.group-dialog-use-global;
+        extra-args: root.group-dialog-extra-args;
+        toggle-extra(index) => { root.group-dialog-toggle-extra(index); }
+        removed-args: root.group-dialog-removed-args;
+        toggle-removed(index) => { root.group-dialog-toggle-removed(index); }
+        test-env <=> root.group-dialog-test-env;
+        docs: root.group-dialog-docs;
+        docs-status: root.group-dialog-docs-status;
+        pick-docs => { root.group-dialog-pick-docs(); }
+        clear-docs => { root.group-dialog-docs = ""; root.group-dialog-docs-status = ""; }
+        index-docs => { root.group-dialog-index-docs(); }
+        memory <=> root.group-dialog-memory;
+        purpose <=> root.group-dialog-purpose;
+        error: root.group-dialog-error;
+        save => { root.group-dialog-save(); }
+        cancel => { root.group-dialog-open = false; }
+        pick-folder => { root.group-dialog-pick-folder(); }
+        clear-folder => { root.group-dialog-folder = ""; }
+        open-memory => { root.group-open-memory(""); }
+        delete => { root.group-dialog-delete(); }
+    }
+
+    if root.settings-page > 0: SettingsDialog {
+        width: root.width;
+        height: root.height;
+        page <=> root.settings-page;
+        profile-name <=> root.profile-name;
+        profile-about <=> root.profile-about;
+        profile-picture: root.profile-picture;
+        has-profile-picture: root.has-profile-picture;
+        profile-initial: root.profile-initial;
+        profile-can-delete: root.profile-count > 1;
+        profile-message: root.profile-message;
+        pick-picture => { root.profile-pick-picture(); }
+        remove-picture => { root.profile-remove-picture(); }
+        delete-profile => { root.profile-delete(); }
+        ollama-url <=> root.ollama-url;
+        context-index <=> root.context-index;
+        keep-alive-index <=> root.keep-alive-index;
+        system-prompt-text <=> root.system-prompt-text;
+        context-options: root.context-options;
+        keep-alive-options: root.keep-alive-options;
+        language-options: root.language-options;
+        language-index <=> root.language-index;
+        tools-enabled <=> root.tools-enabled;
+        show-context-bar <=> root.show-context-bar;
+        auto-switch <=> root.auto-switch;
+        auto-continue <=> root.auto-continue;
+        auto-compact <=> root.auto-compact;
+        compact-at <=> root.compact-at;
+        work-dir <=> root.work-dir;
+        container-index <=> root.container-index;
+        container-image <=> root.container-image;
+        container-status: root.container-status;
+        container-changed(index) => { root.container-changed(index); }
+        embed-model <=> root.embed-model;
+        pick-work-dir => { root.pick-work-dir(); }
+        save-general(index, tools) => { root.save-general(index, tools); }
+        data-info: root.data-info;
+        busy: root.busy;
+        delete-all-chats => { root.delete-all-chats(); }
+        open-reset => { root.open-reset(); }
+        backend-index <=> root.backend-index;
+        backend-status: root.backend-status;
+        backend-busy: root.backend-busy;
+        backend-apply(index) => { root.backend-apply(index); }
+        ui-language-index <=> root.ui-language-index;
+        theme-index <=> root.theme-index;
+        theme-changed(index) => { root.theme-changed(index); }
+        ui-language-changed(index) => { root.ui-language-changed(index); }
+        start-tour => { root.start-tour(); }
+        save-profile(name, about) => { root.save-profile(name, about); }
+        save-ollama(url, context, keep, prompt) => { root.save-ollama(url, context, keep, prompt); }
+    }
+
+    if root.piper-dialog-open: Rectangle {
+        background: #00000080;
+
+        TouchArea { }
+
+        Rectangle {
+            width: min(520px, root.width - 40px);
+            height: piper-card.preferred-height;
+            border-radius: 14px;
+            background: Palette.background;
+            border-width: 1px;
+            border-color: Palette.border;
+            drop-shadow-blur: 24px;
+            drop-shadow-color: #00000060;
+
+            piper-card := VerticalLayout {
+                padding: 20px;
+                spacing: 12px;
+
+                Text {
+                    text: @tr("Read aloud needs Piper");
+                    font-size: 18px;
+                    font-weight: 700;
+                }
+
+                Text {
+                    text: @tr("This command was copied to your clipboard. Run it in a terminal, or use another AUR helper:");
+                    wrap: word-wrap;
+                }
+
+                Rectangle {
+                    border-radius: 8px;
+                    background: #1e1f22;
+
+                    VerticalLayout {
+                        padding: 10px;
+
+                        piper-command-text := TextInput {
+                            text: root.piper-command;
+                            read-only: true;
+                            single-line: false;
+                            wrap: word-wrap;
+                            font-family: "monospace";
+                            color: #e6e6e6;
+                            init => {
+                                self.select-all();
+                                self.copy();
+                                self.clear-selection();
+                            }
+                        }
+                    }
+                }
+
+                HorizontalLayout {
+                    spacing: 8px;
+                    alignment: end;
+
+                    Button {
+                        text: @tr("OK");
+                        clicked => { root.piper-dialog-open = false; }
+                    }
+
+                    Button {
+                        text: @tr("Open terminal with this command");
+                        primary: true;
+                        clicked => {
+                            root.install-piper(root.piper-command);
+                            root.piper-dialog-open = false;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    if root.profiles-open: ProfilesDialog {
+        width: root.width;
+        height: root.height;
+        profiles: root.profiles;
+        error: root.profiles-error;
+        busy: root.busy;
+        switch(id) => { root.switch-profile(id); }
+        create(name) => { root.create-profile(name); }
+        close => { root.profiles-open = false; }
+    }
+
+    if root.test-env-open: TestEnvDialog {
+        width: root.width;
+        height: root.height;
+        text: root.test-env-text;
+        accept => { root.test-env-accept(); }
+        cancel => { root.test-env-open = false; }
+    }
+
+    if root.work-open: WorkDialog {
+        width: root.width;
+        height: root.height;
+        diff: root.work-diff;
+        count: root.work-changes;
+        project: root.work-project;
+        apply => { root.apply-work-changes(); }
+        refresh => { root.open-work-changes(); }
+        close => { root.work-open = false; }
+    }
+
+    if Tutorial.active: TourOverlay {
+        width: root.width;
+        height: root.height;
+    }
+
+    if root.reset-open: ResetDialog {
+        width: root.width;
+        height: root.height;
+        folders: root.reset-folders;
+        cancel => { root.reset-open = false; }
+        confirm => { root.reset-all(); }
+    }
+
+    if root.unlock-open: UnlockScreen {
+        width: root.width;
+        height: root.height;
+        profile-id: root.unlock-id;
+        name: root.unlock-name;
+        initial: root.unlock-initial;
+        picture: root.unlock-picture;
+        has-picture: root.unlock-has-picture;
+        error: root.unlock-error;
+        can-cancel: root.unlock-can-cancel;
+        profiles: root.profiles;
+        password <=> root.unlock-password;
+        unlock(password) => { root.unlock-profile(password); }
+        switch(id) => { root.switch-profile(id); }
+        create(name) => { root.create-profile(name); }
+        cancel => { root.unlock-open = false; }
+    }
+}

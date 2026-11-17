@@ -1,0 +1,2420 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: de\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Models"
+msgstr "Modelle"
+
+msgid "Tools"
+msgstr "Werkzeuge"
+
+msgid "Start arguments"
+msgstr "Startargumente"
+
+msgid "Groups"
+msgstr "Gruppen"
+
+msgid "Automations"
+msgstr "Automationen"
+
+msgid "New chat"
+msgstr "Neuer Chat"
+
+msgid "💻 Coding"
+msgstr "💻 Coding"
+
+msgid "changes in work folder"
+msgstr "Änderungen im Arbeitsordner"
+
+msgid "Waiting for your answer"
+msgstr "Wartet auf deine Antwort"
+
+msgid "Waiting for your OK"
+msgstr "Wartet auf dein OK"
+
+msgid "Activity & browser"
+msgstr "Aktivität & Browser"
+
+msgid "Group:"
+msgstr "Gruppe:"
+
+msgid "+ New group…"
+msgstr "+ Neue Gruppe…"
+
+msgid "Purpose:"
+msgstr "Zweck:"
+
+msgid "Other"
+msgstr "Sonstiges"
+
+msgid "Coding"
+msgstr "Coding"
+
+msgid "Test environment"
+msgstr "Testumgebung"
+
+msgid "The model works in its own folder instead of your real project: a copy of the shared project is made there when you send the first message. It may build, test and change everything inside. Your project stays untouched – take the changes over with “Apply to project”. The folder is deleted together with the chat."
+msgstr "Das Modell arbeitet in einem eigenen Ordner statt in deinem echten Projekt: Beim Senden der ersten Nachricht wird dort eine Kopie des geteilten Projekts angelegt. Darin darf es alles bauen, testen und ändern. Dein Projekt bleibt unberührt – übernimm die Änderungen mit „Ins Projekt übernehmen“. Der Ordner wird zusammen mit dem Chat gelöscht."
+
+msgid "On: the model works on a copy of your project, your files stay untouched."
+msgstr "An: Das Modell arbeitet auf einer Kopie deines Projekts, deine Dateien bleiben unberührt."
+
+msgid "Off: the model works directly in the folders you share."
+msgstr "Aus: Das Modell arbeitet direkt in den Ordnern, die du teilst."
+
+msgid "I have an ARCHITEKTUR.md"
+msgstr "Ich habe eine ARCHITEKTUR.md"
+
+msgid "No ARCHITEKTUR.md yet"
+msgstr "Noch keine ARCHITEKTUR.md"
+
+msgid "Brand new project"
+msgstr "Ganz neues Projekt"
+
+msgid "Choose project folder…"
+msgstr "Projektordner wählen…"
+
+msgid "Read aloud needs Piper"
+msgstr "Vorlesen braucht Piper"
+
+msgid "This command was copied to your clipboard. Run it in a terminal, or use another AUR helper:"
+msgstr "Dieser Befehl wurde in deine Zwischenablage kopiert. Führe ihn in einem Terminal aus oder nutze einen anderen AUR-Helper:"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "Open terminal with this command"
+msgstr "Terminal mit diesem Befehl öffnen"
+
+msgid "No"
+msgstr "Nein"
+
+msgid "Allow in this chat"
+msgstr "In diesem Chat erlauben"
+
+msgid "Yes, once"
+msgstr "Ja, einmal"
+
+msgid "Open result"
+msgstr "Ergebnis öffnen"
+
+msgid "Run now"
+msgstr "Jetzt ausführen"
+
+msgid "Edit"
+msgstr "Bearbeiten"
+
+msgid "Active"
+msgstr "Aktiv"
+
+msgid "The model does a task on its own at set times, e.g. every morning at 8:00. Each run becomes a new chat titled with ⏰ (in the chosen group). Runs only while the app is open; a missed run is done once when you start the app. Automations work without tools, so the model can't read files or search the web on its own."
+msgstr "Das Modell erledigt zu festen Zeiten selbstständig eine Aufgabe, z. B. jeden Morgen um 8:00. Jeder Lauf wird ein neuer Chat mit ⏰ im Titel (in der gewählten Gruppe). Läuft nur, solange die App offen ist; ein verpasster Lauf wird einmal nachgeholt, wenn du die App startest. Automationen laufen ohne Werkzeuge, das Modell kann also nicht selbst Dateien lesen oder im Web suchen."
+
+msgid "New automation"
+msgstr "Neue Automation"
+
+msgid "Edit automation"
+msgstr "Automation bearbeiten"
+
+msgid "Name"
+msgstr "Name"
+
+msgid "e.g. Morning briefing"
+msgstr "z. B. Morgen-Briefing"
+
+msgid "What should the model do?"
+msgstr "Was soll das Modell tun?"
+
+msgid "When"
+msgstr "Wann"
+
+msgid "Day"
+msgstr "Tag"
+
+msgid "Time"
+msgstr "Uhrzeit"
+
+msgid "Every … hours"
+msgstr "Alle … Stunden"
+
+msgid "Model"
+msgstr "Modell"
+
+msgid "Save results in group"
+msgstr "Ergebnisse in Gruppe speichern"
+
+msgid "Cancel"
+msgstr "Abbrechen"
+
+msgid "Save"
+msgstr "Speichern"
+
+msgid "Install"
+msgstr "Installieren"
+
+msgid "Log in"
+msgstr "Anmelden"
+
+msgid "Use the online AIs through their own command-line programs. 1. Install (opens a terminal, no sudo – it goes to ~/.local), 2. Log in once with your own account, 3. switch on “Active”. Active ones show up in the model list with ☁. They run on the provider's servers with your account, answer without the app's tools and see your shared folder through their own tools."
+msgstr "Nutze die Online-KIs über ihre eigenen Kommandozeilen-Programme. 1. Installieren (öffnet ein Terminal, ohne sudo – landet in ~/.local), 2. einmal mit deinem eigenen Konto anmelden, 3. „Aktiv“ einschalten. Aktive erscheinen in der Modellliste mit ☁. Sie laufen mit deinem Konto auf den Servern des Anbieters, antworten ohne die Werkzeuge der App und sehen deinen geteilten Ordner über ihre eigenen Werkzeuge."
+
+msgid "Check again"
+msgstr "Erneut prüfen"
+
+msgid "New group"
+msgstr "Neue Gruppe"
+
+msgid "Group settings"
+msgstr "Gruppeneinstellungen"
+
+msgid "For example one group per project."
+msgstr "Zum Beispiel eine Gruppe pro Projekt."
+
+msgid "Standard folder"
+msgstr "Standardordner"
+
+msgid "Shared automatically in every new chat of this group."
+msgstr "Wird automatisch in jedem neuen Chat dieser Gruppe geteilt."
+
+msgid "none"
+msgstr "keiner"
+
+msgid "allow writing"
+msgstr "Schreiben erlauben"
+
+msgid "Choose…"
+msgstr "Wählen…"
+
+msgid "Rules for this group"
+msgstr "Regeln für diese Gruppe"
+
+msgid "One per line. Every chat of the group gets them, like start arguments."
+msgstr "Eine pro Zeile. Jeder Chat der Gruppe bekommt sie, wie Startargumente."
+
+msgid "Use these rules"
+msgstr "Diese Regeln nutzen"
+
+msgid "Also use the global start arguments"
+msgstr "Auch die globalen Startargumente nutzen"
+
+msgid "Start arguments only for this group"
+msgstr "Startargumente nur für diese Gruppe"
+
+msgid "Start arguments that are switched off globally can be switched on just for this group."
+msgstr "Global ausgeschaltete Startargumente kannst du nur für diese Gruppe einschalten."
+
+msgid "Done"
+msgstr "Fertig"
+
+msgid "+ Add start argument…"
+msgstr "+ Startargument hinzufügen…"
+
+msgid "All start arguments are switched on globally. Switch one off on the Start arguments page to use it only in this group."
+msgstr "Alle Startargumente sind global eingeschaltet. Schalte eines auf der Seite Startargumente aus, um es nur in dieser Gruppe zu nutzen."
+
+msgid "Global start arguments not used in this group"
+msgstr "Globale Startargumente, die in dieser Gruppe nicht genutzt werden"
+
+msgid "Switch off single global start arguments only for this group."
+msgstr "Einzelne globale Startargumente nur für diese Gruppe ausschalten."
+
+msgid "− Remove global start argument…"
+msgstr "− Globales Startargument entfernen…"
+
+msgid "No start argument is switched on globally."
+msgstr "Kein Startargument ist global eingeschaltet."
+
+msgid "Each chat gets its own copy of the group folder at its first message."
+msgstr "Jeder Chat bekommt bei seiner ersten Nachricht eine eigene Kopie des Gruppenordners."
+
+msgid "🧪 Test environment for every chat"
+msgstr "🧪 Testumgebung für jeden Chat"
+
+msgid "Documents (searchable)"
+msgstr "Dokumente (durchsuchbar)"
+
+msgid "PDF, DOCX, ODT, Markdown, text – found by meaning. Needs: ollama pull nomic-embed-text"
+msgstr "PDF, DOCX, ODT, Markdown, Text – nach Bedeutung gefunden. Benötigt: ollama pull nomic-embed-text"
+
+msgid "Index now"
+msgstr "Jetzt indexieren"
+
+msgid "Memory"
+msgstr "Gedächtnis"
+
+msgid "Markdown notes of this group – the model reads and writes them with the memory tools."
+msgstr "Markdown-Notizen dieser Gruppe – das Modell liest und schreibt sie mit den Gedächtnis-Werkzeugen."
+
+msgid "Memory (brain) on"
+msgstr "Gedächtnis (Gehirn) an"
+
+msgid "Open memory folder"
+msgstr "Gedächtnisordner öffnen"
+
+msgid "Purpose"
+msgstr "Zweck"
+
+msgid "New chats of this group start with this purpose."
+msgstr "Neue Chats dieser Gruppe starten mit diesem Zweck."
+
+msgid "Delete group…"
+msgstr "Gruppe löschen…"
+
+msgid "Really delete (memory is deleted, chats stay)"
+msgstr "Wirklich löschen (Gedächtnis wird gelöscht, Chats bleiben)"
+
+msgid "Create"
+msgstr "Erstellen"
+
+msgid "1 chat"
+msgstr "1 Chat"
+
+msgid "chats"
+msgstr "Chats"
+
+msgid "No standard folder"
+msgstr "Kein Standardordner"
+
+msgid "Folder: "
+msgstr "Ordner: "
+
+msgid "Memory on"
+msgstr "Gedächtnis an"
+
+msgid "Memory off"
+msgstr "Gedächtnis aus"
+
+msgid "Own rules on"
+msgstr "Eigene Regeln an"
+
+msgid "No own rules"
+msgstr "Keine eigenen Regeln"
+
+msgid "global start args on"
+msgstr "globale Startargumente an"
+
+msgid "global start args off"
+msgstr "globale Startargumente aus"
+
+msgid "🗂 Global memory"
+msgstr "🗂 Globales Gedächtnis"
+
+msgid "Import…"
+msgstr "Importieren…"
+
+msgid "+ New group"
+msgstr "+ Neue Gruppe"
+
+msgid "Click a group to change its folder, rules, start arguments and memory."
+msgstr "Klicke auf eine Gruppe, um Ordner, Regeln, Startargumente und Gedächtnis zu ändern."
+
+msgid "No groups yet."
+msgstr "Noch keine Gruppen."
+
+msgid "Got it"
+msgstr "Verstanden"
+
+msgid "Welcome to Dream-LLMChatBox"
+msgstr "Willkommen bei Dream-LLMChatBox"
+
+msgid "Choose your language – the whole app will use it. You can change it later in the settings."
+msgstr "Wähle deine Sprache – die ganze App nutzt sie. Du kannst sie später in den Einstellungen ändern."
+
+msgid "Skip the tour"
+msgstr "Tour überspringen"
+
+msgid "Next"
+msgstr "Weiter"
+
+msgid "End tour"
+msgstr "Tour beenden"
+
+msgid "Back"
+msgstr "Zurück"
+
+msgid "Finish"
+msgstr "Fertig"
+
+msgid "read + write"
+msgstr "lesen + schreiben"
+
+msgid "read only"
+msgstr "nur lesen"
+
+msgid "Microphone level"
+msgstr "Mikrofonpegel"
+
+msgid "Microphone"
+msgstr "Mikrofon"
+
+msgid "Language"
+msgstr "Sprache"
+
+msgid "Speech model"
+msgstr "Sprachmodell"
+
+msgid "Gain"
+msgstr "Verstärkung"
+
+msgid "Live text while speaking (shows the words as you talk)"
+msgstr "Live-Text beim Sprechen (zeigt die Wörter, während du sprichst)"
+
+msgid "Listening… click the microphone again to stop"
+msgstr "Hört zu… klicke erneut auf das Mikrofon zum Beenden"
+
+msgid "Write a message…"
+msgstr "Schreib eine Nachricht…"
+
+msgid "Refresh"
+msgstr "Aktualisieren"
+
+msgid "Stop"
+msgstr "Stopp"
+
+msgid "Send"
+msgstr "Senden"
+
+msgid "Copy kill command"
+msgstr "Kill-Befehl kopieren"
+
+msgid "Run kill command in a terminal"
+msgstr "Kill-Befehl in einem Terminal ausführen"
+
+msgid "Ends the model process if Stop hangs"
+msgstr "Beendet den Modellprozess, wenn Stopp hängt"
+
+msgid "Add files"
+msgstr "Dateien hinzufügen"
+
+msgid "Text, code, PDF or images"
+msgstr "Text, Code, PDF oder Bilder"
+
+msgid "Add folder"
+msgstr "Ordner hinzufügen"
+
+msgid "All text files inside a folder"
+msgstr "Alle Textdateien in einem Ordner"
+
+msgid "Add media"
+msgstr "Medien hinzufügen"
+
+msgid "Images, video, audio (transcribed)"
+msgstr "Bilder, Video, Audio (transkribiert)"
+
+msgid "Give folder access"
+msgstr "Ordnerzugriff geben"
+
+msgid "The model may read files there (tools)"
+msgstr "Das Modell darf dort Dateien lesen (Werkzeuge)"
+
+msgid "🧪 Test environment"
+msgstr "🧪 Testumgebung"
+
+msgid "Project copy the model may change and test"
+msgstr "Projektkopie, die das Modell ändern und testen darf"
+
+msgid "Recording"
+msgstr "Aufnahme"
+
+msgid "Working"
+msgstr "Arbeitet"
+
+msgid "Compress"
+msgstr "Komprimieren"
+
+msgid "tokens"
+msgstr "Tokens"
+
+msgid "Copied ✓"
+msgstr "Kopiert ✓"
+
+msgid "Copy"
+msgstr "Kopieren"
+
+msgid "Select all"
+msgstr "Alles auswählen"
+
+msgid "Thinking"
+msgstr "Denken"
+
+msgid "Assistant"
+msgstr "Assistent"
+
+msgid "Attached: "
+msgstr "Angehängt: "
+
+msgid "(stopped)"
+msgstr "(gestoppt)"
+
+msgid "Earlier messages summarized"
+msgstr "Frühere Nachrichten zusammengefasst"
+
+msgid "Tool"
+msgstr "Werkzeug"
+
+msgid "Edit and send again"
+msgstr "Bearbeiten und erneut senden"
+
+msgid "Stop reading"
+msgstr "Vorlesen stoppen"
+
+msgid "Read aloud (right-click: voice)"
+msgstr "Vorlesen (Rechtsklick: Stimme)"
+
+msgid "Copied"
+msgstr "Kopiert"
+
+msgid "Copy text"
+msgstr "Text kopieren"
+
+msgid "Undo file changes"
+msgstr "Dateiänderungen rückgängig machen"
+
+msgid "Continue writing"
+msgstr "Weiterschreiben"
+
+msgid "▶ Continue"
+msgstr "▶ Weiter"
+
+msgid "Paused – the model repeated itself"
+msgstr "Pausiert – das Modell hat sich wiederholt"
+
+msgid "Paused after many tool steps"
+msgstr "Pausiert nach vielen Werkzeugschritten"
+
+msgid "Stopped near the context limit"
+msgstr "Kurz vor dem Kontextlimit gestoppt"
+
+msgid "Voice"
+msgstr "Stimme"
+
+msgid "Download"
+msgstr "Herunterladen"
+
+msgid "Add voice file (.onnx)…"
+msgstr "Stimmdatei hinzufügen (.onnx)…"
+
+msgid "Installed"
+msgstr "Installiert"
+
+msgid "All"
+msgstr "Alle"
+
+msgid "Everyday"
+msgstr "Alltag"
+
+msgid "Reasoning"
+msgstr "Logik"
+
+msgid "Vision"
+msgstr "Bilderkennung"
+
+msgid "All-in-one"
+msgstr "Alles-in-einem"
+
+msgid "Available"
+msgstr "Verfügbar"
+
+msgid "Online"
+msgstr "Online"
+
+msgid "Servers"
+msgstr "Server"
+
+msgid "No models installed yet. Pick one under “Available”."
+msgstr "Noch keine Modelle installiert. Wähle eins unter „Verfügbar“."
+
+msgid "Estimate"
+msgstr "Schätzung"
+
+msgid "Measured"
+msgstr "Gemessen"
+
+msgid "Loading the model and running a short prompt…"
+msgstr "Lade das Modell und führe einen kurzen Prompt aus…"
+
+msgid "Not tested yet. The test loads the model and runs a short prompt."
+msgstr "Noch nicht getestet. Der Test lädt das Modell und führt einen kurzen Prompt aus."
+
+msgid "Testing…"
+msgstr "Teste…"
+
+msgid "Test"
+msgstr "Testen"
+
+msgid "Strengths"
+msgstr "Stärken"
+
+msgid "Weaknesses"
+msgstr "Schwächen"
+
+msgid "Search models… (Enter)"
+msgstr "Modelle suchen… (Enter)"
+
+msgid "Search"
+msgstr "Suchen"
+
+msgid "Curated"
+msgstr "Ausgewählt"
+
+msgid "Select a model on the left."
+msgstr "Wähle links ein Modell aus."
+
+msgid "Good for: "
+msgstr "Gut für: "
+
+msgid "Can: "
+msgstr "Kann: "
+
+msgid "Sizes"
+msgstr "Größen"
+
+msgid "VRAM, RAM and speed are rough estimates for your hardware."
+msgstr "VRAM, RAM und Geschwindigkeit sind grobe Schätzungen für deine Hardware."
+
+msgid "Open…"
+msgstr "Öffnen…"
+
+msgid "Files the model writes or changes in this chat show up here. Open any file with “Open…”."
+msgstr "Dateien, die das Modell in diesem Chat schreibt oder ändert, erscheinen hier. Öffne jede Datei mit „Öffnen…“."
+
+msgid "No preview for this file type – open it with ↗."
+msgstr "Keine Vorschau für diesen Dateityp – öffne sie mit ↗."
+
+msgid "Profiles"
+msgstr "Profile"
+
+msgid "Every profile has its own chats, groups, memory and start arguments."
+msgstr "Jedes Profil hat eigene Chats, Gruppen, Gedächtnis und Startargumente."
+
+msgid "New profile"
+msgstr "Neues Profil"
+
+msgid "Name of the new profile"
+msgstr "Name des neuen Profils"
+
+msgid "Close"
+msgstr "Schließen"
+
+msgid "The model asks you"
+msgstr "Das Modell fragt dich"
+
+msgid "Your own answer…"
+msgstr "Deine eigene Antwort…"
+
+msgid "Your answer…"
+msgstr "Deine Antwort…"
+
+msgid "Skip"
+msgstr "Überspringen"
+
+msgid "Delete EVERYTHING?"
+msgstr "ALLES löschen?"
+
+msgid "Hey – if you press this button, I delete everything: all profiles, chats, groups, memories, test environments, automations, start arguments, settings, voices and speech models. This cannot be undone. Your own project folders and your Ollama models are not touched. The app starts again afterwards like on the very first day."
+msgstr "Hey – wenn du diesen Button drückst, lösche ich alles: alle Profile, Chats, Gruppen, Gedächtnisse, Testumgebungen, Automationen, Startargumente, Einstellungen, Stimmen und Sprachmodelle. Das lässt sich nicht rückgängig machen. Deine eigenen Projektordner und deine Ollama-Modelle werden nicht angefasst. Die App startet danach wie am allerersten Tag."
+
+msgid "These folders are deleted:"
+msgstr "Diese Ordner werden gelöscht:"
+
+msgid "Type DELETE to confirm:"
+msgstr "Tippe LÖSCHEN zur Bestätigung:"
+
+msgid "DELETE"
+msgstr "LÖSCHEN"
+
+msgid "Delete everything and restart"
+msgstr "Alles löschen und neu starten"
+
+msgid "Other local servers with an OpenAI-compatible API – LM Studio, llama.cpp, vLLM, LocalAI or another PC. Their models show up in the model list with ⇄ and can use the app's tools. Start the server first, then press Test."
+msgstr "Andere lokale Server mit OpenAI-kompatibler API – LM Studio, llama.cpp, vLLM, LocalAI oder ein anderer PC. Ihre Modelle erscheinen in der Modellliste mit ⇄ und können die Werkzeuge der App nutzen. Starte zuerst den Server, dann drücke Testen."
+
+msgid "Add a server"
+msgstr "Server hinzufügen"
+
+msgid "API key (optional)"
+msgstr "API-Schlüssel (optional)"
+
+msgid "Add"
+msgstr "Hinzufügen"
+
+msgid "Profile"
+msgstr "Profil"
+
+msgid "Settings"
+msgstr "Einstellungen"
+
+msgid "Ollama settings"
+msgstr "Ollama-Einstellungen"
+
+msgid "You"
+msgstr "Du"
+
+msgid "Choose picture…"
+msgstr "Bild wählen…"
+
+msgid "Remove picture"
+msgstr "Bild entfernen"
+
+msgid "ⓘ About you"
+msgstr "ⓘ Über dich"
+
+msgid "The AI gets this in every chat, e.g. what you work on or how it should answer."
+msgstr "Die KI bekommt das in jedem Chat, z. B. woran du arbeitest oder wie sie antworten soll."
+
+msgid "Delete profile…"
+msgstr "Profil löschen…"
+
+msgid "Really delete this profile with all its chats, groups, memory and start arguments?"
+msgstr "Dieses Profil mit allen Chats, Gruppen, Gedächtnis und Startargumenten wirklich löschen?"
+
+msgid "Delete profile"
+msgstr "Profil löschen"
+
+msgid "Answer language"
+msgstr "Antwortsprache"
+
+msgid "Every model is told to always answer in this language. “Automatic” lets the model answer in the language you write in."
+msgstr "Jedes Modell wird angewiesen, immer in dieser Sprache zu antworten. „Automatisch“ lässt das Modell in der Sprache antworten, in der du schreibst."
+
+msgid "Time, calculator and hardware info for models that support tools. Every call is shown in the chat."
+msgstr "Uhrzeit, Rechner und Hardware-Infos für Modelle, die Werkzeuge unterstützen. Jeder Aufruf wird im Chat angezeigt."
+
+msgid "Let models use tools"
+msgstr "Modelle Werkzeuge nutzen lassen"
+
+msgid "A small installed model first rates your message (simple chat, coding, complex) and the best fitting installed model answers. A model that is already loaded is kept when it fits, so the VRAM is not emptied for nothing."
+msgstr "Ein kleines installiertes Modell bewertet zuerst deine Nachricht (einfacher Chat, Coding, komplex) und das am besten passende installierte Modell antwortet. Ein bereits geladenes Modell wird behalten, wenn es passt, damit der VRAM nicht umsonst geleert wird."
+
+msgid "Auto-Switch AI Model"
+msgstr "KI-Modell automatisch wechseln"
+
+msgid "Pauses"
+msgstr "Pausen"
+
+msgid "When the model pauses to wait for something (⏸), the answer continues by itself after the time it asked for. Off: only with the Continue button."
+msgstr "Wenn das Modell pausiert, um auf etwas zu warten (⏸), geht die Antwort nach der gewünschten Zeit von selbst weiter. Aus: nur mit dem Weiter-Button."
+
+msgid "Continue automatically after a pause"
+msgstr "Nach einer Pause automatisch weitermachen"
+
+msgid "Context bar"
+msgstr "Kontextleiste"
+
+msgid "Small bar below the input: how full the context of this chat is. Green, then orange, then red."
+msgstr "Kleine Leiste unter der Eingabe: wie voll der Kontext dieses Chats ist. Grün, dann Orange, dann Rot."
+
+msgid "Show the context bar"
+msgstr "Kontextleiste anzeigen"
+
+msgid "Long chats"
+msgstr "Lange Chats"
+
+msgid "When the context is this full after an answer, older messages are summarized so you can keep chatting. The newest messages stay word for word, the originals stay visible. Also by hand with 🗜 next to the context bar."
+msgstr "Wenn der Kontext nach einer Antwort so voll ist, werden ältere Nachrichten zusammengefasst, damit du weiterchatten kannst. Die neuesten Nachrichten bleiben wortgetreu, die Originale bleiben sichtbar. Auch von Hand mit 🗜 neben der Kontextleiste."
+
+msgid "Compress automatically at"
+msgstr "Automatisch komprimieren bei"
+
+msgid "Embedding model"
+msgstr "Embedding-Modell"
+
+msgid "Ollama model for searchable documents (groups). Install it once with: ollama pull nomic-embed-text"
+msgstr "Ollama-Modell für durchsuchbare Dokumente (Gruppen). Einmal installieren mit: ollama pull nomic-embed-text"
+
+msgid "Work folder"
+msgstr "Arbeitsordner"
+
+msgid "Base folder for test copies. Every group gets its own folder in it, every chat a folder inside the group folder. When the model may not write to your project, it can work on a copy there."
+msgstr "Basisordner für Testkopien. Jede Gruppe bekommt darin einen eigenen Ordner, jeder Chat einen Ordner im Gruppenordner. Wenn das Modell nicht in dein Projekt schreiben darf, kann es dort auf einer Kopie arbeiten."
+
+msgid "Default: ~/DreamWork"
+msgstr "Standard: ~/DreamWork"
+
+msgid "Container (optional)"
+msgstr "Container (optional)"
+
+msgid "Off by default. When on, the model's terminal commands in a test environment run inside a Podman or Docker container: the test folder is mounted at /work, the rest of your computer stays out of reach. The image needs the tools your project uses (e.g. rust, python)."
+msgstr "Standardmäßig aus. Wenn an, laufen die Terminalbefehle des Modells in einer Testumgebung in einem Podman- oder Docker-Container: Der Testordner wird unter /work eingehängt, der Rest deines Computers bleibt unerreichbar. Das Image braucht die Werkzeuge, die dein Projekt nutzt (z. B. rust, python)."
+
+msgid "Off"
+msgstr "Aus"
+
+msgid "Appearance"
+msgstr "Darstellung"
+
+msgid "System follows the light or dark mode of your desktop."
+msgstr "System folgt dem hellen oder dunklen Modus deines Desktops."
+
+msgid "System"
+msgstr "System"
+
+msgid "Light"
+msgstr "Hell"
+
+msgid "Dark"
+msgstr "Dunkel"
+
+msgid "Language of the app. The model answers in the language set under “Answer language”."
+msgstr "Sprache der App. Das Modell antwortet in der Sprache, die unter „Antwortsprache“ eingestellt ist."
+
+msgid "Start the tour again"
+msgstr "Tour erneut starten"
+
+msgid "Reset the app"
+msgstr "App zurücksetzen"
+
+msgid "Deletes everything of Dream-LLMChatBox: all profiles, chats, groups, memories, test environments, automations, settings and downloaded voices and speech models. Your own project folders and your Ollama models stay."
+msgstr "Löscht alles von Dream-LLMChatBox: alle Profile, Chats, Gruppen, Gedächtnisse, Testumgebungen, Automationen, Einstellungen sowie heruntergeladene Stimmen und Sprachmodelle. Deine eigenen Projektordner und deine Ollama-Modelle bleiben."
+
+msgid "Reset everything…"
+msgstr "Alles zurücksetzen…"
+
+msgid "Chat data"
+msgstr "Chatdaten"
+
+msgid "Delete all chats…"
+msgstr "Alle Chats löschen…"
+
+msgid "Really delete all chats with all images, files and transcripts? This cannot be undone."
+msgstr "Wirklich alle Chats mit allen Bildern, Dateien und Transkripten löschen? Das lässt sich nicht rückgängig machen."
+
+msgid "Delete everything"
+msgstr "Alles löschen"
+
+msgid "Server address"
+msgstr "Serveradresse"
+
+msgid "Default: http://localhost:11434"
+msgstr "Standard: http://localhost:11434"
+
+msgid "Context length"
+msgstr "Kontextlänge"
+
+msgid "More context = longer chats, but more VRAM. Near the limit the answer stops and offers “Continue”."
+msgstr "Mehr Kontext = längere Chats, aber mehr VRAM. Nahe am Limit stoppt die Antwort und bietet „Weiter“ an."
+
+msgid "Keep model loaded"
+msgstr "Modell geladen lassen"
+
+msgid "How long the model stays in VRAM after an answer."
+msgstr "Wie lange das Modell nach einer Antwort im VRAM bleibt."
+
+msgid "Graphics backend"
+msgstr "Grafik-Backend"
+
+msgid "Which library Ollama uses for the graphics card. Vulkan is often faster and more stable on AMD RX 9000 cards, ROCm can be faster for big models. Applying asks for your password and restarts Ollama."
+msgstr "Welche Bibliothek Ollama für die Grafikkarte nutzt. Vulkan ist auf AMD-RX-9000-Karten oft schneller und stabiler, ROCm kann bei großen Modellen schneller sein. Beim Übernehmen wirst du nach deinem Passwort gefragt, und Ollama startet neu."
+
+msgid "Automatic"
+msgstr "Automatisch"
+
+msgid "CPU only"
+msgstr "Nur CPU"
+
+msgid "Applying…"
+msgstr "Wird übernommen…"
+
+msgid "Apply"
+msgstr "Übernehmen"
+
+msgid "Extra instructions for every chat"
+msgstr "Zusätzliche Anweisungen für jeden Chat"
+
+msgid "Optional. Added to the system prompt of every model."
+msgstr "Optional. Wird dem System-Prompt jedes Modells hinzugefügt."
+
+msgid "Browser"
+msgstr "Browser"
+
+msgid "Activity"
+msgstr "Aktivität"
+
+msgid "Preview"
+msgstr "Vorschau"
+
+msgid "Address or search words"
+msgstr "Adresse oder Suchbegriffe"
+
+msgid "Loading…"
+msgstr "Lädt…"
+
+msgid "Opened by the model · "
+msgstr "Vom Modell geöffnet · "
+
+msgid "Here you see every web page and search the model opens – as clean text, like the model reads it. You can also type an address or search words yourself. ↗ opens the page in your normal browser."
+msgstr "Hier siehst du jede Webseite und Suche, die das Modell öffnet – als sauberen Text, so wie das Modell sie liest. Du kannst auch selbst eine Adresse oder Suchbegriffe eingeben. ↗ öffnet die Seite in deinem normalen Browser."
+
+msgid "What the model did in this chat"
+msgstr "Was das Modell in diesem Chat gemacht hat"
+
+msgid "Clear"
+msgstr "Leeren"
+
+msgid "Nothing yet."
+msgstr "Noch nichts."
+
+msgid "📌 Unpin"
+msgstr "📌 Lösen"
+
+msgid "📌 Pin to top"
+msgstr "📌 Oben anheften"
+
+msgid "↑ Move up"
+msgstr "↑ Nach oben"
+
+msgid "↓ Move down"
+msgstr "↓ Nach unten"
+
+msgid "☑ Unselect"
+msgstr "☑ Abwählen"
+
+msgid "☐ Select (Ctrl + click)"
+msgstr "☐ Auswählen (Strg + Klick)"
+
+msgid "⤓ Export as Markdown…"
+msgstr "⤓ Als Markdown exportieren…"
+
+msgid "Assign to group"
+msgstr "Gruppe zuweisen"
+
+msgid "— No group"
+msgstr "— Keine Gruppe"
+
+msgid "selected – merge their memories"
+msgstr "ausgewählt – Gedächtnisse zusammenführen"
+
+msgid "Name of the new group"
+msgstr "Name der neuen Gruppe"
+
+msgid "🧠 Merge into new group"
+msgstr "🧠 In neue Gruppe zusammenführen"
+
+msgid "Clear selection"
+msgstr "Auswahl aufheben"
+
+msgid "New chat in this group"
+msgstr "Neuer Chat in dieser Gruppe"
+
+msgid "🧠 Merge selected into new group"
+msgstr "🧠 Auswahl in neue Gruppe zusammenführen"
+
+msgid "Group settings…"
+msgstr "Gruppeneinstellungen…"
+
+msgid "Export…"
+msgstr "Exportieren…"
+
+msgid "Export with chats…"
+msgstr "Mit Chats exportieren…"
+
+msgid "No chats yet"
+msgstr "Noch keine Chats"
+
+msgid "Chat"
+msgstr "Chat"
+
+msgid "🔍 Search chats"
+msgstr "🔍 Chats durchsuchen"
+
+msgid "Nothing found"
+msgstr "Nichts gefunden"
+
+msgid "No groups yet – \"+\" creates one, e.g. one per project."
+msgstr "Noch keine Gruppen – „+“ erstellt eine, z. B. eine pro Projekt."
+
+msgid "Chats without group"
+msgstr "Chats ohne Gruppe"
+
+msgid "Chats"
+msgstr "Chats"
+
+msgid "Newest chats"
+msgstr "Neueste Chats"
+
+msgid "Newer chats"
+msgstr "Neuere Chats"
+
+msgid "Older chats"
+msgstr "Ältere Chats"
+
+msgid "Ollama …"
+msgstr "Ollama …"
+
+msgid "Ollama running"
+msgstr "Ollama läuft"
+
+msgid "Ollama not installed"
+msgstr "Ollama nicht installiert"
+
+msgid "Ollama stopped"
+msgstr "Ollama gestoppt"
+
+msgid "Start"
+msgstr "Starten"
+
+msgid "Switch profile…"
+msgstr "Profil wechseln…"
+
+msgid "Answer like:"
+msgstr "Antworte wie:"
+
+msgid "Open styles folder"
+msgstr "Stil-Ordner öffnen"
+
+msgid "Saved by the model"
+msgstr "Vom Modell gespeichert"
+
+msgid "Standard · changed"
+msgstr "Standard · geändert"
+
+msgid "Standard"
+msgstr "Standard"
+
+msgid "Reset"
+msgstr "Zurücksetzen"
+
+msgid "Delete"
+msgstr "Löschen"
+
+msgid "Really delete"
+msgstr "Wirklich löschen"
+
+msgid "+ Add"
+msgstr "+ Hinzufügen"
+
+msgid "Every switched-on point is given to the model at the start of every chat, with every model. Good for things like your setup, your projects or how you like answers. Models with the tool \"remember\" can add points themselves."
+msgstr "Jeder eingeschaltete Punkt wird dem Modell zu Beginn jedes Chats mitgegeben, bei jedem Modell. Gut für Dinge wie dein Setup, deine Projekte oder wie du Antworten magst. Modelle mit dem Werkzeug „remember“ können selbst Punkte hinzufügen."
+
+msgid "New start argument"
+msgstr "Neues Startargument"
+
+msgid "Edit start argument"
+msgstr "Startargument bearbeiten"
+
+msgid "Example: I use Arch Linux with KDE and code in Rust."
+msgstr "Beispiel: Ich nutze Arch Linux mit KDE und programmiere in Rust."
+
+msgid "No start arguments yet."
+msgstr "Noch keine Startargumente."
+
+msgid "Changed – saved in the tools folder as "
+msgstr "Geändert – gespeichert im Werkzeugordner als "
+
+msgid "Starting…"
+msgstr "Startet…"
+
+msgid "Models that support tools can use these while answering. Every call and its result is shown in the chat. Every changed or own tool is a file in ~/.config/dream-llmchatbox/tools/ – you can put your own scripts there too."
+msgstr "Modelle, die Werkzeuge unterstützen, können diese beim Antworten nutzen. Jeder Aufruf und sein Ergebnis werden im Chat angezeigt. Jedes geänderte oder eigene Werkzeug ist eine Datei in ~/.config/dream-llmchatbox/tools/ – du kannst dort auch eigene Skripte ablegen."
+
+msgid "Built-in"
+msgstr "Eingebaut"
+
+msgid "Edit built-in tool: "
+msgstr "Eingebautes Werkzeug bearbeiten: "
+
+msgid "Description for the model"
+msgstr "Beschreibung für das Modell"
+
+msgid "The model reads this to decide when and how to use the tool."
+msgstr "Das Modell liest das, um zu entscheiden, wann und wie es das Werkzeug nutzt."
+
+msgid "Command (bash)"
+msgstr "Befehl (bash)"
+
+msgid "Empty = the built-in code of the app is used. Write a command here to replace it with your own, e.g. a script from the tools folder: python3 \"$TOOLS_DIR/my_tool.py\" \"$expression\""
+msgstr "Leer = der eingebaute Code der App wird genutzt. Schreib hier einen Befehl, um ihn durch deinen eigenen zu ersetzen, z. B. ein Skript aus dem Werkzeugordner: python3 \"$TOOLS_DIR/my_tool.py\" \"$expression\""
+
+msgid "Your command replaces the built-in code. Parameters are variables like $path, $TOOLS_DIR is the tools folder."
+msgstr "Dein Befehl ersetzt den eingebauten Code. Parameter sind Variablen wie $path, $TOOLS_DIR ist der Werkzeugordner."
+
+msgid "Parameters"
+msgstr "Parameter"
+
+msgid "The built-in code uses these parameters. You can change them when you use your own command."
+msgstr "Der eingebaute Code nutzt diese Parameter. Du kannst sie ändern, wenn du deinen eigenen Befehl nutzt."
+
+msgid "Names separated by commas."
+msgstr "Namen durch Kommas getrennt."
+
+msgid "Safe commands"
+msgstr "Sichere Befehle"
+
+msgid "run_terminal_command runs these without asking (one per line, also with extra arguments, e.g. \"cargo test --release\"). Every other command needs your OK. sudo, rm -rf /, paths outside the folder and similar are always blocked."
+msgstr "run_terminal_command führt diese ohne Nachfrage aus (einer pro Zeile, auch mit zusätzlichen Argumenten, z. B. \"cargo test --release\"). Jeder andere Befehl braucht dein OK. sudo, rm -rf /, Pfade außerhalb des Ordners und Ähnliches sind immer gesperrt."
+
+msgid "Save safe commands"
+msgstr "Sichere Befehle speichern"
+
+msgid "Your own tools"
+msgstr "Deine eigenen Werkzeuge"
+
+msgid "Open folder"
+msgstr "Ordner öffnen"
+
+msgid "+ Add tool"
+msgstr "+ Werkzeug hinzufügen"
+
+msgid "No own tools yet. An own tool runs a bash command, e.g. \"df -h\" for free disk space or \"curl -s wttr.in/$city?format=3\" for the weather."
+msgstr "Noch keine eigenen Werkzeuge. Ein eigenes Werkzeug führt einen bash-Befehl aus, z. B. \"df -h\" für freien Speicherplatz oder \"curl -s wttr.in/$city?format=3\" für das Wetter."
+
+msgid "New tool"
+msgstr "Neues Werkzeug"
+
+msgid "Edit tool"
+msgstr "Werkzeug bearbeiten"
+
+msgid "Only a-z, 0-9 and _, e.g. disk_usage"
+msgstr "Nur a-z, 0-9 und _, z. B. disk_usage"
+
+msgid "What the tool does and when the model should use it."
+msgstr "Was das Werkzeug macht und wann das Modell es nutzen soll."
+
+msgid "Parameters (optional)"
+msgstr "Parameter (optional)"
+
+msgid "Names separated by commas. The model fills them in; in the command they are variables like $city."
+msgstr "Namen durch Kommas getrennt. Das Modell füllt sie aus; im Befehl sind sie Variablen wie $city."
+
+msgid "Runs in the first shared folder (or your home folder), max. 30 seconds. Output goes back to the model. Scripts in the tools folder: \"$TOOLS_DIR/script.sh\""
+msgstr "Läuft im ersten geteilten Ordner (oder deinem Home-Ordner), max. 30 Sekunden. Die Ausgabe geht zurück an das Modell. Skripte im Werkzeugordner: \"$TOOLS_DIR/script.sh\""
+
+msgid "MCP servers"
+msgstr "MCP-Server"
+
+msgid "+ Add MCP server"
+msgstr "+ MCP-Server hinzufügen"
+
+msgid "Programs that give the model more tools (Model Context Protocol, stdio). Same format as Claude Desktop, saved in ~/.config/dream-llmchatbox/mcp.json. A server starts when a chat needs it; every call asks you first."
+msgstr "Programme, die dem Modell mehr Werkzeuge geben (Model Context Protocol, stdio). Gleiches Format wie Claude Desktop, gespeichert in ~/.config/dream-llmchatbox/mcp.json. Ein Server startet, wenn ein Chat ihn braucht; jeder Aufruf fragt dich vorher."
+
+msgid "Import from Claude Desktop"
+msgstr "Aus Claude Desktop importieren"
+
+msgid "Open mcp.json"
+msgstr "mcp.json öffnen"
+
+msgid "No MCP servers yet. Example: name \"filesystem\", command \"npx\", arguments \"-y @modelcontextprotocol/server-filesystem ~/Documents\"."
+msgstr "Noch keine MCP-Server. Beispiel: Name \"filesystem\", Befehl \"npx\", Argumente \"-y @modelcontextprotocol/server-filesystem ~/Documents\"."
+
+msgid "New MCP server"
+msgstr "Neuer MCP-Server"
+
+msgid "Edit MCP server"
+msgstr "MCP-Server bearbeiten"
+
+msgid "Shown in the approval bar; tools are called mcp_<name>_<tool>."
+msgstr "Wird in der Freigabeleiste angezeigt; Werkzeuge heißen mcp_<name>_<tool>."
+
+msgid "Command"
+msgstr "Befehl"
+
+msgid "The program that starts the server, e.g. npx, uvx, python3 or a full path."
+msgstr "Das Programm, das den Server startet, z. B. npx, uvx, python3 oder ein vollständiger Pfad."
+
+msgid "Arguments"
+msgstr "Argumente"
+
+msgid "Separated by spaces; use \"double\" or 'single' quotes for arguments with spaces."
+msgstr "Durch Leerzeichen getrennt; nutze \"doppelte\" oder 'einfache' Anführungszeichen für Argumente mit Leerzeichen."
+
+msgid "Environment (optional)"
+msgstr "Umgebung (optional)"
+
+msgid "One KEY=value per line, e.g. API tokens the server needs."
+msgstr "Ein KEY=value pro Zeile, z. B. API-Tokens, die der Server braucht."
+
+msgid "🔒 This profile still has an old password. Enter it once – the password is removed afterwards."
+msgstr "🔒 Dieses Profil hat noch ein altes Passwort. Gib es einmal ein – danach wird das Passwort entfernt."
+
+msgid "Password"
+msgstr "Passwort"
+
+msgid "Unlock"
+msgstr "Entsperren"
+
+msgid "Other profiles"
+msgstr "Andere Profile"
+
+msgid "Changes in the work folder"
+msgstr "Änderungen im Arbeitsordner"
+
+msgid "No changes compared to the project."
+msgstr "Keine Änderungen gegenüber dem Projekt."
+
+msgid "changed files – “Apply” copies them into:"
+msgstr "geänderte Dateien – „Übernehmen“ kopiert sie nach:"
+
+msgid "Apply to project"
+msgstr "Ins Projekt übernehmen"
+
+msgid "🧪 Test environment for this chat"
+msgstr "🧪 Testumgebung für diesen Chat"
+
+msgid "Accept"
+msgstr "Akzeptieren"
+
+msgid "The folder is shared read only, but a command can still change files there."
+msgstr "Der Ordner ist nur lesbar geteilt, aber ein Befehl kann dort trotzdem Dateien ändern."
+
+msgid "The model wants to run a command:"
+msgstr "Das Modell möchte einen Befehl ausführen:"
+
+msgid "in {}"
+msgstr "in {}"
+
+msgid "{} is larger than 20 MB"
+msgstr "{} ist größer als 20 MB"
+
+msgid "{}: PDF needs 'pdftotext' (poppler) installed"
+msgstr "{}: PDF benötigt installiertes 'pdftotext' (poppler)"
+
+msgid "{}: could not read PDF"
+msgstr "{}: PDF konnte nicht gelesen werden"
+
+msgid "{} is larger than 2 MB"
+msgstr "{} ist größer als 2 MB"
+
+msgid "{} is not a text file"
+msgstr "{} ist keine Textdatei"
+
+msgid "{}: no text files found"
+msgstr "{}: keine Textdateien gefunden"
+
+msgid "Audio and video need 'ffmpeg' installed"
+msgstr "Audio und Video benötigen installiertes 'ffmpeg'"
+
+msgid "Mon–Fri at {}"
+msgstr "Mo–Fr um {}"
+
+msgid "Every {} at {}"
+msgstr "Jeden {} um {}"
+
+msgid "Every {} h"
+msgstr "Alle {} h"
+
+msgid "Every day at {}"
+msgstr "Jeden Tag um {}"
+
+msgid "Please give the automation a name."
+msgstr "Bitte gib der Automation einen Namen."
+
+msgid "Please write what the model should do."
+msgstr "Bitte schreib, was das Modell tun soll."
+
+msgid "Please choose at least 1 hour."
+msgstr "Bitte wähle mindestens 1 Stunde."
+
+msgid "Please write the time like 08:00."
+msgstr "Bitte schreib die Uhrzeit wie 08:00."
+
+msgid "Could not save: {}"
+msgstr "Konnte nicht speichern: {}"
+
+msgid "next {}"
+msgstr "nächster {}"
+
+msgid "off"
+msgstr "aus"
+
+msgid "Model selected in the chat"
+msgstr "Im Chat gewähltes Modell"
+
+msgid "No group"
+msgstr "Keine Gruppe"
+
+msgid "⏰ {}: no model selected"
+msgstr "⏰ {}: kein Modell ausgewählt"
+
+msgid "⏰ {} is running…"
+msgstr "⏰ {} läuft…"
+
+msgid "⏰ {}: could not save the result: {}"
+msgstr "⏰ {}: Ergebnis konnte nicht gespeichert werden: {}"
+
+msgid "is done"
+msgstr "ist fertig"
+
+msgid "failed"
+msgstr "ist fehlgeschlagen"
+
+msgid "⏰ {} {} – the result is a new chat."
+msgstr "⏰ {} {} – das Ergebnis ist ein neuer Chat."
+
+msgid "The result is a new chat in Dream-LLMChatBox."
+msgstr "Das Ergebnis ist ein neuer Chat in Dream-LLMChatBox."
+
+msgid "\n\n[… page cut for display]"
+msgstr "\n\n[… Seite für die Anzeige gekürzt]"
+
+msgid "Undone: {} {} back as before this answer"
+msgstr "Rückgängig: {} {} wieder wie vor dieser Antwort"
+
+msgid "file is"
+msgstr "Datei ist"
+
+msgid "files are"
+msgstr "Dateien sind"
+
+msgid "Could not undo everything: {}"
+msgstr "Konnte nicht alles rückgängig machen: {}"
+
+msgid "Thinking on for this chat"
+msgstr "Denken an für diesen Chat"
+
+msgid "Thinking off for this chat – faster answers"
+msgstr "Denken aus für diesen Chat – schnellere Antworten"
+
+msgid "Thinking auto: off for simple chat, on for coding and complex tasks"
+msgstr "Denken auto: aus bei einfachem Chat, an bei Coding und komplexen Aufgaben"
+
+msgid "All chats were deleted."
+msgstr "Alle Chats wurden gelöscht."
+
+msgid "Could not delete chats: {}"
+msgstr "Chats konnten nicht gelöscht werden: {}"
+
+msgid "Could not load chat: {}"
+msgstr "Chat konnte nicht geladen werden: {}"
+
+msgid "Could not rename chat: {}"
+msgstr "Chat konnte nicht umbenannt werden: {}"
+
+msgid "Could not delete chat: {}"
+msgstr "Chat konnte nicht gelöscht werden: {}"
+
+msgid "Could not save chat: {}"
+msgstr "Chat konnte nicht gespeichert werden: {}"
+
+msgid "No models installed. Install one on the Models page."
+msgstr "Keine Modelle installiert. Installiere eins auf der Seite Modelle."
+
+msgid "Ollama is not running. Start it at the bottom left."
+msgstr "Ollama läuft nicht. Starte es unten links."
+
+msgid "Auto-Switch: choosing a model…"
+msgstr "Auto-Switch: Modell wird ausgewählt…"
+
+msgid "Model has no image support – sending images as text (colors + OCR)…"
+msgstr "Modell kann keine Bilder – Bilder werden als Text gesendet (Farben + OCR)…"
+
+msgid "Thinking auto: {} → {}"
+msgstr "Denken auto: {} → {}"
+
+msgid "on"
+msgstr "an"
+
+msgid "This model can't use tools, so it can't see the shared folders."
+msgstr "Dieses Modell kann keine Werkzeuge nutzen und sieht daher die geteilten Ordner nicht."
+
+msgid "Tools are turned off in Settings, so the model can't see the shared folders."
+msgstr "Werkzeuge sind in den Einstellungen aus, daher sieht das Modell die geteilten Ordner nicht."
+
+msgid "Thinking ({})"
+msgstr "Denkt nach ({})"
+
+msgid "Writing the answer ({})"
+msgstr "Schreibt die Antwort ({})"
+
+msgid "Not enough VRAM – unloaded {} other model(s), trying again…"
+msgstr "Nicht genug VRAM – {} andere(s) Modell(e) entladen, neuer Versuch…"
+
+msgid "The model runner crashed – trying once more with a smaller context…"
+msgstr "Der Modell-Runner ist abgestürzt – noch ein Versuch mit kleinerem Kontext…"
+
+msgid "Not enough VRAM for {} context – trying {}…"
+msgstr "Nicht genug VRAM für {} Kontext – versuche {}…"
+
+msgid "⏸ {} · continues automatically at {} · {}"
+msgstr "⏸ {} · geht automatisch um {} weiter · {}"
+
+msgid "⏸ {} · about {} min · {}"
+msgstr "⏸ {} · etwa {} Min. · {}"
+
+msgid "Stopped"
+msgstr "Gestoppt"
+
+msgid "[Error: {}]"
+msgstr "[Fehler: {}]"
+
+msgid "\n\nThe model does not fit into your VRAM/RAM, even with a small context. Try a smaller model or a smaller quantization (e.g. Q4 instead of Q8), or close other programs that use the graphics card."
+msgstr "\n\nDas Modell passt nicht in deinen VRAM/RAM, auch nicht mit kleinem Kontext. Versuch ein kleineres Modell oder eine kleinere Quantisierung (z. B. Q4 statt Q8) oder schließ andere Programme, die die Grafikkarte nutzen."
+
+msgid "Context for this model reduced to {} so it fits into VRAM (remembered)."
+msgstr "Kontext für dieses Modell auf {} verkleinert, damit es in den VRAM passt (gemerkt)."
+
+msgid "Work folder for this chat?"
+msgstr "Arbeitsordner für diesen Chat?"
+
+msgid "The shared folder is read-only. May the model get its own work folder with a copy of the project to test changes?\n{}"
+msgstr "Der geteilte Ordner ist schreibgeschützt. Darf das Modell einen eigenen Arbeitsordner mit einer Kopie des Projekts bekommen, um Änderungen zu testen?\n{}"
+
+msgid "The folder is deleted together with its group. Change the base folder in Settings."
+msgstr "Der Ordner wird zusammen mit seiner Gruppe gelöscht. Den Basisordner änderst du in den Einstellungen."
+
+msgid "Could not create the work folder: {}"
+msgstr "Arbeitsordner konnte nicht erstellt werden: {}"
+
+msgid "The model asks for access to the project \"{}\" ({}).\nReason: {}"
+msgstr "Das Modell bittet um Zugriff auf das Projekt \"{}\" ({}).\nGrund: {}"
+
+msgid "Export chat"
+msgstr "Chat exportieren"
+
+msgid "Chat exported to {}"
+msgstr "Chat exportiert nach {}"
+
+msgid "Could not export: {}"
+msgstr "Export fehlgeschlagen: {}"
+
+msgid "Could not pin the chat: {}"
+msgstr "Chat konnte nicht angeheftet werden: {}"
+
+msgid "Could not move the chat: {}"
+msgstr "Chat konnte nicht verschoben werden: {}"
+
+msgid "Wait until the answer is finished."
+msgstr "Warte, bis die Antwort fertig ist."
+
+msgid "Could not merge: {}"
+msgstr "Zusammenführen fehlgeschlagen: {}"
+
+msgid "select at least two chats or groups (Ctrl + click)"
+msgstr "wähle mindestens zwei Chats oder Gruppen aus (Strg + Klick)"
+
+msgid "Merged group"
+msgstr "Zusammengeführte Gruppe"
+
+msgid "New group “{}”: {} memories merged, {} chats moved."
+msgstr "Neue Gruppe „{}“: {} Erinnerungen zusammengeführt, {} Chats verschoben."
+
+msgid "curl is missing – install curl first"
+msgstr "curl fehlt – installiere zuerst curl"
+
+msgid "npm is missing – install Node.js (npm) first, e.g. sudo pacman -S npm"
+msgstr "npm fehlt – installiere zuerst Node.js (npm), z. B. sudo pacman -S npm"
+
+msgid "{} is not installed – Models → Online → Install"
+msgstr "{} ist nicht installiert – Modelle → Online → Installieren"
+
+msgid "Could not start {}: {}"
+msgstr "{} konnte nicht gestartet werden: {}"
+
+msgid "{} took longer than 15 minutes"
+msgstr "{} hat länger als 15 Minuten gebraucht"
+
+msgid "{} is not logged in – Models → Online → Log in"
+msgstr "{} ist nicht angemeldet – Modelle → Online → Anmelden"
+
+msgid "{} gave no answer"
+msgstr "{} hat keine Antwort gegeben"
+
+msgid "{} failed: {}"
+msgstr "{} fehlgeschlagen: {}"
+
+msgid "Not installed"
+msgstr "Nicht installiert"
+
+msgid "Installed · logged in"
+msgstr "Installiert · angemeldet"
+
+msgid "Installed · please log in once"
+msgstr "Installiert · bitte einmal anmelden"
+
+msgid "Installed · log in once if you have not yet"
+msgstr "Installiert · melde dich einmal an, falls noch nicht geschehen"
+
+msgid "A terminal opened – when it is done, press “Check again”."
+msgstr "Ein Terminal wurde geöffnet – wenn es fertig ist, drück „Erneut prüfen“."
+
+msgid "{}. Run it yourself: {}"
+msgstr "{}. Führ es selbst aus: {}"
+
+msgid "Install it first."
+msgstr "Installiere es zuerst."
+
+msgid "No project folder shared yet – the first shared folder is the project."
+msgstr "Noch kein Projektordner geteilt – der erste geteilte Ordner ist das Projekt."
+
+msgid "line"
+msgstr "Zeile"
+
+msgid "lines"
+msgstr "Zeilen"
+
+msgid "Found {} ({} {}) – the model gets it first."
+msgstr "{} gefunden ({} {}) – das Modell bekommt es zuerst."
+
+msgid "No ARCHITEKTUR.md found in the folder or in docs/."
+msgstr "Keine ARCHITEKTUR.md im Ordner oder in docs/ gefunden."
+
+msgid "The model asks a few questions, then writes ARCHITEKTUR.md."
+msgstr "Das Modell stellt ein paar Fragen und schreibt dann ARCHITEKTUR.md."
+
+msgid "The model looks at the folder and writes ARCHITEKTUR.md first."
+msgstr "Das Modell sieht sich den Ordner an und schreibt zuerst ARCHITEKTUR.md."
+
+msgid "Allow writing (click 'read only' on the folder chip) so the model can create ARCHITEKTUR.md"
+msgstr "Erlaube Schreiben (klick auf 'nur lesen' am Ordner-Chip), damit das Modell ARCHITEKTUR.md anlegen kann"
+
+msgid "the model returned an empty summary"
+msgstr "das Modell hat eine leere Zusammenfassung geliefert"
+
+msgid "Nothing to compress yet – the chat is still short."
+msgstr "Noch nichts zu komprimieren – der Chat ist noch kurz."
+
+msgid "Choose a local or server model to compress the chat."
+msgstr "Wähle ein lokales oder Server-Modell, um den Chat zu komprimieren."
+
+msgid "🗜 Compressing the chat…"
+msgstr "🗜 Chat wird komprimiert…"
+
+msgid "Compressing failed: {}"
+msgstr "Komprimieren fehlgeschlagen: {}"
+
+msgid "{} older messages summarized"
+msgstr "{} ältere Nachrichten zusammengefasst"
+
+msgid "🗜 Chat compressed: {} older messages summarized."
+msgstr "🗜 Chat komprimiert: {} ältere Nachrichten zusammengefasst."
+
+msgid "System default"
+msgstr "Systemstandard"
+
+msgid "Image: "
+msgstr "Bild: "
+
+msgid "Could not read the image from the clipboard."
+msgstr "Bild aus der Zwischenablage konnte nicht gelesen werden."
+
+msgid "Add images, video or audio"
+msgstr "Bilder, Video oder Audio hinzufügen"
+
+msgid "Images, video, audio"
+msgstr "Bilder, Video, Audio"
+
+msgid "Please wait until the current transcription is done."
+msgstr "Bitte warte, bis die aktuelle Transkription fertig ist."
+
+msgid "Transcribing {}…"
+msgstr "Transkribiere {}…"
+
+msgid "Downloading speech model…"
+msgstr "Sprachmodell wird heruntergeladen…"
+
+msgid "Downloading speech model… {}%"
+msgstr "Sprachmodell wird heruntergeladen… {}%"
+
+msgid "Microphone: {}"
+msgstr "Mikrofon: {}"
+
+msgid "Transcribing…"
+msgstr "Transkribiere…"
+
+msgid "No speech recognized."
+msgstr "Keine Sprache erkannt."
+
+msgid "Speech recognition: {}"
+msgstr "Spracherkennung: {}"
+
+msgid "Commands run directly on your computer."
+msgstr "Befehle laufen direkt auf deinem Computer."
+
+msgid "{} found ✓ – commands in test environments run in a container."
+msgstr "{} gefunden ✓ – Befehle in Testumgebungen laufen in einem Container."
+
+msgid "{} is not installed."
+msgstr "{} ist nicht installiert."
+
+msgid "This is not a Dream-LLMChatBox tools file"
+msgstr "Das ist keine Dream-LLMChatBox-Werkzeugdatei"
+
+msgid "A tool named {} already exists"
+msgstr "Ein Werkzeug namens {} gibt es schon"
+
+msgid "Name: only a-z, 0-9 and _, starting with a letter"
+msgstr "Name: nur a-z, 0-9 und _, mit einem Buchstaben am Anfang"
+
+msgid "Description: tell the model what the tool does and when to use it"
+msgstr "Beschreibung: sag dem Modell, was das Werkzeug tut und wann es genutzt wird"
+
+msgid "Parameter {}: only a-z, 0-9 and _"
+msgstr "Parameter {}: nur a-z, 0-9 und _"
+
+msgid "Command is empty"
+msgstr "Befehl ist leer"
+
+msgid "PDF via {}"
+msgstr "PDF über {}"
+
+msgid "PDF via LibreOffice"
+msgstr "PDF über LibreOffice"
+
+msgid "no PDF engine"
+msgstr "keine PDF-Engine"
+
+msgid "Give the model access to a folder"
+msgstr "Gib dem Modell Zugriff auf einen Ordner"
+
+msgid "Can't share this folder: {}"
+msgstr "Dieser Ordner kann nicht geteilt werden: {}"
+
+msgid "The group needs a name"
+msgstr "Die Gruppe braucht einen Namen"
+
+msgid "Group not found"
+msgstr "Gruppe nicht gefunden"
+
+msgid "This is not a Dream-LLMChatBox group file"
+msgstr "Das ist keine Dream-LLMChatBox-Gruppendatei"
+
+msgid "Document folder of the group"
+msgstr "Dokumentenordner der Gruppe"
+
+msgid "Standard folder of the group"
+msgstr "Standardordner der Gruppe"
+
+msgid "Can't use this folder: {}"
+msgstr "Dieser Ordner kann nicht genutzt werden: {}"
+
+msgid "Group deleted – its chats are now without group."
+msgstr "Gruppe gelöscht – ihre Chats sind jetzt ohne Gruppe."
+
+msgid "Export failed: {}"
+msgstr "Export fehlgeschlagen: {}"
+
+msgid "Export group"
+msgstr "Gruppe exportieren"
+
+msgid "Group exported to {}"
+msgstr "Gruppe exportiert nach {}"
+
+msgid "Could not write {}: {}"
+msgstr "{} konnte nicht geschrieben werden: {}"
+
+msgid "Import group"
+msgstr "Gruppe importieren"
+
+msgid "Dream-LLMChatBox group"
+msgstr "Dream-LLMChatBox-Gruppe"
+
+msgid "Could not read {}: {}"
+msgstr "{} konnte nicht gelesen werden: {}"
+
+msgid " Its rules are switched off – check them in the group settings."
+msgstr " Ihre Regeln sind ausgeschaltet – prüf sie in den Gruppeneinstellungen."
+
+msgid "Imported group \"{}\" with {} chat(s).{}"
+msgstr "Gruppe \"{}\" mit {} Chat(s) importiert.{}"
+
+msgid "Import failed: {}"
+msgstr "Import fehlgeschlagen: {}"
+
+msgid "Does not fit (needs ~{})"
+msgstr "Passt nicht (braucht ~{})"
+
+msgid "CPU only  ·  ~{} RAM"
+msgstr "Nur CPU  ·  ~{} RAM"
+
+msgid "Saved {} of {}"
+msgstr "{} von {} gespeichert"
+
+msgid "{} is not a JSON object"
+msgstr "{} ist kein JSON-Objekt"
+
+msgid "{} is not valid JSON: {}"
+msgstr "{} ist kein gültiges JSON: {}"
+
+msgid "No Claude Desktop config found at {}"
+msgstr "Keine Claude-Desktop-Konfiguration gefunden unter {}"
+
+msgid "missing closing ' in the arguments"
+msgstr "schließendes ' in den Argumenten fehlt"
+
+msgid "missing closing \" in the arguments"
+msgstr "schließendes \" in den Argumenten fehlt"
+
+msgid "\"{}\" is not KEY=value"
+msgstr "\"{}\" ist nicht KEY=value"
+
+msgid "\"{}\" has no valid name before ="
+msgstr "\"{}\" hat keinen gültigen Namen vor ="
+
+msgid "{}: started, {} tool(s)."
+msgstr "{}: gestartet, {} Werkzeug(e)."
+
+msgid "Nothing new in {} ({} already there, {} without a command skipped)."
+msgstr "Nichts Neues in {} ({} schon vorhanden, {} ohne Befehl übersprungen)."
+
+msgid "Imported {} MCP server(s). They are switched off – check the command before you switch them on."
+msgstr "{} MCP-Server importiert. Sie sind ausgeschaltet – prüf den Befehl, bevor du sie einschaltest."
+
+msgid "Please enter a name."
+msgstr "Bitte gib einen Namen ein."
+
+msgid "Please enter a command."
+msgstr "Bitte gib einen Befehl ein."
+
+msgid "A server called \"{}\" already exists."
+msgstr "Ein Server namens \"{}\" existiert bereits."
+
+msgid "not started"
+msgstr "nicht gestartet"
+
+msgid "starting…"
+msgstr "startet…"
+
+msgid "running – {} tools"
+msgstr "läuft – {} Werkzeuge"
+
+msgid "error:"
+msgstr "Fehler:"
+
+msgid "{}  ·  {} tok/s measured"
+msgstr "{}  ·  {} tok/s gemessen"
+
+msgid "{}% VRAM ({})  ·  {} RAM  ·  {} tok/s  ·  loaded in {} s"
+msgstr "{}% VRAM ({})  ·  {} RAM  ·  {} tok/s  ·  geladen in {} s"
+
+msgid "{} models"
+msgstr "{} Modelle"
+
+msgid "Searching…"
+msgstr "Suche…"
+
+msgid "No models found."
+msgstr "Keine Modelle gefunden."
+
+msgid "text only"
+msgstr "nur Text"
+
+msgid "Could not load sizes: {}"
+msgstr "Größen konnten nicht geladen werden: {}"
+
+msgid "Loading sizes…"
+msgstr "Lade Größen…"
+
+msgid "No local download found (maybe cloud only)."
+msgstr "Kein lokaler Download gefunden (evtl. nur Cloud)."
+
+msgid "≈ Sizes estimated from the parameter count (Q4)."
+msgstr "≈ Größen aus der Parameterzahl geschätzt (Q4)."
+
+msgid "{}  ·  {} downloads"
+msgstr "{}  ·  {} Downloads"
+
+msgid "Search failed: {}"
+msgstr "Suche fehlgeschlagen: {}"
+
+msgid "Invalid model name: {}"
+msgstr "Ungültiger Modellname: {}"
+
+msgid "Could not save test result: {}"
+msgstr "Testergebnis konnte nicht gespeichert werden: {}"
+
+msgid "Test of {} failed: {}"
+msgstr "Test von {} fehlgeschlagen: {}"
+
+msgid "Model was not loaded after the test"
+msgstr "Modell wurde nach dem Test nicht geladen"
+
+msgid "Authorization was cancelled or failed"
+msgstr "Autorisierung wurde abgebrochen oder ist fehlgeschlagen"
+
+msgid "Saved for the Ollama system service and restarted Ollama."
+msgstr "Für den Ollama-Systemdienst gespeichert und Ollama neu gestartet."
+
+msgid "Ollama was restarted with the new backend."
+msgstr "Ollama wurde mit dem neuen Backend neu gestartet."
+
+msgid "Saved – used the next time this app starts Ollama."
+msgstr "Gespeichert – wird genutzt, wenn die App Ollama das nächste Mal startet."
+
+msgid "Last used by Ollama: {}"
+msgstr "Zuletzt von Ollama genutzt: {}"
+
+msgid "Which backend Ollama uses shows up here after a model was loaded."
+msgstr "Welches Backend Ollama nutzt, steht hier, sobald ein Modell geladen wurde."
+
+msgid "Hugging Face GGUF repository by {}"
+msgstr "Hugging-Face-GGUF-Repository von {}"
+
+msgid "pdftoppm is missing – install poppler to see PDF pages"
+msgstr "pdftoppm fehlt – installiere poppler, um PDF-Seiten zu sehen"
+
+msgid "pdftoppm could not read this PDF"
+msgstr "pdftoppm konnte dieses PDF nicht lesen"
+
+msgid "Could not load the PDF page"
+msgstr "PDF-Seite konnte nicht geladen werden"
+
+msgid "{} does not exist (any more)"
+msgstr "{} existiert nicht (mehr)"
+
+msgid "Could not load this image"
+msgstr "Dieses Bild konnte nicht geladen werden"
+
+msgid "HTML shown as text – ↗ opens the real page in your browser"
+msgstr "HTML als Text angezeigt – ↗ öffnet die echte Seite im Browser"
+
+msgid "File is too big for the preview – open it with ↗"
+msgstr "Datei ist zu groß für die Vorschau – öffne sie mit ↗"
+
+msgid "Preview a file"
+msgstr "Vorschau einer Datei"
+
+msgid "{} chats stored  ·  {} MB"
+msgstr "{} Chats gespeichert  ·  {} MB"
+
+msgid "Installing Ollama in a terminal window…"
+msgstr "Ollama wird in einem Terminalfenster installiert…"
+
+msgid "Ollama is installed."
+msgstr "Ollama ist installiert."
+
+msgid "Ollama was not installed."
+msgstr "Ollama wurde nicht installiert."
+
+msgid "Ollama stopped."
+msgstr "Ollama gestoppt."
+
+msgid "Please enter a name"
+msgstr "Bitte gib einen Namen ein"
+
+msgid "Profile not found"
+msgstr "Profil nicht gefunden"
+
+msgid "Encryption failed"
+msgstr "Verschlüsselung fehlgeschlagen"
+
+msgid "Encrypted data is damaged"
+msgstr "Verschlüsselte Daten sind beschädigt"
+
+msgid "Wrong password or damaged data"
+msgstr "Falsches Passwort oder beschädigte Daten"
+
+msgid "Wrong password"
+msgstr "Falsches Passwort"
+
+msgid "The archive is damaged"
+msgstr "Das Archiv ist beschädigt"
+
+msgid "Unknown file format"
+msgstr "Unbekanntes Dateiformat"
+
+msgid "The profile already has a password"
+msgstr "Das Profil hat schon ein Passwort"
+
+msgid "Could not move your data into the profile folder: {}"
+msgstr "Deine Daten konnten nicht in den Profilordner verschoben werden: {}"
+
+msgid "Could not open the profile: {}"
+msgstr "Profil konnte nicht geöffnet werden: {}"
+
+msgid "No profile found."
+msgstr "Kein Profil gefunden."
+
+msgid "Profile not found."
+msgstr "Profil nicht gefunden."
+
+msgid "Profile passwords are gone. This profile is open without a password now."
+msgstr "Profilpasswörter sind weg. Dieses Profil ist jetzt ohne Passwort geöffnet."
+
+msgid "Could not remove the old password: {}"
+msgstr "Altes Passwort konnte nicht entfernt werden: {}"
+
+msgid "Could not lock the current profile: {}"
+msgstr "Aktuelles Profil konnte nicht gesperrt werden: {}"
+
+msgid "The profile is locked"
+msgstr "Das Profil ist gesperrt"
+
+msgid "The app was not closed properly last time. The unlocked data of that session was used and is encrypted again."
+msgstr "Die App wurde beim letzten Mal nicht richtig beendet. Die entsperrten Daten dieser Sitzung wurden übernommen und sind wieder verschlüsselt."
+
+msgid "Could not save the encrypted profile: {}"
+msgstr "Verschlüsseltes Profil konnte nicht gespeichert werden: {}"
+
+msgid "Choose a profile picture"
+msgstr "Profilbild auswählen"
+
+msgid "Images"
+msgstr "Bilder"
+
+msgid "Could not use this picture: {}"
+msgstr "Dieses Bild kann nicht verwendet werden: {}"
+
+msgid "No profile is open"
+msgstr "Kein Profil geöffnet"
+
+msgid "The last profile cannot be deleted."
+msgstr "Das letzte Profil kann nicht gelöscht werden."
+
+msgid "Could not delete the profile completely: {}"
+msgstr "Profil konnte nicht vollständig gelöscht werden: {}"
+
+msgid "Indexed: {} files, {} passages ({})"
+msgstr "Indexiert: {} Dateien, {} Abschnitte ({})"
+
+msgid "Not indexed yet – press “Index now”"
+msgstr "Noch nicht indexiert – drück „Jetzt indexieren“"
+
+msgid "Indexing… (first time can take a while)"
+msgstr "Indexiere… (beim ersten Mal kann das dauern)"
+
+msgid "Indexing… {} / {} files"
+msgstr "Indexiere… {} / {} Dateien"
+
+msgid "Indexed: {} files, {} passages ({} new or changed)"
+msgstr "Indexiert: {} Dateien, {} Abschnitte ({} neu oder geändert)"
+
+msgid "Add Piper voice (.onnx)"
+msgstr "Piper-Stimme hinzufügen (.onnx)"
+
+msgid "Piper voice"
+msgstr "Piper-Stimme"
+
+msgid "Voice: {}"
+msgstr "Stimme: {}"
+
+msgid "Read aloud: {}"
+msgstr "Vorlesen: {}"
+
+msgid "Downloading voice {}…"
+msgstr "Lade Stimme {} herunter…"
+
+msgid "Downloading voice {}… {}%"
+msgstr "Lade Stimme {} herunter… {}%"
+
+msgid "Voice download: {}"
+msgstr "Stimmen-Download: {}"
+
+msgid "Reset incomplete:"
+msgstr "Zurücksetzen unvollständig:"
+
+msgid "Ollama is not installed (command 'ollama' not found)"
+msgstr "Ollama ist nicht installiert (Befehl 'ollama' nicht gefunden)"
+
+msgid "Could not start Ollama: {}"
+msgstr "Ollama konnte nicht gestartet werden: {}"
+
+msgid "Ollama did not answer after 15 seconds"
+msgstr "Ollama hat nach 15 Sekunden nicht geantwortet"
+
+msgid "Ollama was started outside this app (e.g. in a terminal). Please stop it there."
+msgstr "Ollama wurde außerhalb dieser App gestartet (z. B. im Terminal). Bitte stopp es dort."
+
+msgid "A server with this name already exists."
+msgstr "Ein Server mit diesem Namen existiert bereits."
+
+msgid "testing…"
+msgstr "teste…"
+
+msgid "reachable, but no models loaded"
+msgstr "erreichbar, aber keine Modelle geladen"
+
+msgid "✓ {} models"
+msgstr "✓ {} Modelle"
+
+msgid "Download failed: {}"
+msgstr "Download fehlgeschlagen: {}"
+
+msgid "Download incomplete"
+msgstr "Download unvollständig"
+
+msgid "Recording too short"
+msgstr "Aufnahme zu kurz"
+
+msgid "Speech engine busy"
+msgstr "Sprach-Engine beschäftigt"
+
+msgid "Could not load speech model: {}"
+msgstr "Sprachmodell konnte nicht geladen werden: {}"
+
+msgid "Speech model missing"
+msgstr "Sprachmodell fehlt"
+
+msgid "Could not save start arguments: {}"
+msgstr "Startargumente konnten nicht gespeichert werden: {}"
+
+msgid "Database not open"
+msgstr "Datenbank nicht geöffnet"
+
+msgid "Searching: {}"
+msgstr "Suche: {}"
+
+msgid "Opening {}"
+msgstr "Öffne {}"
+
+msgid "Running: {}"
+msgstr "Führe aus: {}"
+
+msgid "Reading {}"
+msgstr "Lese {}"
+
+msgid "Looking into {}"
+msgstr "Schaue in {}"
+
+msgid "Writing {}"
+msgstr "Schreibe {}"
+
+msgid "Editing {}"
+msgstr "Bearbeite {}"
+
+msgid "Creating document {}"
+msgstr "Erstelle Dokument {}"
+
+msgid "Searching files for {}"
+msgstr "Durchsuche Dateien nach {}"
+
+msgid "Calculating {}"
+msgstr "Berechne {}"
+
+msgid "Checking the time"
+msgstr "Prüfe die Uhrzeit"
+
+msgid "Checking the hardware"
+msgstr "Prüfe die Hardware"
+
+msgid "Remembering: {}"
+msgstr "Merke mir: {}"
+
+msgid "Asking you: {}"
+msgstr "Frage dich: {}"
+
+msgid "Pausing: {}"
+msgstr "Pausiere: {}"
+
+msgid "Looking up your projects"
+msgstr "Schaue deine Projekte nach"
+
+msgid "Asking for access to {}"
+msgstr "Bitte um Zugriff auf {}"
+
+msgid "Looking into the group memory"
+msgstr "Schaue ins Gruppengedächtnis"
+
+msgid "Searching the memory: {}"
+msgstr "Durchsuche das Gedächtnis: {}"
+
+msgid "Reading memory: {}"
+msgstr "Lese Gedächtnis: {}"
+
+msgid "Writing memory: {}"
+msgstr "Schreibe Gedächtnis: {}"
+
+msgid "The model wants to change a part of a file:"
+msgstr "Das Modell möchte einen Teil einer Datei ändern:"
+
+msgid "The model wants to overwrite a file:"
+msgstr "Das Modell möchte eine Datei überschreiben:"
+
+msgid "The model wants to create a file:"
+msgstr "Das Modell möchte eine Datei erstellen:"
+
+msgid "{} lines  ·  \"Allow in this chat\" = all file writes in this chat"
+msgstr "{} Zeilen  ·  \"In diesem Chat erlauben\" = alle Dateischreibvorgänge in diesem Chat"
+
+msgid "Safe commands saved."
+msgstr "Sichere Befehle gespeichert."
+
+msgid "Import tools"
+msgstr "Werkzeuge importieren"
+
+msgid "Tools (JSON)"
+msgstr "Werkzeuge (JSON)"
+
+msgid "Nothing new – all tools in this file already exist."
+msgstr "Nichts Neues – alle Werkzeuge in dieser Datei gibt es schon."
+
+msgid "Imported {} tool(s). They are switched off – check the command before you switch them on."
+msgstr "{} Werkzeug(e) importiert. Sie sind ausgeschaltet – prüf den Befehl, bevor du sie einschaltest."
+
+msgid "Export tools"
+msgstr "Werkzeuge exportieren"
+
+msgid "Exported {} tool(s) to {}"
+msgstr "{} Werkzeug(e) exportiert nach {}"
+
+msgid "Unknown voice"
+msgstr "Unbekannte Stimme"
+
+msgid "The matching .onnx.json file must be next to the .onnx file"
+msgstr "Die passende .onnx.json-Datei muss neben der .onnx-Datei liegen"
+
+msgid "Invalid file name"
+msgstr "Ungültiger Dateiname"
+
+msgid "Voice {} is not installed"
+msgstr "Stimme {} ist nicht installiert"
+
+msgid "Could not start piper-tts: {}"
+msgstr "piper-tts konnte nicht gestartet werden: {}"
+
+msgid "No audio output found"
+msgstr "Keine Audioausgabe gefunden"
+
+msgid "Audio output: {}"
+msgstr "Audioausgabe: {}"
+
+msgid "Unsupported audio format: {}"
+msgstr "Nicht unterstütztes Audioformat: {}"
+
+msgid "Folder: {}\n\n"
+msgstr "Ordner: {}\n\n"
+
+msgid "This chat already has a test environment. Accept to give the model access to it again.\n\n"
+msgstr "Dieser Chat hat schon eine Testumgebung. Nimm an, um dem Modell wieder Zugriff darauf zu geben.\n\n"
+
+msgid "A copy of {} is made there (without .git, target, node_modules).\n\n"
+msgstr "Dort wird eine Kopie von {} angelegt (ohne .git, target, node_modules).\n\n"
+
+msgid "No project folder is shared yet, so the folder starts empty. Share your project first if the model should get a copy.\n\n"
+msgstr "Noch kein Projektordner geteilt, daher startet der Ordner leer. Teile zuerst dein Projekt, wenn das Modell eine Kopie bekommen soll.\n\n"
+
+msgid "The model may create, change, build and run everything in this folder. Your project stays untouched – you take changes over with “Apply to project”. The folder is deleted together with the chat or its group. Change the base folder in Settings."
+msgstr "Das Modell darf in diesem Ordner alles erstellen, ändern, bauen und ausführen. Dein Projekt bleibt unberührt – Änderungen übernimmst du mit „Ins Projekt übernehmen“. Der Ordner wird zusammen mit dem Chat oder seiner Gruppe gelöscht. Den Basisordner änderst du in den Einstellungen."
+
+msgid "Test environment ready: {} files copied to {}"
+msgstr "Testumgebung bereit: {} Dateien nach {} kopiert"
+
+msgid "Test environment ready: {}"
+msgstr "Testumgebung bereit: {}"
+
+msgid "Could not create the test environment: {}"
+msgstr "Testumgebung konnte nicht erstellt werden: {}"
+
+msgid "{} files copied into {}"
+msgstr "{} Dateien nach {} kopiert"
+
+msgid "Could not apply the changes: {}"
+msgstr "Änderungen konnten nicht übernommen werden: {}"
+
+msgid "more than {} files, copy stopped"
+msgstr "mehr als {} Dateien, Kopieren abgebrochen"
+
+msgid "(binary file)"
+msgstr "(Binärdatei)"
+
+msgid "＋ NEW"
+msgstr "＋ NEU"
+
+msgid "✎ CHANGED"
+msgstr "✎ GEÄNDERT"
+
+msgid "4K"
+msgstr "4K"
+
+msgid "8K"
+msgstr "8K"
+
+msgid "16K"
+msgstr "16K"
+
+msgid "32K"
+msgstr "32K"
+
+msgid "64K (default)"
+msgstr "64K (Standard)"
+
+msgid "128K"
+msgstr "128K"
+
+msgid "0"
+msgstr "0"
+
+msgid "Unload right after answering"
+msgstr "Direkt nach der Antwort entladen"
+
+msgid "5m"
+msgstr "5m"
+
+msgid "5 minutes (default)"
+msgstr "5 Minuten (Standard)"
+
+msgid "30m"
+msgstr "30m"
+
+msgid "30 minutes"
+msgstr "30 Minuten"
+
+msgid "1h"
+msgstr "1h"
+
+msgid "1 hour"
+msgstr "1 Stunde"
+
+msgid "-1"
+msgstr "-1"
+
+msgid "Keep loaded"
+msgstr "Geladen lassen"
+
+msgid "Automatic (like you write)"
+msgstr "Automatisch (wie du schreibst)"
+
+msgid "de"
+msgstr "de"
+
+msgid "Deutsch"
+msgstr "Deutsch"
+
+msgid "German"
+msgstr "Deutsch"
+
+msgid "en"
+msgstr "en"
+
+msgid "English"
+msgstr "Englisch"
+
+msgid "fr"
+msgstr "fr"
+
+msgid "Français"
+msgstr "Français"
+
+msgid "French"
+msgstr "Französisch"
+
+msgid "es"
+msgstr "es"
+
+msgid "Español"
+msgstr "Español"
+
+msgid "Spanish"
+msgstr "Spanisch"
+
+msgid "it"
+msgstr "it"
+
+msgid "Italiano"
+msgstr "Italiano"
+
+msgid "Italian"
+msgstr "Italienisch"
+
+msgid "nl"
+msgstr "nl"
+
+msgid "Nederlands"
+msgstr "Nederlands"
+
+msgid "Dutch"
+msgstr "Niederländisch"
+
+msgid "pl"
+msgstr "pl"
+
+msgid "Polski"
+msgstr "Polski"
+
+msgid "Polish"
+msgstr "Polnisch"
+
+msgid "pt"
+msgstr "pt"
+
+msgid "Português"
+msgstr "Português"
+
+msgid "Portuguese"
+msgstr "Portugiesisch"
+
+msgid "tr"
+msgstr "tr"
+
+msgid "Türkçe"
+msgstr "Türkçe"
+
+msgid "Turkish"
+msgstr "Türkisch"
+
+msgid "ru"
+msgstr "ru"
+
+msgid "Русский"
+msgstr "Русский"
+
+msgid "Russian"
+msgstr "Russisch"
+
+msgid "ja"
+msgstr "ja"
+
+msgid "日本語"
+msgstr "日本語"
+
+msgid "Japanese"
+msgstr "Japanisch"
+
+msgid "Every day"
+msgstr "Jeden Tag"
+
+msgid "Weekdays (Mon–Fri)"
+msgstr "Werktags (Mo–Fr)"
+
+msgid "Once a week"
+msgstr "Einmal pro Woche"
+
+msgid "Every few hours"
+msgstr "Alle paar Stunden"
+
+msgid "Monday"
+msgstr "Montag"
+
+msgid "Tuesday"
+msgstr "Dienstag"
+
+msgid "Wednesday"
+msgstr "Mittwoch"
+
+msgid "Thursday"
+msgstr "Donnerstag"
+
+msgid "Friday"
+msgstr "Freitag"
+
+msgid "Saturday"
+msgstr "Samstag"
+
+msgid "Sunday"
+msgstr "Sonntag"
+
+msgid "Fast"
+msgstr "Schnell"
+
+msgid "Medium"
+msgstr "Mittel"
+
+msgid "Slow"
+msgstr "Langsam"
+
+msgid "Very slow"
+msgstr "Sehr langsam"
+
+msgid "Too large"
+msgstr "Zu groß"
+
+msgid "simple chat"
+msgstr "einfacher Chat"
+
+msgid "coding"
+msgstr "Coding"
+
+msgid "complex task"
+msgstr "komplexe Aufgabe"
+
+msgid "Curated list"
+msgstr "Kuratierte Liste"
+
+msgid "ollama.com"
+msgstr "ollama.com"
+
+msgid "Hugging Face"
+msgstr "Hugging Face"
+
+msgid "Chat and Models"
+msgstr "Chat und Modelle"
+
+msgid "Here you switch between your chats and the model manager, where you install and test AI models."
+msgstr "Hier wechselst du zwischen deinen Chats und der Modellverwaltung, wo du KI-Modelle installierst und testest."
+
+msgid "Starts an empty chat. Every chat keeps its own history, model and settings."
+msgstr "Startet einen leeren Chat. Jeder Chat hat seinen eigenen Verlauf, sein Modell und seine Einstellungen."
+
+msgid "Search chats"
+msgstr "Chats durchsuchen"
+
+msgid "Finds chats by their title and by words inside the messages."
+msgstr "Findet Chats über ihren Titel und Wörter in den Nachrichten."
+
+msgid "The model does a task on its own at set times, e.g. a short briefing every morning. Each run becomes a new chat marked with ⏰. The number shows how many are switched on."
+msgstr "Das Modell erledigt zu festen Zeiten selbst eine Aufgabe, z. B. jeden Morgen ein kurzes Briefing. Jeder Lauf wird ein neuer Chat mit ⏰. Die Zahl zeigt, wie viele eingeschaltet sind."
+
+msgid "A group bundles chats that belong together: a project folder, its own memory, extra start arguments and searchable documents. ▦ shows all groups, + makes a new one, ↓ imports one. Right-click a chat to pin it or move it into a group."
+msgstr "Eine Gruppe bündelt zusammengehörige Chats: einen Projektordner, ein eigenes Gedächtnis, zusätzliche Startargumente und durchsuchbare Dokumente. ▦ zeigt alle Gruppen, + erstellt eine neue, ↓ importiert eine. Rechtsklick auf einen Chat, um ihn anzuheften oder in eine Gruppe zu verschieben."
+
+msgid "Group of this chat"
+msgstr "Gruppe dieses Chats"
+
+msgid "Choose the group before you write the first message, or make a new one. The chat then gets the group's folder, memory and documents."
+msgstr "Wähle die Gruppe, bevor du die erste Nachricht schreibst, oder erstelle eine neue. Der Chat bekommt dann Ordner, Gedächtnis und Dokumente der Gruppe."
+
+msgid "Coding: the model works on a project folder, reads ARCHITEKTUR.md first and keeps it up to date. Other: a normal chat."
+msgstr "Coding: Das Modell arbeitet an einem Projektordner, liest zuerst ARCHITEKTUR.md und hält sie aktuell. Sonstiges: ein normaler Chat."
+
+msgid "The model works on a copy of your project in its own folder. It may build, test and change everything there – your project stays untouched until you press “Apply to project”."
+msgstr "Das Modell arbeitet an einer Kopie deines Projekts in einem eigenen Ordner. Dort darf es alles bauen, testen und ändern – dein Projekt bleibt unberührt, bis du „Ins Projekt übernehmen“ drückst."
+
+msgid "Add things"
+msgstr "Hinzufügen"
+
+msgid "Adds files, images, audio and video, shares a folder with the model or creates a test environment."
+msgstr "Fügt Dateien, Bilder, Audio und Video hinzu, teilt einen Ordner mit dem Modell oder erstellt eine Testumgebung."
+
+msgid "Speak"
+msgstr "Sprechen"
+
+msgid "Speak instead of typing. The words appear live in the text field; press again to stop."
+msgstr "Sprich statt zu tippen. Die Wörter erscheinen live im Textfeld; drück erneut zum Beenden."
+
+msgid "Microphone settings"
+msgstr "Mikrofon-Einstellungen"
+
+msgid "Choose the microphone, the speech model, the volume and whether live text is shown while you speak."
+msgstr "Wähle Mikrofon, Sprachmodell, Lautstärke und ob beim Sprechen Live-Text angezeigt wird."
+
+msgid "Lets the model think before it answers. Auto decides by the question, On always thinks, Off answers right away."
+msgstr "Lässt das Modell nachdenken, bevor es antwortet. Auto entscheidet je nach Frage, An denkt immer, Aus antwortet sofort."
+
+msgid "The AI model for this chat. ⇄ marks models from other servers, ☁ online models. Refresh reloads the list."
+msgstr "Das KI-Modell für diesen Chat. ⇄ markiert Modelle von anderen Servern, ☁ Online-Modelle. Aktualisieren lädt die Liste neu."
+
+msgid "Sends the message – Enter does the same. Shift+Enter makes a new line. While the model writes, this button stops it."
+msgstr "Sendet die Nachricht – Enter macht dasselbe. Shift+Enter macht eine neue Zeile. Während das Modell schreibt, stoppt dieser Knopf es."
+
+msgid "Activity and preview"
+msgstr "Aktivität und Vorschau"
+
+msgid "Opens the side panel: what the model is doing right now (reading files, searching, running commands) and a preview of files."
+msgstr "Öffnet die Seitenleiste: was das Modell gerade tut (Dateien lesen, suchen, Befehle ausführen) und eine Vorschau von Dateien."
+
+msgid "Installed models"
+msgstr "Installierte Modelle"
+
+msgid "Your models: test how fast they run, see their size and remove them."
+msgstr "Deine Modelle: teste, wie schnell sie laufen, sieh ihre Größe und entferne sie."
+
+msgid "Available models"
+msgstr "Verfügbare Modelle"
+
+msgid "Download new models. The list shows which ones fit your graphics card."
+msgstr "Lade neue Modelle herunter. Die Liste zeigt, welche zu deiner Grafikkarte passen."
+
+msgid "Online models"
+msgstr "Online-Modelle"
+
+msgid "Use Claude Code, Codex, Gemini or Grok through their command-line tools: install, log in, activate."
+msgstr "Nutze Claude Code, Codex, Gemini oder Grok über ihre Kommandozeilen-Tools: installieren, anmelden, aktivieren."
+
+msgid "Connect LM Studio, llama.cpp, vLLM or another OpenAI-compatible server. Its models then appear in the model list with ⇄."
+msgstr "Verbinde LM Studio, llama.cpp, vLLM oder einen anderen OpenAI-kompatiblen Server. Seine Modelle erscheinen dann mit ⇄ in der Modellliste."
+
+msgid "Ollama"
+msgstr "Ollama"
+
+msgid "Ollama runs the local models. Start or stop it here – or install it if it is missing."
+msgstr "Ollama führt die lokalen Modelle aus. Starte oder stoppe es hier – oder installiere es, falls es fehlt."
+
+msgid "Profile and settings"
+msgstr "Profil und Einstellungen"
+
+msgid "Your profile and the menu: settings (language, this tour, reset), Ollama settings, tools and start arguments. Have fun!"
+msgstr "Dein Profil und das Menü: Einstellungen (Sprache, diese Tour, Zurücksetzen), Ollama-Einstellungen, Werkzeuge und Startargumente. Viel Spaß!"
+
+msgid "Ollama's model runner crashed – this is a problem inside Ollama, not in this app.\n\n- Restart Ollama (button bottom left: Stop, then Start) and try again.\n- AMD graphics card: the ROCm version of Ollama often crashes on RX 9000 cards. Try the Vulkan version instead (CachyOS/Arch: install `ollama-vulkan` instead of `ollama-rocm`) or update Ollama.\n- Try a smaller context in the Ollama settings or another model.\n- Details: `journalctl -u ollama -n 50` in a terminal."
+msgstr "Der Modell-Runner von Ollama ist abgestürzt – das ist ein Problem in Ollama, nicht in dieser App.\n\n- Starte Ollama neu (Knopf unten links: Stopp, dann Start) und versuch es erneut.\n- AMD-Grafikkarte: Die ROCm-Version von Ollama stürzt auf RX-9000-Karten oft ab. Probier stattdessen die Vulkan-Version (CachyOS/Arch: `ollama-vulkan` statt `ollama-rocm` installieren) oder aktualisiere Ollama.\n- Probier einen kleineren Kontext in den Ollama-Einstellungen oder ein anderes Modell.\n- Details: `journalctl -u ollama -n 50` in einem Terminal."

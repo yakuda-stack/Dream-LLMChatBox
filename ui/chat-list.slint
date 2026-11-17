@@ -1,0 +1,17 @@
+import { ChatEntry } from "types.slint";
+
+export global ChatList {
+    in property <[string]> group-ids;
+    in property <[string]> group-names;
+    in property <int> selection-count;
+    in-out property <string> query;
+    in property <[ChatEntry]> results;
+    callback search(string);
+    callback export(string);
+    callback select(string);
+    callback clear-selection();
+    callback toggle-pin(string);
+    callback move(string, int);
+    callback assign(string, string);
+    callback merge(string);
+}

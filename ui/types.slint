@@ -1,0 +1,169 @@
+export struct MessageSegment {
+    is-code: bool,
+    is-heading: bool,
+    is-tool: bool,
+    is-think: bool,
+    is-bullet: bool,
+    level: int,
+    language: string,
+    text: string,
+}
+
+export struct ChatMessage {
+    is-user: bool,
+    text: string,
+    attachment-names: string,
+    attachments-json: string,
+    segments: [MessageSegment],
+    status: string,
+    info: string,
+    undo-count: int,
+}
+
+export struct VoiceEntry {
+    id: string,
+    label: string,
+    installed: bool,
+    active: bool,
+}
+
+export struct McpEntry {
+    name: string,
+    command: string,
+    status: string,
+    detail: string,
+    enabled: bool,
+    failed: bool,
+    busy: bool,
+}
+
+export struct ToolEntry {
+    name: string,
+    description: string,
+    detail: string,
+    enabled: bool,
+    custom: bool,
+    edited: bool,
+}
+
+export struct GroupArg {
+    key: string,
+    title: string,
+    text: string,
+    on: bool,
+}
+
+export struct StartArgEntry {
+    title: string,
+    has-choices: bool,
+    choices: [string],
+    choice-index: int,
+    text: string,
+    enabled: bool,
+    by-model: bool,
+    standard: bool,
+    changed: bool,
+}
+
+export struct ActivityEntry {
+    id: int,
+    icon: string,
+    text: string,
+    detail: string,
+    state: int,
+    time: string,
+}
+
+export struct BrowserLink {
+    title: string,
+    url: string,
+}
+
+export struct SharedFolder {
+    name: string,
+    path: string,
+    writable: bool,
+}
+
+export struct ChatEntry {
+    id: string,
+    title: string,
+    pinned: bool,
+    selected: bool,
+}
+
+export struct GroupEntry {
+    id: string,
+    name: string,
+    collapsed: bool,
+    chats: [ChatEntry],
+    folder: string,
+    memory: bool,
+    rules: bool,
+    global-args: bool,
+    selected: bool,
+}
+
+export struct InstalledEntry {
+    name: string,
+    details: string,
+    subtitle: string,
+    size-text: string,
+    fit-text: string,
+    vram-fill: int,
+    ram-fill: int,
+    vram-label: string,
+    ram-label: string,
+    speed: string,
+    speed-level: int,
+    test-text: string,
+    description: string,
+    strengths: [string],
+    weaknesses: [string],
+}
+
+export struct ModelVariant {
+    tag: string,
+    label: string,
+    size-text: string,
+    vram-fill: int,
+    ram-fill: int,
+    vram-label: string,
+    ram-label: string,
+    fit-text: string,
+    speed: string,
+    speed-level: int,
+    installed: bool,
+}
+
+export struct CatalogEntry {
+    name: string,
+    description: string,
+    capabilities: string,
+    categories: string,
+    source: string,
+    note: string,
+    strengths: [string],
+    weaknesses: [string],
+    variants: [ModelVariant],
+}
+
+export struct AvailableRow {
+    is-header: bool,
+    key: string,
+    title: string,
+    subtitle: string,
+    expanded: bool,
+    active: bool,
+    indented: bool,
+}
+
+export struct ProfileEntry {
+    id: string,
+    name: string,
+    initial: string,
+    picture: image,
+    has-picture: bool,
+    locked: bool,
+    active: bool,
+}

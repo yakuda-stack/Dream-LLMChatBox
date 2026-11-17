@@ -1,0 +1,135 @@
+import { Button, ComboBox, Palette, ScrollView } from "std-widgets.slint";
+
+export global PreviewState {
+    in property <[string]> files;
+    in-out property <int> current-index: -1;
+    in property <string> kind;
+    in property <image> picture;
+    in property <string> text;
+    in property <string> note;
+    in property <int> page: 1;
+    in property <int> pages: 1;
+    callback select(int);
+    callback refresh();
+    callback open-external();
+    callback pick-file();
+    callback page-step(int);
+}
+
+export component PreviewPane inherits VerticalLayout {
+    spacing: 8px;
+
+    HorizontalLayout {
+        spacing: 6px;
+
+        if PreviewState.files.length > 0: ComboBox {
+            horizontal-stretch: 1;
+            model: PreviewState.files;
+            current-index: PreviewState.current-index;
+            selected => { PreviewState.select(self.current-index); }
+        }
+
+        if PreviewState.files.length == 0: Rectangle {
+            horizontal-stretch: 1;
+        }
+
+        Button {
+            text: @tr("Open…");
+            clicked => { PreviewState.pick-file(); }
+        }
+
+        Button {
+            text: "↻";
+            enabled: PreviewState.current-index >= 0;
+            clicked => { PreviewState.refresh(); }
+        }
+
+        Button {
+            text: "↗";
+            enabled: PreviewState.current-index >= 0;
+            clicked => { PreviewState.open-external(); }
+        }
+    }
+
+    if PreviewState.note != "": Rectangle {
+        height: note-text.preferred-height;
+
+        note-text := Text {
+            x: 0;
+            y: 0;
+            width: parent.width;
+            text: PreviewState.note;
+            font-size: 11px;
+            opacity: 0.65;
+            wrap: word-wrap;
+        }
+    }
+
+    if PreviewState.kind == "image" || PreviewState.kind == "pdf": Rectangle {
+        vertical-stretch: 1;
+        background: Palette.alternate-background;
+        border-radius: 6px;
+
+        Image {
+            width: parent.width - 8px;
+            height: parent.height - 8px;
+            source: PreviewState.picture;
+            image-fit: contain;
+        }
+    }
+
+    if PreviewState.kind == "pdf": HorizontalLayout {
+        spacing: 6px;
+        alignment: center;
+
+        Button {
+            text: "‹";
+            enabled: PreviewState.page > 1;
+            clicked => { PreviewState.page-step(-1); }
+        }
+
+        Text {
+            text: PreviewState.page + " / " + PreviewState.pages;
+            vertical-alignment: center;
+        }
+
+        Button {
+            text: "›";
+            enabled: PreviewState.page < PreviewState.pages;
+            clicked => { PreviewState.page-step(1); }
+        }
+    }
+
+    if PreviewState.kind == "text": view := ScrollView {
+        vertical-stretch: 1;
+
+        Rectangle {
+            width: view.visible-width;
+            height: max(view.visible-height, body.preferred-height + 12px);
+
+            body := TextInput {
+                x: 6px;
+                y: 6px;
+                width: parent.width - 12px;
+                text: PreviewState.text;
+                read-only: true;
+                single-line: false;
+                wrap: word-wrap;
+                font-size: 12px;
+                color: Palette.foreground;
+            }
+        }
+    }
+
+    if PreviewState.kind == "" || PreviewState.kind == "none": Rectangle {
+        vertical-stretch: 1;
+
+        Text {
+            width: parent.width - 20px;
+            text: PreviewState.files.length == 0 ? @tr("Files the model writes or changes in this chat show up here. Open any file with “Open…”.") : @tr("No preview for this file type – open it with ↗.");
+            wrap: word-wrap;
+            horizontal-alignment: center;
+            opacity: 0.6;
+        }
+    }
+}

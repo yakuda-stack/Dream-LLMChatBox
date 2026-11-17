@@ -1,0 +1,721 @@
+import { Button, CheckBox, LineEdit, Palette, ScrollView, Switch, TextEdit } from "std-widgets.slint";
+import { ToolEntry, McpEntry } from "types.slint";
+
+export global McpPage {
+    in property <[McpEntry]> servers;
+    in property <string> message;
+    in-out property <bool> form-open;
+    in property <string> form-error;
+    in-out property <string> form-old-name;
+    in-out property <string> form-name;
+    in-out property <string> form-command;
+    in-out property <string> form-args;
+    in-out property <string> form-env;
+    in-out property <string> confirm-delete;
+    callback toggle(string, bool);
+    callback test(string);
+    callback edit(string);
+    callback delete(string);
+    callback save(string, string, string, string, string);
+    callback import-claude();
+    callback open-config();
+}
+
+component Section inherits Text {
+    font-size: 13px;
+    font-weight: 700;
+    opacity: 0.8;
+}
+
+component ToolRow inherits Rectangle {
+    in property <ToolEntry> tool;
+    in property <bool> active: true;
+    in property <bool> confirm;
+    callback toggled(bool);
+    callback edit();
+    callback delete();
+    callback ask-delete();
+    callback reset();
+
+    border-radius: 8px;
+    background: Palette.control-background;
+    border-width: 1px;
+    border-color: Palette.border;
+    opacity: root.active ? 1.0 : 0.55;
+
+    HorizontalLayout {
+        padding: 10px;
+        spacing: 12px;
+
+        VerticalLayout {
+            spacing: 2px;
+            horizontal-stretch: 1;
+            alignment: center;
+
+            Text {
+                text: root.tool.name;
+                font-weight: 600;
+                font-family: "monospace";
+            }
+
+            Text {
+                text: root.tool.description;
+                font-size: 12px;
+                opacity: 0.75;
+                wrap: word-wrap;
+            }
+
+            if root.tool.edited: Text {
+                text: @tr("Changed – saved in the tools folder as ") + root.tool.name + ".json";
+                font-size: 11px;
+                opacity: 0.55;
+            }
+
+            if root.tool.detail != "": Text {
+                text: root.tool.detail;
+                font-size: 11px;
+                font-family: "monospace";
+                opacity: 0.6;
+                wrap: word-wrap;
+            }
+        }
+
+        VerticalLayout {
+            alignment: center;
+
+            HorizontalLayout {
+                spacing: 6px;
+
+                if root.tool.edited: Button {
+                    text: @tr("Reset");
+                    clicked => { root.reset(); }
+                }
+
+                Button {
+                    text: @tr("Edit");
+                    clicked => { root.edit(); }
+                }
+
+                if root.tool.custom && !root.confirm: Button {
+                    text: @tr("Delete");
+                    clicked => { root.ask-delete(); }
+                }
+
+                if root.tool.custom && root.confirm: Button {
+                    text: @tr("Really delete");
+                    primary: true;
+                    clicked => { root.delete(); }
+                }
+            }
+        }
+
+        VerticalLayout {
+            alignment: center;
+
+            Switch {
+                checked: root.tool.enabled;
+                toggled => { root.toggled(self.checked); }
+            }
+        }
+    }
+}
+
+component McpRow inherits Rectangle {
+    in property <McpEntry> server;
+    in property <bool> active: true;
+
+    border-radius: 8px;
+    background: Palette.control-background;
+    border-width: 1px;
+    border-color: Palette.border;
+    opacity: root.active ? 1.0 : 0.55;
+
+    HorizontalLayout {
+        padding: 10px;
+        spacing: 12px;
+
+        VerticalLayout {
+            spacing: 2px;
+            horizontal-stretch: 1;
+            alignment: center;
+
+            Text {
+                text: root.server.name;
+                font-weight: 600;
+                font-family: "monospace";
+                overflow: elide;
+            }
+
+            Text {
+                text: "$ " + root.server.command;
+                font-size: 11px;
+                font-family: "monospace";
+                opacity: 0.6;
+                overflow: elide;
+            }
+
+            Text {
+                text: root.server.status;
+                font-size: 12px;
+                color: root.server.failed ? #cf222e : Palette.foreground;
+                opacity: root.server.failed ? 1.0 : 0.75;
+                overflow: elide;
+            }
+
+            if root.server.detail != "": Rectangle {
+                height: detail-text.preferred-height;
+                preferred-width: detail-text.preferred-width;
+
+                detail-text := Text {
+                    x: 0;
+                    y: 0;
+                    width: parent.width;
+                    text: root.server.detail;
+                    font-size: 11px;
+                    font-family: "monospace";
+                    opacity: 0.6;
+                    wrap: word-wrap;
+                }
+            }
+        }
+
+        VerticalLayout {
+            alignment: center;
+
+            HorizontalLayout {
+                spacing: 6px;
+
+                Button {
+                    text: root.server.busy ? @tr("Starting…") : @tr("Test");
+                    enabled: !root.server.busy;
+                    clicked => { McpPage.test(root.server.name); }
+                }
+
+                Button {
+                    text: @tr("Edit");
+                    clicked => { McpPage.edit(root.server.name); }
+                }
+
+                if McpPage.confirm-delete != root.server.name: Button {
+                    text: @tr("Delete");
+                    clicked => { McpPage.confirm-delete = root.server.name; }
+                }
+
+                if McpPage.confirm-delete == root.server.name: Button {
+                    text: @tr("Really delete");
+                    primary: true;
+                    clicked => {
+                        McpPage.confirm-delete = "";
+                        McpPage.delete(root.server.name);
+                    }
+                }
+            }
+        }
+
+        VerticalLayout {
+            alignment: center;
+
+            Switch {
+                checked: root.server.enabled;
+                toggled => { McpPage.toggle(root.server.name, self.checked); }
+            }
+        }
+    }
+}
+
+component Field inherits VerticalLayout {
+    in property <string> label;
+    in property <string> hint;
+
+    spacing: 4px;
+
+    Text {
+        text: root.label;
+        font-weight: 600;
+        font-size: 12px;
+    }
+
+    @children
+
+    if root.hint != "": Text {
+        text: root.hint;
+        font-size: 11px;
+        opacity: 0.6;
+        wrap: word-wrap;
+    }
+}
+
+export component ToolsPage inherits Rectangle {
+    in property <[ToolEntry]> builtin-tools;
+    in property <[ToolEntry]> custom-tools;
+    in-out property <bool> tools-enabled;
+    in-out property <bool> form-open;
+    in property <string> form-error;
+    in-out property <string> form-old-name;
+    in-out property <bool> form-builtin;
+    in-out property <string> form-name;
+    in-out property <string> form-description;
+    in-out property <string> form-params;
+    in-out property <string> form-command;
+    in-out property <string> confirm-delete;
+    callback tools-global(bool);
+    callback tool-toggle(string, bool);
+    callback tool-save(string, string, string, string, string);
+    callback tool-delete(string);
+    callback tool-edit(string);
+    callback tool-reset(string);
+    callback tools-import();
+    callback tools-export();
+    callback tools-open-folder();
+    in property <string> message;
+    in-out property <string> safe-commands;
+    callback save-safe-commands(string);
+    callback reset-safe-commands();
+
+    ScrollView {
+        VerticalLayout {
+            padding: 24px;
+            spacing: 12px;
+            alignment: start;
+
+            Text {
+                text: @tr("Tools");
+                font-size: 20px;
+                font-weight: 700;
+            }
+
+            Text {
+                text: @tr("Models that support tools can use these while answering. Every call and its result is shown in the chat. Every changed or own tool is a file in ~/.config/dream-llmchatbox/tools/ – you can put your own scripts there too.");
+                font-size: 12px;
+                opacity: 0.7;
+                wrap: word-wrap;
+            }
+
+            CheckBox {
+                text: @tr("Let models use tools");
+                checked <=> root.tools-enabled;
+                toggled => { root.tools-global(self.checked); }
+            }
+
+            Section {
+                text: @tr("Built-in");
+            }
+
+            for tool in root.builtin-tools: ToolRow {
+                tool: tool;
+                active: root.tools-enabled;
+                toggled(on) => { root.tool-toggle(tool.name, on); }
+                edit => { root.tool-edit(tool.name); }
+                reset => { root.tool-reset(tool.name); }
+            }
+
+            if root.form-open && root.form-builtin: Rectangle {
+                border-radius: 10px;
+                border-width: 1px;
+                border-color: Palette.accent-background;
+                background: Palette.background;
+
+                VerticalLayout {
+                    padding: 14px;
+                    spacing: 10px;
+
+                    Text {
+                        text: @tr("Edit built-in tool: ") + root.form-name;
+                        font-weight: 700;
+                    }
+
+                    Field {
+                        label: @tr("Description for the model");
+                        hint: @tr("The model reads this to decide when and how to use the tool.");
+
+                        TextEdit {
+                            height: 90px;
+                            text <=> root.form-description;
+                            font-size: 12px;
+                        }
+                    }
+
+                    Field {
+                        label: @tr("Command (bash)");
+                        hint: root.form-command == "" ? @tr("Empty = the built-in code of the app is used. Write a command here to replace it with your own, e.g. a script from the tools folder: python3 \"$TOOLS_DIR/my_tool.py\" \"$expression\"") : @tr("Your command replaces the built-in code. Parameters are variables like $path, $TOOLS_DIR is the tools folder.");
+
+                        TextEdit {
+                            height: 60px;
+                            text <=> root.form-command;
+                            font-size: 12px;
+                        }
+                    }
+
+                    Field {
+                        label: @tr("Parameters");
+                        hint: root.form-command == "" ? @tr("The built-in code uses these parameters. You can change them when you use your own command.") : @tr("Names separated by commas.");
+
+                        LineEdit {
+                            text <=> root.form-params;
+                            enabled: root.form-command != "";
+                        }
+                    }
+
+                    if root.form-error != "": Text {
+                        text: root.form-error;
+                        color: #cf222e;
+                        font-size: 12px;
+                        wrap: word-wrap;
+                    }
+
+                    HorizontalLayout {
+                        spacing: 8px;
+                        alignment: end;
+
+                        Button {
+                            text: @tr("Cancel");
+                            clicked => { root.form-open = false; }
+                        }
+
+                        Button {
+                            text: @tr("Save");
+                            primary: true;
+                            clicked => {
+                                root.tool-save(root.form-old-name, root.form-name, root.form-description, root.form-params, root.form-command);
+                            }
+                        }
+                    }
+                }
+            }
+
+            Section {
+                text: @tr("Safe commands");
+            }
+
+            Text {
+                text: @tr("run_terminal_command runs these without asking (one per line, also with extra arguments, e.g. \"cargo test --release\"). Every other command needs your OK. sudo, rm -rf /, paths outside the folder and similar are always blocked.");
+                font-size: 12px;
+                opacity: 0.7;
+                wrap: word-wrap;
+            }
+
+            TextEdit {
+                height: 120px;
+                text <=> root.safe-commands;
+                font-size: 12px;
+            }
+
+            HorizontalLayout {
+                spacing: 8px;
+                alignment: end;
+
+                Button {
+                    text: @tr("Reset");
+                    clicked => { root.reset-safe-commands(); }
+                }
+
+                Button {
+                    text: @tr("Save safe commands");
+                    primary: true;
+                    clicked => { root.save-safe-commands(root.safe-commands); }
+                }
+            }
+
+            HorizontalLayout {
+                padding-top: 8px;
+                spacing: 6px;
+
+                Section {
+                    text: @tr("Your own tools");
+                    vertical-alignment: center;
+                    horizontal-stretch: 1;
+                }
+
+                HorizontalLayout {
+                    spacing: 6px;
+
+                    Button {
+                        text: @tr("Open folder");
+                        clicked => { root.tools-open-folder(); }
+                    }
+
+                    Button {
+                        text: @tr("Import…");
+                        clicked => { root.tools-import(); }
+                    }
+
+                    Button {
+                        text: @tr("Export…");
+                        enabled: root.custom-tools.length > 0;
+                        clicked => { root.tools-export(); }
+                    }
+                }
+
+                if !(root.form-open && !root.form-builtin): Button {
+                    text: @tr("+ Add tool");
+                    clicked => {
+                        root.form-builtin = false;
+                        root.form-old-name = "";
+                        root.form-name = "";
+                        root.form-description = "";
+                        root.form-params = "";
+                        root.form-command = "";
+                        root.form-open = true;
+                    }
+                }
+            }
+
+            if root.message != "": Text {
+                text: root.message;
+                font-size: 12px;
+                color: Palette.accent-background;
+                wrap: word-wrap;
+            }
+
+            if root.custom-tools.length == 0 && !(root.form-open && !root.form-builtin): Text {
+                text: @tr("No own tools yet. An own tool runs a bash command, e.g. \"df -h\" for free disk space or \"curl -s wttr.in/$city?format=3\" for the weather.");
+                font-size: 12px;
+                opacity: 0.6;
+                wrap: word-wrap;
+            }
+
+            for tool in root.custom-tools: ToolRow {
+                tool: tool;
+                active: root.tools-enabled;
+                confirm: root.confirm-delete == tool.name;
+                toggled(on) => { root.tool-toggle(tool.name, on); }
+                edit => { root.tool-edit(tool.name); }
+                ask-delete => { root.confirm-delete = tool.name; }
+                delete => {
+                    root.confirm-delete = "";
+                    root.tool-delete(tool.name);
+                }
+            }
+
+            if root.form-open && !root.form-builtin: Rectangle {
+                border-radius: 10px;
+                border-width: 1px;
+                border-color: Palette.accent-background;
+                background: Palette.background;
+
+                VerticalLayout {
+                    padding: 14px;
+                    spacing: 10px;
+
+                    Text {
+                        text: root.form-old-name == "" ? @tr("New tool") : @tr("Edit tool");
+                        font-weight: 700;
+                    }
+
+                    Field {
+                        label: @tr("Name");
+                        hint: @tr("Only a-z, 0-9 and _, e.g. disk_usage");
+
+                        LineEdit {
+                            text <=> root.form-name;
+                            placeholder-text: "disk_usage";
+                        }
+                    }
+
+                    Field {
+                        label: @tr("Description for the model");
+                        hint: @tr("What the tool does and when the model should use it.");
+
+                        LineEdit {
+                            text <=> root.form-description;
+                            placeholder-text: "Shows the free disk space of this computer";
+                        }
+                    }
+
+                    Field {
+                        label: @tr("Parameters (optional)");
+                        hint: @tr("Names separated by commas. The model fills them in; in the command they are variables like $city.");
+
+                        LineEdit {
+                            text <=> root.form-params;
+                            placeholder-text: "city";
+                        }
+                    }
+
+                    Field {
+                        label: @tr("Command (bash)");
+                        hint: @tr("Runs in the first shared folder (or your home folder), max. 30 seconds. Output goes back to the model. Scripts in the tools folder: \"$TOOLS_DIR/script.sh\"");
+
+                        TextEdit {
+                            height: 80px;
+                            text <=> root.form-command;
+                            font-size: 12px;
+                        }
+                    }
+
+                    if root.form-error != "": Text {
+                        text: root.form-error;
+                        color: #cf222e;
+                        font-size: 12px;
+                        wrap: word-wrap;
+                    }
+
+                    HorizontalLayout {
+                        spacing: 8px;
+                        alignment: end;
+
+                        Button {
+                            text: @tr("Cancel");
+                            clicked => { root.form-open = false; }
+                        }
+
+                        Button {
+                            text: @tr("Save");
+                            primary: true;
+                            clicked => {
+                                root.tool-save(root.form-old-name, root.form-name, root.form-description, root.form-params, root.form-command);
+                            }
+                        }
+                    }
+                }
+            }
+
+            HorizontalLayout {
+                padding-top: 8px;
+                spacing: 6px;
+
+                Section {
+                    text: @tr("MCP servers");
+                    vertical-alignment: center;
+                    horizontal-stretch: 1;
+                }
+
+                if !McpPage.form-open: Button {
+                    text: @tr("+ Add MCP server");
+                    clicked => {
+                        McpPage.form-old-name = "";
+                        McpPage.form-name = "";
+                        McpPage.form-command = "";
+                        McpPage.form-args = "";
+                        McpPage.form-env = "";
+                        McpPage.form-open = true;
+                    }
+                }
+            }
+
+            Text {
+                text: @tr("Programs that give the model more tools (Model Context Protocol, stdio). Same format as Claude Desktop, saved in ~/.config/dream-llmchatbox/mcp.json. A server starts when a chat needs it; every call asks you first.");
+                font-size: 12px;
+                opacity: 0.7;
+                wrap: word-wrap;
+            }
+
+            HorizontalLayout {
+                spacing: 6px;
+                alignment: end;
+
+                Button {
+                    text: @tr("Import from Claude Desktop");
+                    clicked => { McpPage.import-claude(); }
+                }
+
+                Button {
+                    text: @tr("Open mcp.json");
+                    clicked => { McpPage.open-config(); }
+                }
+            }
+
+            if McpPage.message != "": Text {
+                text: McpPage.message;
+                font-size: 12px;
+                color: Palette.accent-background;
+                wrap: word-wrap;
+            }
+
+            if McpPage.servers.length == 0 && !McpPage.form-open: Text {
+                text: @tr("No MCP servers yet. Example: name \"filesystem\", command \"npx\", arguments \"-y @modelcontextprotocol/server-filesystem ~/Documents\".");
+                font-size: 12px;
+                opacity: 0.6;
+                wrap: word-wrap;
+            }
+
+            for server in McpPage.servers: McpRow {
+                server: server;
+                active: root.tools-enabled;
+            }
+
+            if McpPage.form-open: Rectangle {
+                border-radius: 10px;
+                border-width: 1px;
+                border-color: Palette.accent-background;
+                background: Palette.background;
+
+                VerticalLayout {
+                    padding: 14px;
+                    spacing: 10px;
+
+                    Text {
+                        text: McpPage.form-old-name == "" ? @tr("New MCP server") : @tr("Edit MCP server");
+                        font-weight: 700;
+                    }
+
+                    Field {
+                        label: @tr("Name");
+                        hint: @tr("Shown in the approval bar; tools are called mcp_<name>_<tool>.");
+
+                        LineEdit {
+                            text <=> McpPage.form-name;
+                            placeholder-text: "filesystem";
+                        }
+                    }
+
+                    Field {
+                        label: @tr("Command");
+                        hint: @tr("The program that starts the server, e.g. npx, uvx, python3 or a full path.");
+
+                        LineEdit {
+                            text <=> McpPage.form-command;
+                            placeholder-text: "npx";
+                        }
+                    }
+
+                    Field {
+                        label: @tr("Arguments");
+                        hint: @tr("Separated by spaces; use \"double\" or 'single' quotes for arguments with spaces.");
+
+                        LineEdit {
+                            text <=> McpPage.form-args;
+                            placeholder-text: "-y @modelcontextprotocol/server-filesystem /home/me/Documents";
+                        }
+                    }
+
+                    Field {
+                        label: @tr("Environment (optional)");
+                        hint: @tr("One KEY=value per line, e.g. API tokens the server needs.");
+
+                        TextEdit {
+                            height: 60px;
+                            text <=> McpPage.form-env;
+                            font-size: 12px;
+                        }
+                    }
+
+                    if McpPage.form-error != "": Text {
+                        text: McpPage.form-error;
+                        color: #cf222e;
+                        font-size: 12px;
+                        wrap: word-wrap;
+                    }
+
+                    HorizontalLayout {
+                        spacing: 8px;
+                        alignment: end;
+
+                        Button {
+                            text: @tr("Cancel");
+                            clicked => { McpPage.form-open = false; }
+                        }
+
+                        Button {
+                            text: @tr("Save");
+                            primary: true;
+                            clicked => {
+                                McpPage.save(McpPage.form-old-name, McpPage.form-name, McpPage.form-command, McpPage.form-args, McpPage.form-env);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

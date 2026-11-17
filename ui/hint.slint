@@ -1,0 +1,284 @@
+import { Button, Palette } from "std-widgets.slint";
+
+export global Tutorial {
+    in-out property <bool> active;
+    in-out property <bool> language-step;
+    in-out property <string> language: "en";
+    in-out property <string> spot;
+    in-out property <string> title;
+    in-out property <string> text;
+    in-out property <int> step;
+    in-out property <int> count;
+    in-out property <bool> card-top;
+    in-out property <int> models-tab;
+    callback next();
+    callback back();
+    callback skip();
+    callback choose-language(string);
+}
+
+component TourDot inherits Rectangle {
+    property <float> wave: (1 + sin(animation-tick() / 1.2s * 360deg)) / 2;
+
+    width: 22px;
+    height: 22px;
+    border-radius: 11px;
+    background: #f2c200;
+    border-width: 2px;
+    border-color: #fff3b0;
+    drop-shadow-blur: 6px + 12px * root.wave;
+    drop-shadow-color: #f2c200;
+
+    Text {
+        text: "i";
+        font-size: 13px;
+        font-weight: 900;
+        color: #1f1f1f;
+        horizontal-alignment: center;
+        vertical-alignment: center;
+    }
+}
+
+export component Spot inherits Rectangle {
+    in property <string> name;
+
+    HorizontalLayout {
+        @children
+    }
+
+    if Tutorial.active && !Tutorial.language-step && Tutorial.spot == root.name: TourDot {
+        x: parent.width - self.width * 0.75;
+        y: -self.height * 0.25;
+    }
+}
+
+export component Hint inherits Rectangle {
+    in property <string> title;
+    in property <string> text;
+
+    width: 18px;
+    height: 18px;
+    border-radius: 9px;
+    background: touch.has-hover ? Palette.control-background : transparent;
+    border-width: 1px;
+    border-color: Palette.border;
+
+    Text {
+        text: "i";
+        font-size: 11px;
+        font-weight: 800;
+        color: Palette.foreground;
+        horizontal-alignment: center;
+        vertical-alignment: center;
+    }
+
+    touch := TouchArea {
+        mouse-cursor: pointer;
+        clicked => { popup.show(); }
+    }
+
+    popup := PopupWindow {
+        x: 0;
+        y: root.height + 4px;
+        width: 320px;
+        close-policy: close-on-click-outside;
+
+        Rectangle {
+            background: Palette.background;
+            border-radius: 10px;
+            border-width: 1px;
+            border-color: Palette.accent-background;
+            drop-shadow-blur: 12px;
+            drop-shadow-color: #00000050;
+
+            VerticalLayout {
+                padding: 12px;
+                spacing: 8px;
+
+                Text {
+                    text: "ⓘ " + root.title;
+                    font-weight: 700;
+                    wrap: word-wrap;
+                }
+
+                Text {
+                    text: root.text;
+                    font-size: 12px;
+                    wrap: word-wrap;
+                }
+
+                HorizontalLayout {
+                    alignment: end;
+
+                    Button {
+                        text: @tr("Got it");
+                        clicked => { popup.close(); }
+                    }
+                }
+            }
+        }
+    }
+}
+
+component LanguageButton inherits Rectangle {
+    in property <string> label;
+    in property <string> code;
+
+    height: 54px;
+    border-radius: 10px;
+    border-width: 2px;
+    border-color: Tutorial.language == root.code ? #f2c200 : Palette.border;
+    background: Tutorial.language == root.code ? #f2c20025 : touch.has-hover ? Palette.control-background : transparent;
+
+    Text {
+        text: root.label;
+        font-size: 17px;
+        font-weight: 700;
+        horizontal-alignment: center;
+        vertical-alignment: center;
+    }
+
+    touch := TouchArea {
+        mouse-cursor: pointer;
+        clicked => { Tutorial.choose-language(root.code); }
+    }
+}
+
+export component TourOverlay inherits Rectangle {
+    if Tutorial.language-step: Rectangle {
+        background: #00000080;
+
+        TouchArea {}
+
+        Rectangle {
+            width: min(480px, root.width - 40px);
+            height: language-content.preferred-height;
+            background: Palette.background;
+            border-radius: 14px;
+            border-width: 1px;
+            border-color: #f2c200;
+            drop-shadow-blur: 20px;
+            drop-shadow-color: #00000060;
+
+            language-content := VerticalLayout {
+                padding: 22px;
+                spacing: 14px;
+
+                Text {
+                    text: "👋 " + @tr("Welcome to Dream-LLMChatBox");
+                    font-size: 19px;
+                    font-weight: 700;
+                    wrap: word-wrap;
+                }
+
+                Text {
+                    text: @tr("Choose your language – the whole app will use it. You can change it later in the settings.");
+                    wrap: word-wrap;
+                }
+
+                HorizontalLayout {
+                    spacing: 12px;
+
+                    LanguageButton {
+                        label: "Deutsch";
+                        code: "de";
+                    }
+
+                    LanguageButton {
+                        label: "English";
+                        code: "en";
+                    }
+                }
+
+                HorizontalLayout {
+                    spacing: 8px;
+                    alignment: end;
+
+                    Button {
+                        text: @tr("Skip the tour");
+                        clicked => { Tutorial.skip(); }
+                    }
+
+                    Button {
+                        text: @tr("Next") + " →";
+                        primary: true;
+                        clicked => { Tutorial.next(); }
+                    }
+                }
+            }
+        }
+    }
+
+    if !Tutorial.language-step: Rectangle {
+        x: root.width - self.width - 24px;
+        y: Tutorial.card-top ? 70px : root.height - self.height - 24px;
+        width: min(380px, root.width - 48px);
+        height: card-content.preferred-height;
+        background: Palette.background;
+        border-radius: 12px;
+        border-width: 2px;
+        border-color: #f2c200;
+        drop-shadow-blur: 18px;
+        drop-shadow-color: #00000070;
+
+        TouchArea {}
+
+        card-content := VerticalLayout {
+            padding: 16px;
+            spacing: 8px;
+
+            HorizontalLayout {
+                spacing: 8px;
+
+                Text {
+                    text: "ⓘ " + Tutorial.title;
+                    font-size: 15px;
+                    font-weight: 700;
+                    wrap: word-wrap;
+                    horizontal-stretch: 1;
+                }
+
+                Text {
+                    text: Tutorial.step + " / " + Tutorial.count;
+                    font-size: 11px;
+                    opacity: 0.6;
+                }
+            }
+
+            Rectangle {
+                height: tour-text.preferred-height;
+
+                tour-text := Text {
+                    x: 0;
+                    y: 0;
+                    width: parent.width;
+                    text: Tutorial.text;
+                    font-size: 13px;
+                    wrap: word-wrap;
+                }
+            }
+
+            HorizontalLayout {
+                spacing: 6px;
+
+                Button {
+                    text: @tr("End tour");
+                    clicked => { Tutorial.skip(); }
+                }
+
+                Rectangle { horizontal-stretch: 1; }
+
+                Button {
+                    text: "← " + @tr("Back");
+                    clicked => { Tutorial.back(); }
+                }
+
+                Button {
+                    text: Tutorial.step >= Tutorial.count ? @tr("Finish") : @tr("Next") + " →";
+                    primary: true;
+                    clicked => { Tutorial.next(); }
+                }
+            }
+        }
+    }
+}

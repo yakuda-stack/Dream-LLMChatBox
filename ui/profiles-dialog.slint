@@ -1,0 +1,112 @@
+import { Button, LineEdit, Palette } from "std-widgets.slint";
+import { ProfileEntry } from "types.slint";
+import { ProfileRow } from "avatar.slint";
+
+export component ProfilesDialog inherits Rectangle {
+    in property <[ProfileEntry]> profiles;
+    in property <string> error;
+    in property <bool> busy;
+    property <bool> creating: false;
+    property <string> new-name;
+    callback switch(string);
+    callback create(string);
+    callback close();
+
+    background: #00000080;
+
+    TouchArea {
+        clicked => { root.close(); }
+    }
+
+    Rectangle {
+        width: min(420px, root.width - 40px);
+        height: min(card.preferred-height, root.height - 40px);
+        border-radius: 14px;
+        background: Palette.background;
+        border-width: 1px;
+        border-color: Palette.border;
+        drop-shadow-blur: 24px;
+        drop-shadow-color: #00000060;
+
+        TouchArea { }
+
+        card := VerticalLayout {
+            padding: 20px;
+            spacing: 12px;
+
+            Text {
+                text: @tr("Profiles");
+                font-size: 18px;
+                font-weight: 700;
+            }
+
+            Text {
+                text: @tr("Every profile has its own chats, groups, memory and start arguments.");
+                font-size: 11px;
+                opacity: 0.6;
+                overflow: elide;
+            }
+
+            VerticalLayout {
+                spacing: 2px;
+
+                for profile in root.profiles: ProfileRow {
+                    entry: profile;
+                    clicked => { root.switch(profile.id); }
+                }
+            }
+
+            if !root.creating: HorizontalLayout {
+                alignment: start;
+
+                Button {
+                    text: @tr("New profile");
+                    enabled: !root.busy;
+                    clicked => {
+                        root.new-name = "";
+                        root.creating = true;
+                    }
+                }
+            }
+
+            if root.creating: HorizontalLayout {
+                spacing: 8px;
+
+                LineEdit {
+                    text <=> root.new-name;
+                    placeholder-text: @tr("Name of the new profile");
+                    horizontal-stretch: 1;
+                    init => { self.focus(); }
+                    accepted => { root.create(root.new-name); }
+                }
+
+                Button {
+                    text: @tr("Cancel");
+                    clicked => { root.creating = false; }
+                }
+
+                Button {
+                    text: @tr("Create");
+                    primary: true;
+                    enabled: !root.busy;
+                    clicked => { root.create(root.new-name); }
+                }
+            }
+
+            if root.error != "": Text {
+                text: root.error;
+                color: #cf222e;
+                overflow: elide;
+            }
+
+            HorizontalLayout {
+                alignment: end;
+
+                Button {
+                    text: @tr("Close");
+                    clicked => { root.close(); }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,231 @@
+import { Button, ComboBox, Palette, ScrollView, Switch, TextEdit } from "std-widgets.slint";
+import { StartArgEntry } from "types.slint";
+import { ArgLabel } from "arg-label.slint";
+
+component ArgRow inherits Rectangle {
+    in property <StartArgEntry> entry;
+    in property <bool> confirm;
+    callback toggled(bool);
+    callback edit();
+    callback ask-delete();
+    callback delete();
+    callback reset();
+    callback choose(int);
+    callback open-styles();
+
+    border-radius: 8px;
+    background: Palette.control-background;
+    border-width: 1px;
+    border-color: Palette.border;
+    opacity: root.entry.enabled ? 1.0 : 0.6;
+
+    HorizontalLayout {
+        padding: 10px;
+        spacing: 12px;
+
+        VerticalLayout {
+            spacing: 2px;
+            horizontal-stretch: 1;
+            alignment: center;
+
+            ArgLabel {
+                title: root.entry.title;
+                text: root.entry.text;
+            }
+
+            if root.entry.has-choices: HorizontalLayout {
+                spacing: 6px;
+                alignment: start;
+
+                Text {
+                    text: @tr("Answer like:");
+                    font-size: 12px;
+                    vertical-alignment: center;
+                }
+
+                ComboBox {
+                    width: 180px;
+                    model: root.entry.choices;
+                    current-index: root.entry.choice-index;
+                    selected => { root.choose(self.current-index); }
+                }
+
+                Button {
+                    text: @tr("Open styles folder");
+                    clicked => { root.open-styles(); }
+                }
+            }
+
+            if root.entry.by-model: Text {
+                text: @tr("Saved by the model");
+                font-size: 11px;
+                opacity: 0.55;
+            }
+
+            if root.entry.standard: Text {
+                text: root.entry.changed ? @tr("Standard · changed") : @tr("Standard");
+                font-size: 11px;
+                opacity: 0.55;
+            }
+        }
+
+        VerticalLayout {
+            alignment: center;
+
+            HorizontalLayout {
+                spacing: 6px;
+
+                Button {
+                    text: @tr("Edit");
+                    clicked => { root.edit(); }
+                }
+
+                if root.entry.standard && root.entry.changed: Button {
+                    text: @tr("Reset");
+                    clicked => { root.reset(); }
+                }
+
+                if !root.entry.standard && !root.confirm: Button {
+                    text: @tr("Delete");
+                    clicked => { root.ask-delete(); }
+                }
+
+                if !root.entry.standard && root.confirm: Button {
+                    text: @tr("Really delete");
+                    primary: true;
+                    clicked => { root.delete(); }
+                }
+            }
+        }
+
+        VerticalLayout {
+            alignment: center;
+
+            Switch {
+                checked: root.entry.enabled;
+                toggled => { root.toggled(self.checked); }
+            }
+        }
+    }
+}
+
+export component StartArgsPage inherits Rectangle {
+    in property <[StartArgEntry]> entries;
+    in-out property <bool> form-open;
+    in-out property <int> form-index: -1;
+    in-out property <string> form-text;
+    in-out property <int> confirm-delete: -1;
+    callback arg-toggle(int, bool);
+    callback arg-save(int, string);
+    callback arg-delete(int);
+    callback arg-reset(int);
+    callback arg-choose(int, int);
+    callback arg-open-styles();
+
+    ScrollView {
+        VerticalLayout {
+            padding: 24px;
+            spacing: 12px;
+            alignment: start;
+
+            HorizontalLayout {
+                Text {
+                    text: @tr("Start arguments");
+                    font-size: 20px;
+                    font-weight: 700;
+                    horizontal-stretch: 1;
+                    vertical-alignment: center;
+                }
+
+                if !root.form-open: Button {
+                    text: @tr("+ Add");
+                    clicked => {
+                        root.form-index = -1;
+                        root.form-text = "";
+                        root.form-open = true;
+                    }
+                }
+            }
+
+            Text {
+                text: @tr("Every switched-on point is given to the model at the start of every chat, with every model. Good for things like your setup, your projects or how you like answers. Models with the tool \"remember\" can add points themselves.");
+                font-size: 12px;
+                opacity: 0.7;
+                wrap: word-wrap;
+            }
+
+            if root.form-open: Rectangle {
+                border-radius: 10px;
+                border-width: 1px;
+                border-color: Palette.accent-background;
+                background: Palette.background;
+
+                VerticalLayout {
+                    padding: 14px;
+                    spacing: 10px;
+
+                    Text {
+                        text: root.form-index < 0 ? @tr("New start argument") : @tr("Edit start argument");
+                        font-weight: 700;
+                    }
+
+                    TextEdit {
+                        height: 100px;
+                        text <=> root.form-text;
+                    }
+
+                    Text {
+                        text: @tr("Example: I use Arch Linux with KDE and code in Rust.");
+                        font-size: 11px;
+                        opacity: 0.6;
+                    }
+
+                    HorizontalLayout {
+                        spacing: 8px;
+                        alignment: end;
+
+                        Button {
+                            text: @tr("Cancel");
+                            clicked => { root.form-open = false; }
+                        }
+
+                        Button {
+                            text: @tr("Save");
+                            primary: true;
+                            enabled: root.form-text != "";
+                            clicked => {
+                                root.arg-save(root.form-index, root.form-text);
+                                root.form-open = false;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if root.entries.length == 0 && !root.form-open: Text {
+                text: @tr("No start arguments yet.");
+                font-size: 12px;
+                opacity: 0.6;
+            }
+
+            for entry[index] in root.entries: ArgRow {
+                entry: entry;
+                confirm: root.confirm-delete == index;
+                toggled(on) => { root.arg-toggle(index, on); }
+                edit => {
+                    root.form-index = index;
+                    root.form-text = entry.text;
+                    root.form-open = true;
+                }
+                ask-delete => { root.confirm-delete = index; }
+                reset => { root.arg-reset(index); }
+                choose(choice) => { root.arg-choose(index, choice); }
+                open-styles => { root.arg-open-styles(); }
+                delete => {
+                    root.confirm-delete = -1;
+                    root.arg-delete(index);
+                }
+            }
+        }
+    }
+}

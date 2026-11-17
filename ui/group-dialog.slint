@@ -1,0 +1,440 @@
+import { GroupArg } from "types.slint";
+import { Button, CheckBox, LineEdit, Palette, ScrollView, TextEdit } from "std-widgets.slint";
+import { Segmented } from "segmented.slint";
+import { ArgLabel } from "arg-label.slint";
+
+component Field inherits VerticalLayout {
+    in property <string> label;
+    in property <string> hint;
+
+    spacing: 4px;
+
+    Text {
+        text: root.label;
+        font-weight: 600;
+    }
+
+    @children
+
+    if root.hint != "": Text {
+        text: root.hint;
+        font-size: 11px;
+        opacity: 0.6;
+        overflow: elide;
+    }
+}
+
+export component GroupDialog inherits Rectangle {
+    in property <bool> is-new;
+    in-out property <string> name;
+    in property <string> folder;
+    in-out property <bool> folder-writable;
+    in-out property <string> rules;
+    in-out property <bool> use-rules;
+    in-out property <bool> use-global;
+    in property <[GroupArg]> extra-args;
+    callback toggle-extra(int);
+    in-out property <bool> picking: false;
+    in-out property <bool> removing: false;
+    in property <[GroupArg]> removed-args;
+    callback toggle-removed(int);
+    in-out property <bool> test-env;
+    in property <string> docs;
+    in property <string> docs-status;
+    callback pick-docs();
+    callback clear-docs();
+    callback index-docs();
+    in-out property <bool> memory;
+    in-out property <int> purpose;
+    in property <string> error;
+    property <bool> confirm-delete;
+    callback save();
+    callback cancel();
+    callback pick-folder();
+    callback clear-folder();
+    callback open-memory();
+    callback delete();
+
+    background: #00000080;
+
+    TouchArea {
+        clicked => { root.cancel(); }
+    }
+
+    Rectangle {
+        width: min(560px, root.width - 40px);
+        height: min(card.preferred-height, root.height - 40px);
+        border-radius: 14px;
+        background: Palette.background;
+        border-width: 1px;
+        border-color: Palette.border;
+        drop-shadow-blur: 24px;
+        drop-shadow-color: #00000060;
+
+        TouchArea { }
+
+        scroll := ScrollView {
+            width: parent.width;
+            height: parent.height;
+
+        card := VerticalLayout {
+            width: scroll.visible-width;
+            padding: 20px;
+            spacing: 14px;
+
+            Text {
+                text: root.is-new ? @tr("New group") : @tr("Group settings");
+                font-size: 18px;
+                font-weight: 700;
+            }
+
+            Field {
+                label: @tr("Name");
+                hint: @tr("For example one group per project.");
+
+                LineEdit {
+                    text <=> root.name;
+                    placeholder-text: "yakuda-connect";
+                }
+            }
+
+            Field {
+                label: @tr("Standard folder");
+                hint: @tr("Shared automatically in every new chat of this group.");
+
+                HorizontalLayout {
+                    spacing: 6px;
+
+                    Text {
+                        text: root.folder == "" ? @tr("none") : root.folder;
+                        opacity: root.folder == "" ? 0.5 : 1.0;
+                        overflow: elide;
+                        horizontal-stretch: 1;
+                        vertical-alignment: center;
+                    }
+
+                    if root.folder != "": CheckBox {
+                        text: @tr("allow writing");
+                        checked <=> root.folder-writable;
+                    }
+
+                    Button {
+                        text: @tr("Choose…");
+                        clicked => { root.pick-folder(); }
+                    }
+
+                    if root.folder != "": Button {
+                        text: "✕";
+                        clicked => { root.clear-folder(); }
+                    }
+                }
+            }
+
+            Field {
+                label: @tr("Rules for this group");
+                hint: @tr("One per line. Every chat of the group gets them, like start arguments.");
+
+                TextEdit {
+                    height: 90px;
+                    text <=> root.rules;
+                    font-size: 12px;
+                }
+
+                HorizontalLayout {
+                    spacing: 16px;
+
+                    CheckBox {
+                        text: @tr("Use these rules");
+                        checked <=> root.use-rules;
+                    }
+
+                    CheckBox {
+                        text: @tr("Also use the global start arguments");
+                        checked <=> root.use-global;
+                    }
+                }
+
+            }
+
+            Field {
+                label: @tr("Start arguments only for this group");
+                hint: @tr("Start arguments that are switched off globally can be switched on just for this group.");
+
+                VerticalLayout {
+                    spacing: 4px;
+
+                    for arg[index] in root.extra-args: HorizontalLayout {
+                        spacing: 6px;
+                        visible: arg.on;
+                        height: arg.on ? self.preferred-height : 0px;
+
+                        Text {
+                            text: "✓";
+                            color: Palette.accent-background;
+                            vertical-alignment: center;
+                        }
+
+                        ArgLabel {
+                            horizontal-stretch: 1;
+                            title: arg.title;
+                            text: arg.text;
+                        }
+
+                        Button {
+                            text: "✕";
+                            clicked => { root.toggle-extra(index); }
+                        }
+                    }
+                }
+
+                HorizontalLayout {
+                    alignment: start;
+
+                    Button {
+                        text: root.picking ? @tr("Done") : @tr("+ Add start argument…");
+                        clicked => { root.picking = !root.picking; }
+                    }
+                }
+
+                if root.picking && root.extra-args.length == 0: Rectangle {
+                    height: empty-extra-args.preferred-height;
+
+                    empty-extra-args := Text {
+                        x: 0;
+                        y: 0;
+                        width: parent.width;
+                        text: @tr("All start arguments are switched on globally. Switch one off on the Start arguments page to use it only in this group.");
+                        font-size: 12px;
+                        opacity: 0.7;
+                        wrap: word-wrap;
+                    }
+                }
+
+                if root.picking: VerticalLayout {
+                    spacing: 4px;
+
+                    for arg[index] in root.extra-args: HorizontalLayout {
+                        spacing: 6px;
+                        visible: !arg.on;
+                        height: !arg.on ? self.preferred-height : 0px;
+
+                        CheckBox {
+                            text: "";
+                            checked: arg.on;
+                            toggled => { root.toggle-extra(index); }
+                        }
+
+                        ArgLabel {
+                            horizontal-stretch: 1;
+                            title: arg.title;
+                            text: arg.text;
+                        }
+                    }
+                }
+            }
+
+            Field {
+                label: @tr("Global start arguments not used in this group");
+                hint: @tr("Switch off single global start arguments only for this group.");
+
+                VerticalLayout {
+                    spacing: 4px;
+
+                    for arg[index] in root.removed-args: HorizontalLayout {
+                        spacing: 6px;
+                        visible: arg.on;
+                        height: arg.on ? self.preferred-height : 0px;
+
+                        Text {
+                            text: "⊘";
+                            color: Palette.accent-background;
+                            vertical-alignment: center;
+                        }
+
+                        ArgLabel {
+                            horizontal-stretch: 1;
+                            title: arg.title;
+                            text: arg.text;
+                        }
+
+                        Button {
+                            text: "✕";
+                            clicked => { root.toggle-removed(index); }
+                        }
+                    }
+                }
+
+                HorizontalLayout {
+                    alignment: start;
+
+                    Button {
+                        text: root.removing ? @tr("Done") : @tr("− Remove global start argument…");
+                        clicked => { root.removing = !root.removing; }
+                    }
+                }
+
+                if root.removing && root.removed-args.length == 0: Rectangle {
+                    height: empty-removed-args.preferred-height;
+
+                    empty-removed-args := Text {
+                        x: 0;
+                        y: 0;
+                        width: parent.width;
+                        text: @tr("No start argument is switched on globally.");
+                        font-size: 12px;
+                        opacity: 0.7;
+                        wrap: word-wrap;
+                    }
+                }
+
+                if root.removing: VerticalLayout {
+                    spacing: 4px;
+
+                    for arg[index] in root.removed-args: HorizontalLayout {
+                        spacing: 6px;
+                        visible: !arg.on;
+                        height: !arg.on ? self.preferred-height : 0px;
+
+                        CheckBox {
+                            text: "";
+                            checked: arg.on;
+                            toggled => { root.toggle-removed(index); }
+                        }
+
+                        ArgLabel {
+                            horizontal-stretch: 1;
+                            title: arg.title;
+                            text: arg.text;
+                        }
+                    }
+                }
+            }
+
+            Field {
+                label: @tr("Test environment");
+                hint: @tr("Each chat gets its own copy of the group folder at its first message.");
+
+                CheckBox {
+                    text: @tr("🧪 Test environment for every chat");
+                    checked <=> root.test-env;
+                }
+            }
+
+            Field {
+                label: @tr("Documents (searchable)");
+                hint: @tr("PDF, DOCX, ODT, Markdown, text – found by meaning. Needs: ollama pull nomic-embed-text");
+
+                HorizontalLayout {
+                    spacing: 6px;
+
+                    Text {
+                        horizontal-stretch: 1;
+                        text: root.docs == "" ? @tr("none") : root.docs;
+                        opacity: root.docs == "" ? 0.5 : 1.0;
+                        overflow: elide;
+                        vertical-alignment: center;
+                    }
+
+                    Button {
+                        text: @tr("Choose…");
+                        clicked => { root.pick-docs(); }
+                    }
+
+                    if root.docs != "": Button {
+                        text: @tr("Index now");
+                        clicked => { root.index-docs(); }
+                    }
+
+                    if root.docs != "": Button {
+                        text: "✕";
+                        clicked => { root.clear-docs(); }
+                    }
+                }
+
+                if root.docs-status != "": Text {
+                    text: root.docs-status;
+                    font-size: 12px;
+                    opacity: 0.7;
+                }
+            }
+
+            Field {
+                label: @tr("Memory");
+                hint: @tr("Markdown notes of this group – the model reads and writes them with the memory tools.");
+
+                HorizontalLayout {
+                    alignment: start;
+                    spacing: 12px;
+
+                    CheckBox {
+                        text: @tr("Memory (brain) on");
+                        checked <=> root.memory;
+                    }
+
+                    if !root.is-new: Button {
+                        text: @tr("Open memory folder");
+                        clicked => { root.open-memory(); }
+                    }
+                }
+            }
+
+            Field {
+                label: @tr("Purpose");
+                hint: @tr("New chats of this group start with this purpose.");
+
+                HorizontalLayout {
+                    alignment: start;
+
+                    Segmented {
+                        width: 200px;
+                        labels: [@tr("Other"), @tr("Coding")];
+                        current <=> root.purpose;
+                    }
+                }
+            }
+
+            if root.error != "": Text {
+                text: root.error;
+                color: #cf222e;
+                font-size: 12px;
+            }
+
+            HorizontalLayout {
+                spacing: 8px;
+
+                if !root.is-new && !root.confirm-delete: Button {
+                    text: @tr("Delete group…");
+                    clicked => { root.confirm-delete = true; }
+                }
+
+                if !root.is-new && root.confirm-delete: Button {
+                    text: @tr("Really delete (memory is deleted, chats stay)");
+                    primary: true;
+                    clicked => {
+                        root.confirm-delete = false;
+                        root.delete();
+                    }
+                }
+
+                Rectangle {
+                    horizontal-stretch: 1;
+                }
+
+                Button {
+                    text: @tr("Cancel");
+                    clicked => {
+                        root.confirm-delete = false;
+                        root.cancel();
+                    }
+                }
+
+                Button {
+                    text: root.is-new ? @tr("Create") : @tr("Save");
+                    primary: true;
+                    clicked => { root.save(); }
+                }
+            }
+        }
+        }
+    }
+}

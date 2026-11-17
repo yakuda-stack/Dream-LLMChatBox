@@ -1,0 +1,315 @@
+import { Button, LineEdit, ListView, Palette, ScrollView } from "std-widgets.slint";
+import { ActivityEntry, BrowserLink } from "types.slint";
+import { Segmented } from "segmented.slint";
+import { PreviewPane } from "preview.slint";
+
+component WrappedText inherits Rectangle {
+    in property <string> text;
+    in property <length> font-size: 13px;
+    in property <float> text-opacity: 1.0;
+
+    height: body.preferred-height;
+    preferred-width: 0px;
+
+    body := TextInput {
+        x: 0;
+        y: 0;
+        width: parent.width;
+        text: root.text;
+        read-only: true;
+        single-line: false;
+        wrap: word-wrap;
+        font-size: root.font-size;
+        opacity: root.text-opacity;
+    }
+}
+
+component LinkRow inherits Rectangle {
+    in property <BrowserLink> link;
+    callback open();
+
+    border-radius: 6px;
+    background: touch.has-hover ? Palette.control-background : transparent;
+    height: column.preferred-height + 12px;
+
+    touch := TouchArea {
+        clicked => { root.open(); }
+        mouse-cursor: pointer;
+    }
+
+    column := VerticalLayout {
+        y: 6px;
+        x: 8px;
+        width: parent.width - 16px;
+        spacing: 2px;
+
+        Rectangle {
+            height: name.preferred-height;
+
+            name := Text {
+                x: 0;
+                y: 0;
+                width: parent.width;
+                text: root.link.title;
+                color: Palette.accent-background;
+                wrap: word-wrap;
+                font-size: 12px;
+            }
+        }
+
+        Text {
+            text: root.link.url;
+            font-size: 10px;
+            opacity: 0.55;
+            overflow: elide;
+        }
+    }
+}
+
+component ActivityRow inherits Rectangle {
+    in property <ActivityEntry> entry;
+
+    height: row.preferred-height + 10px;
+    border-radius: 6px;
+    background: root.entry.state == 0 ? Palette.control-background : transparent;
+
+    row := HorizontalLayout {
+        y: 5px;
+        x: 6px;
+        width: parent.width - 12px;
+        spacing: 8px;
+
+        Text {
+            width: 18px;
+            text: root.entry.icon;
+            horizontal-alignment: center;
+        }
+
+        VerticalLayout {
+            horizontal-stretch: 1;
+            spacing: 1px;
+
+            Rectangle {
+                height: label.preferred-height;
+
+                label := Text {
+                    x: 0;
+                    y: 0;
+                    width: parent.width;
+                    text: root.entry.text;
+                    font-size: 12px;
+                    wrap: word-wrap;
+                }
+            }
+
+            if root.entry.detail != "": Rectangle {
+                height: info.preferred-height;
+
+                info := Text {
+                    x: 0;
+                    y: 0;
+                    width: parent.width;
+                    text: root.entry.detail;
+                    font-size: 11px;
+                    opacity: 0.6;
+                    wrap: word-wrap;
+                }
+            }
+        }
+
+        VerticalLayout {
+            alignment: start;
+            spacing: 1px;
+
+            Text {
+                text: root.entry.state == 0 ? "…" : root.entry.state == 1 ? "✓" : root.entry.state == 2 ? "✗" : "■";
+                color: root.entry.state == 1 ? #2da44e : root.entry.state == 2 ? #cf222e : Palette.foreground;
+                horizontal-alignment: right;
+                font-weight: 700;
+            }
+
+            Text {
+                text: root.entry.time;
+                font-size: 10px;
+                opacity: 0.5;
+            }
+        }
+    }
+}
+
+export component SidePanel inherits Rectangle {
+    in-out property <int> tab;
+    in property <string> url;
+    in property <string> title;
+    in property <string> page-text;
+    in property <[BrowserLink]> links;
+    in property <bool> loading;
+    in property <string> error;
+    in property <bool> can-back;
+    in property <bool> by-model;
+    in-out property <string> address;
+    in property <[ActivityEntry]> activity;
+    callback go(string);
+    callback back();
+    callback open-external();
+    callback open-link(string);
+    callback clear-activity();
+    callback close();
+
+    background: Palette.alternate-background;
+
+    Rectangle {
+        x: 0;
+        width: 1px;
+        background: Palette.border;
+    }
+
+    VerticalLayout {
+        padding: 10px;
+        spacing: 8px;
+
+        HorizontalLayout {
+            spacing: 6px;
+
+            Segmented {
+                labels: [@tr("Browser"), @tr("Activity"), @tr("Preview")];
+                current <=> root.tab;
+                horizontal-stretch: 1;
+            }
+
+            Button {
+                text: "✕";
+                clicked => { root.close(); }
+            }
+        }
+
+        if root.tab == 0: VerticalLayout {
+            spacing: 8px;
+
+            HorizontalLayout {
+                spacing: 4px;
+
+                Button {
+                    text: "←";
+                    enabled: root.can-back && !root.loading;
+                    clicked => { root.back(); }
+                }
+
+                LineEdit {
+                    text <=> root.address;
+                    placeholder-text: @tr("Address or search words");
+                    accepted(text) => { root.go(text); }
+                }
+
+                Button {
+                    text: "↗";
+                    enabled: root.url != "";
+                    clicked => { root.open-external(); }
+                }
+            }
+
+            if root.loading: Text {
+                text: @tr("Loading…");
+                font-size: 12px;
+                opacity: 0.7;
+            }
+
+            if root.error != "": WrappedText {
+                text: root.error;
+                font-size: 12px;
+            }
+
+            if root.title != "": VerticalLayout {
+                spacing: 2px;
+
+                Text {
+                    text: root.title;
+                    font-size: 15px;
+                    font-weight: 700;
+                    overflow: elide;
+                }
+
+                Text {
+                    text: (root.by-model ? @tr("Opened by the model · ") : "") + root.url;
+                    font-size: 10px;
+                    opacity: 0.55;
+                    overflow: elide;
+                }
+            }
+
+            page := ScrollView {
+                vertical-stretch: 1;
+
+                VerticalLayout {
+                    width: page.visible-width - 8px;
+                    min-height: page.visible-height;
+                    alignment: start;
+                    spacing: 4px;
+
+                    for link in root.links: LinkRow {
+                        link: link;
+                        open => { root.open-link(link.url); }
+                    }
+
+                    if root.page-text != "": WrappedText {
+                        text: root.page-text;
+                    }
+
+                    if root.title == "" && !root.loading && root.error == "": WrappedText {
+                        text: @tr("Here you see every web page and search the model opens – as clean text, like the model reads it. You can also type an address or search words yourself. ↗ opens the page in your normal browser.");
+                        font-size: 12px;
+                        text-opacity: 0.65;
+                    }
+                }
+            }
+        }
+
+        if root.tab == 1: VerticalLayout {
+            spacing: 6px;
+
+            HorizontalLayout {
+                Text {
+                    text: @tr("What the model did in this chat");
+                    font-weight: 700;
+                    horizontal-stretch: 1;
+                    vertical-alignment: center;
+                }
+
+                Button {
+                    text: @tr("Clear");
+                    enabled: root.activity.length > 0;
+                    clicked => { root.clear-activity(); }
+                }
+            }
+
+            if root.activity.length > 0: ListView {
+                vertical-stretch: 1;
+
+                for entry in root.activity: Rectangle {
+                    height: item.height + 2px;
+
+                    item := ActivityRow {
+                        y: 0;
+                        width: parent.width - 8px;
+                        entry: entry;
+                    }
+                }
+            }
+
+            if root.activity.length == 0: VerticalLayout {
+                vertical-stretch: 1;
+                alignment: start;
+
+                Text {
+                    text: @tr("Nothing yet.");
+                    font-size: 12px;
+                    opacity: 0.6;
+                }
+            }
+        }
+
+        if root.tab == 2: PreviewPane {
+            vertical-stretch: 1;
+        }
+    }
+}

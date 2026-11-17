@@ -1,0 +1,128 @@
+import { Button, Palette, ScrollView } from "std-widgets.slint";
+import { GroupEntry } from "types.slint";
+
+component GroupCard inherits Rectangle {
+    in property <GroupEntry> group;
+    callback open();
+
+    border-radius: 12px;
+    border-width: 1px;
+    border-color: touch.has-hover ? Palette.accent-background : Palette.border;
+    background: Palette.control-background;
+
+    touch := TouchArea {
+        clicked => { root.open(); }
+        mouse-cursor: pointer;
+    }
+
+    VerticalLayout {
+        padding: 14px;
+        spacing: 6px;
+
+        Text {
+            text: "📁 " + root.group.name;
+            font-size: 15px;
+            font-weight: 700;
+            overflow: elide;
+        }
+
+        Text {
+            text: root.group.chats.length == 1 ? @tr("1 chat") : root.group.chats.length + " " + @tr("chats");
+            font-size: 12px;
+            opacity: 0.7;
+        }
+
+        Text {
+            text: root.group.folder == "" ? @tr("No standard folder") : @tr("Folder: ") + root.group.folder;
+            font-size: 12px;
+            opacity: 0.7;
+            overflow: elide;
+        }
+
+        Text {
+            text: (root.group.memory ? "🧠 " + @tr("Memory on") : "○ " + @tr("Memory off"));
+            font-size: 12px;
+            opacity: root.group.memory ? 0.9 : 0.6;
+        }
+
+        Text {
+            text: (root.group.rules ? @tr("Own rules on") : @tr("No own rules")) + "  ·  " + (root.group.global-args ? @tr("global start args on") : @tr("global start args off"));
+            font-size: 11px;
+            opacity: 0.6;
+            overflow: elide;
+        }
+    }
+}
+
+export component GroupsPage inherits Rectangle {
+    in property <[GroupEntry]> groups;
+    callback open-group(string);
+    callback create();
+    callback import();
+    callback global-memory();
+
+    property <length> card-width: 250px;
+    property <length> card-height: 150px;
+    property <length> gap: 14px;
+    property <int> columns: max(1, floor((scroll.visible-width - 48px + root.gap) / (root.card-width + root.gap)));
+
+    scroll := ScrollView {
+        VerticalLayout {
+            padding: 24px;
+            spacing: 14px;
+            alignment: start;
+
+            HorizontalLayout {
+                spacing: 8px;
+
+                Text {
+                    text: @tr("Groups");
+                    font-size: 20px;
+                    font-weight: 700;
+                    horizontal-stretch: 1;
+                    vertical-alignment: center;
+                }
+
+                Button {
+                    text: @tr("🗂 Global memory");
+                    clicked => { root.global-memory(); }
+                }
+
+                Button {
+                    text: @tr("Import…");
+                    clicked => { root.import(); }
+                }
+
+                Button {
+                    text: @tr("+ New group");
+                    primary: true;
+                    clicked => { root.create(); }
+                }
+            }
+
+            Text {
+                text: @tr("Click a group to change its folder, rules, start arguments and memory.");
+                font-size: 12px;
+                opacity: 0.7;
+            }
+
+            if root.groups.length == 0: Text {
+                text: @tr("No groups yet.");
+                opacity: 0.6;
+            }
+
+            Rectangle {
+                height: root.groups.length == 0 ? 0px : ceil(root.groups.length / root.columns) * (root.card-height + root.gap);
+
+                for group[index] in root.groups: GroupCard {
+                    x: mod(index, root.columns) * (root.card-width + root.gap);
+                    y: floor(index / root.columns) * (root.card-height + root.gap);
+                    width: root.card-width;
+                    height: root.card-height;
+                    group: group;
+                    open => { root.open-group(group.id); }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,95 @@
+import { Button, LineEdit, Palette } from "std-widgets.slint";
+
+export component ResetDialog inherits Rectangle {
+    in property <string> folders;
+    callback cancel();
+    callback confirm();
+    property <string> typed;
+
+    background: #000000a0;
+
+    TouchArea {}
+
+    Rectangle {
+        width: min(540px, root.width - 40px);
+        height: content.preferred-height;
+        background: Palette.background;
+        border-radius: 14px;
+        border-width: 2px;
+        border-color: #cf222e;
+        drop-shadow-blur: 20px;
+        drop-shadow-color: #00000080;
+
+        content := VerticalLayout {
+            padding: 20px;
+            spacing: 10px;
+
+            Text {
+                text: "⚠ " + @tr("Delete EVERYTHING?");
+                font-size: 20px;
+                font-weight: 800;
+                color: #cf222e;
+            }
+
+            Rectangle {
+                height: warning.preferred-height;
+
+                warning := Text {
+                    x: 0;
+                    y: 0;
+                    width: parent.width;
+                    text: @tr("Hey – if you press this button, I delete everything: all profiles, chats, groups, memories, test environments, automations, start arguments, settings, voices and speech models. This cannot be undone. Your own project folders and your Ollama models are not touched. The app starts again afterwards like on the very first day.");
+                    wrap: word-wrap;
+                }
+            }
+
+            Text {
+                text: @tr("These folders are deleted:");
+                font-weight: 600;
+            }
+
+            Rectangle {
+                height: list.preferred-height;
+
+                list := Text {
+                    x: 0;
+                    y: 0;
+                    width: parent.width;
+                    text: root.folders;
+                    font-size: 12px;
+                    wrap: word-wrap;
+                }
+            }
+
+            Text {
+                text: @tr("Type DELETE to confirm:");
+                font-size: 12px;
+            }
+
+            LineEdit {
+                placeholder-text: @tr("DELETE");
+                text <=> root.typed;
+            }
+
+            HorizontalLayout {
+                spacing: 8px;
+                alignment: end;
+
+                Button {
+                    text: @tr("Cancel");
+                    clicked => {
+                        root.typed = "";
+                        root.cancel();
+                    }
+                }
+
+                Button {
+                    text: @tr("Delete everything and restart");
+                    primary: true;
+                    enabled: root.typed == @tr("DELETE") || root.typed == "DELETE";
+                    clicked => { root.confirm(); }
+                }
+            }
+        }
+    }
+}

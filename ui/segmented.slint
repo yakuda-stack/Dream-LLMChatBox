@@ -1,0 +1,38 @@
+import { Palette } from "std-widgets.slint";
+
+export component Segmented inherits Rectangle {
+    in property <[string]> labels;
+    in-out property <int> current;
+    callback changed(int);
+
+    height: 32px;
+    border-radius: 8px;
+    background: Palette.control-background;
+    border-width: 1px;
+    border-color: Palette.border;
+
+    HorizontalLayout {
+        padding: 3px;
+        spacing: 3px;
+
+        for label[index] in root.labels: Rectangle {
+            border-radius: 6px;
+            background: index == root.current ? Palette.accent-background : touch.has-hover ? Palette.alternate-background : transparent;
+
+            touch := TouchArea {
+                clicked => {
+                    root.current = index;
+                    root.changed(index);
+                }
+            }
+
+            Text {
+                text: label;
+                horizontal-alignment: center;
+                vertical-alignment: center;
+                overflow: elide;
+                color: index == root.current ? Palette.accent-foreground : Palette.foreground;
+            }
+        }
+    }
+}

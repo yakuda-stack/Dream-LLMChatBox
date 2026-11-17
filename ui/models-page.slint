@@ -1,0 +1,646 @@
+import { Spot, Tutorial } from "hint.slint";
+import { Button, LineEdit, ListView, Palette, ScrollView } from "std-widgets.slint";
+import { InstalledEntry, CatalogEntry, ModelVariant, AvailableRow } from "types.slint";
+import { Segmented } from "segmented.slint";
+import { CloudPage } from "cloud-models.slint";
+import { ServerPage } from "server-models.slint";
+
+component MemoryBar inherits VerticalLayout {
+    in property <string> label;
+    in property <int> percent;
+    in property <color> tone;
+
+    spacing: 3px;
+
+    HorizontalLayout {
+        Text {
+            text: root.label;
+            font-size: 11px;
+            opacity: 0.8;
+            horizontal-stretch: 1;
+        }
+
+        Text {
+            text: root.percent + "%";
+            font-size: 11px;
+            font-weight: 600;
+        }
+    }
+
+    Rectangle {
+        height: 6px;
+        border-radius: 3px;
+        background: Palette.border;
+
+        Rectangle {
+            x: 0;
+            width: parent.width * root.percent / 100;
+            border-radius: 3px;
+            background: root.tone;
+        }
+    }
+}
+
+component MemoryBars inherits HorizontalLayout {
+    in property <string> vram-label;
+    in property <int> vram-fill;
+    in property <string> ram-label;
+    in property <int> ram-fill;
+
+    spacing: 16px;
+
+    MemoryBar {
+        label: root.vram-label;
+        percent: root.vram-fill;
+        tone: root.vram-fill >= 90 ? #d1622b : Palette.accent-background;
+    }
+
+    MemoryBar {
+        label: root.ram-label;
+        percent: root.ram-fill;
+        tone: root.ram-fill >= 80 ? #cf222e : root.ram-fill > 0 ? #bf8700 : Palette.accent-background;
+    }
+}
+
+component SpeedBadge inherits Rectangle {
+    in property <string> text;
+    in property <int> level;
+
+    property <color> tone: level == 0 ? #2ea043 : level == 1 ? #bf8700 : level == 2 ? #d1622b : #cf222e;
+
+    width: label.preferred-width + 16px;
+    height: 22px;
+    border-radius: 11px;
+    background: tone.with-alpha(0.18);
+    border-width: 1px;
+    border-color: tone;
+
+    label := Text {
+        text: root.text;
+        font-size: 11px;
+        font-weight: 600;
+        horizontal-alignment: center;
+        vertical-alignment: center;
+    }
+}
+
+component ListItem inherits Rectangle {
+    in property <string> title;
+    in property <string> subtitle;
+    in property <bool> active;
+    callback clicked();
+
+    height: 48px;
+    border-radius: 6px;
+    background: active ? Palette.selection-background : touch.has-hover ? Palette.control-background : transparent;
+
+    touch := TouchArea {
+        clicked => { root.clicked(); }
+    }
+
+    VerticalLayout {
+        padding-left: 10px;
+        padding-right: 10px;
+        alignment: center;
+        spacing: 2px;
+
+        Text {
+            text: root.title;
+            font-weight: 600;
+            overflow: elide;
+            color: active ? Palette.selection-foreground : Palette.foreground;
+        }
+
+        Text {
+            text: root.subtitle;
+            font-size: 11px;
+            opacity: 0.7;
+            overflow: elide;
+            color: active ? Palette.selection-foreground : Palette.foreground;
+        }
+    }
+}
+
+component PointList inherits VerticalLayout {
+    in property <string> title;
+    in property <string> marker;
+    in property <[string]> points;
+
+    spacing: 4px;
+    alignment: start;
+
+    Text {
+        text: root.title;
+        font-weight: 600;
+    }
+
+    for point in root.points: HorizontalLayout {
+        spacing: 6px;
+
+        Text {
+            text: root.marker;
+            width: 12px;
+            opacity: 0.7;
+        }
+
+        Text {
+            text: point;
+            wrap: word-wrap;
+        }
+    }
+}
+
+component VariantRow inherits Rectangle {
+    in property <ModelVariant> variant;
+    callback install();
+
+    border-radius: 8px;
+    background: Palette.alternate-background;
+
+    VerticalLayout {
+        padding: 12px;
+        spacing: 8px;
+
+        HorizontalLayout {
+            spacing: 12px;
+
+            Text {
+                text: variant.label;
+                font-size: 15px;
+                font-weight: 700;
+                vertical-alignment: center;
+            }
+
+            Text {
+                text: variant.size-text;
+                vertical-alignment: center;
+                opacity: 0.8;
+            }
+
+            Rectangle {
+                horizontal-stretch: 1;
+            }
+
+            VerticalLayout {
+                alignment: center;
+
+                SpeedBadge {
+                    text: variant.speed;
+                    level: variant.speed-level;
+                }
+            }
+
+            Button {
+                width: 96px;
+                text: variant.installed ? @tr("Installed") : @tr("Install");
+                enabled: !variant.installed;
+                primary: !variant.installed && variant.speed-level < 4;
+                clicked => { root.install(); }
+            }
+        }
+
+        Text {
+            text: variant.fit-text;
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        MemoryBars {
+            vram-label: variant.vram-label;
+            vram-fill: variant.vram-fill;
+            ram-label: variant.ram-label;
+            ram-fill: variant.ram-fill;
+        }
+    }
+}
+
+component Chip inherits Rectangle {
+    in property <string> text;
+    in property <bool> active;
+    callback clicked();
+
+    width: label.preferred-width + 20px;
+    height: 26px;
+    border-radius: 13px;
+    border-width: 1px;
+    border-color: active ? Palette.accent-background : Palette.border;
+    background: active ? Palette.accent-background : touch.has-hover ? Palette.alternate-background : transparent;
+
+    touch := TouchArea {
+        clicked => { root.clicked(); }
+    }
+
+    label := Text {
+        text: root.text;
+        font-size: 12px;
+        horizontal-alignment: center;
+        vertical-alignment: center;
+        color: active ? Palette.accent-foreground : Palette.foreground;
+    }
+}
+
+component AvailableItem inherits Rectangle {
+    in property <AvailableRow> item;
+    callback clicked();
+
+    height: item.is-header ? 40px : 48px;
+    border-radius: 6px;
+    background: item.active ? Palette.selection-background : touch.has-hover ? Palette.control-background : transparent;
+
+    touch := TouchArea {
+        clicked => { root.clicked(); }
+    }
+
+    HorizontalLayout {
+        padding-left: item.indented ? 24px : 10px;
+        padding-right: 10px;
+        spacing: 8px;
+
+        if item.is-header: Text {
+            width: 12px;
+            text: item.expanded ? "▾" : "▸";
+            vertical-alignment: center;
+            opacity: 0.7;
+        }
+
+        VerticalLayout {
+            alignment: center;
+            spacing: 2px;
+
+            Text {
+                text: item.title;
+                font-weight: item.is-header ? 700 : 600;
+                overflow: elide;
+                color: item.active ? Palette.selection-foreground : Palette.foreground;
+            }
+
+            Text {
+                text: item.subtitle;
+                font-size: 11px;
+                opacity: 0.7;
+                overflow: elide;
+                color: item.active ? Palette.selection-foreground : Palette.foreground;
+            }
+        }
+    }
+}
+
+export component ModelsPage inherits VerticalLayout {
+    in property <[InstalledEntry]> installed;
+    in property <[AvailableRow]> available-rows;
+    in property <CatalogEntry> available-detail;
+    in property <bool> has-available-detail;
+    in property <string> available-message;
+    in property <string> hardware-text;
+    in property <string> testing-model;
+    in property <bool> chat-busy;
+    callback install(string);
+    callback test(string);
+    callback refresh();
+    callback search(string);
+    callback source-changed(int);
+    callback category-changed(int);
+    callback toggle-group(string);
+    callback select(string);
+
+    property <int> tab <=> Tutorial.models-tab;
+    property <int> installed-index: 0;
+    property <int> source: 0;
+    property <int> category: 0;
+    property <[string]> category-labels: [@tr("All"), @tr("Everyday"), @tr("Coding"), @tr("Reasoning"), @tr("Vision"), @tr("All-in-one")];
+
+    HorizontalLayout {
+        padding: 12px;
+        spacing: 12px;
+
+        Spot {
+            name: "models-tabs";
+
+            Segmented {
+                width: 420px;
+                labels: [@tr("Installed"), @tr("Available"), @tr("Online"), @tr("Servers")];
+                current <=> root.tab;
+            }
+        }
+
+        Text {
+            text: root.hardware-text;
+            font-size: 12px;
+            opacity: 0.7;
+            vertical-alignment: center;
+            horizontal-alignment: right;
+            overflow: elide;
+            horizontal-stretch: 1;
+        }
+
+        Button {
+            text: @tr("Refresh");
+            clicked => { root.refresh(); }
+        }
+    }
+
+    if root.tab == 2: CloudPage {
+        vertical-stretch: 1;
+    }
+
+    if root.tab == 3: ServerPage {
+        vertical-stretch: 1;
+    }
+
+    if root.tab == 0: HorizontalLayout {
+        padding-left: 12px;
+        padding-right: 12px;
+        padding-bottom: 12px;
+        spacing: 12px;
+
+        ListView {
+            width: 280px;
+
+            for entry[index] in root.installed: ListItem {
+                title: entry.name;
+                subtitle: entry.subtitle;
+                active: index == root.installed-index;
+                clicked => { root.installed-index = index; }
+            }
+        }
+
+        if root.installed.length == 0: Text {
+            text: @tr("No models installed yet. Pick one under “Available”.");
+            horizontal-alignment: center;
+            vertical-alignment: center;
+            opacity: 0.6;
+            wrap: word-wrap;
+        }
+
+        if root.installed-index < root.installed.length: ScrollView {
+            property <InstalledEntry> entry: root.installed[root.installed-index];
+
+            VerticalLayout {
+                alignment: start;
+                padding-right: 12px;
+                spacing: 14px;
+
+                Text {
+                    text: entry.name;
+                    font-size: 20px;
+                    font-weight: 700;
+                }
+
+                if entry.description != "": Text {
+                    text: entry.description;
+                    wrap: word-wrap;
+                    opacity: 0.8;
+                }
+
+                Rectangle {
+                    border-radius: 8px;
+                    background: Palette.alternate-background;
+
+                    VerticalLayout {
+                        padding: 12px;
+                        spacing: 8px;
+
+                        HorizontalLayout {
+                            spacing: 12px;
+
+                            Text {
+                                text: @tr("Estimate");
+                                font-weight: 700;
+                                vertical-alignment: center;
+                            }
+
+                            Text {
+                                text: entry.size-text + (entry.details != "" ? "  ·  " + entry.details : "");
+                                vertical-alignment: center;
+                                opacity: 0.8;
+                                horizontal-stretch: 1;
+                                overflow: elide;
+                            }
+
+                            VerticalLayout {
+                                alignment: center;
+
+                                SpeedBadge {
+                                    text: entry.speed;
+                                    level: entry.speed-level;
+                                }
+                            }
+                        }
+
+                        Text {
+                            text: entry.fit-text;
+                            font-size: 12px;
+                            opacity: 0.8;
+                        }
+
+                        MemoryBars {
+                            vram-label: entry.vram-label;
+                            vram-fill: entry.vram-fill;
+                            ram-label: entry.ram-label;
+                            ram-fill: entry.ram-fill;
+                        }
+                    }
+                }
+
+                Rectangle {
+                    border-radius: 8px;
+                    background: Palette.alternate-background;
+
+                    HorizontalLayout {
+                        padding: 12px;
+                        spacing: 12px;
+
+                        VerticalLayout {
+                            alignment: center;
+                            spacing: 4px;
+                            horizontal-stretch: 1;
+
+                            Text {
+                                text: @tr("Measured");
+                                font-weight: 700;
+                            }
+
+                            Text {
+                                text: root.testing-model == entry.name ? @tr("Loading the model and running a short prompt…") : entry.test-text != "" ? entry.test-text : @tr("Not tested yet. The test loads the model and runs a short prompt.");
+                                font-size: 12px;
+                                wrap: word-wrap;
+                                opacity: entry.test-text != "" ? 1.0 : 0.7;
+                            }
+                        }
+
+                        VerticalLayout {
+                            alignment: center;
+
+                            Button {
+                                width: 96px;
+                                text: root.testing-model == entry.name ? @tr("Testing…") : @tr("Test");
+                                enabled: root.testing-model == "" && !root.chat-busy;
+                                clicked => { root.test(entry.name); }
+                            }
+                        }
+                    }
+                }
+
+                if entry.strengths.length > 0: PointList {
+                    title: @tr("Strengths");
+                    marker: "+";
+                    points: entry.strengths;
+                }
+
+                if entry.weaknesses.length > 0: PointList {
+                    title: @tr("Weaknesses");
+                    marker: "−";
+                    points: entry.weaknesses;
+                }
+            }
+        }
+    }
+
+    if root.tab == 1: VerticalLayout {
+        padding-left: 12px;
+        padding-right: 12px;
+        padding-bottom: 12px;
+        spacing: 10px;
+
+        HorizontalLayout {
+            spacing: 8px;
+
+            search-input := LineEdit {
+                placeholder-text: @tr("Search models… (Enter)");
+                accepted(text) => { root.search(text); }
+            }
+
+            Button {
+                text: @tr("Search");
+                clicked => { root.search(search-input.text); }
+            }
+
+            Segmented {
+                width: 360px;
+                labels: [@tr("Curated"), "ollama.com", "Hugging Face"];
+                current <=> root.source;
+                changed(index) => { root.source-changed(index); }
+            }
+        }
+
+        HorizontalLayout {
+            spacing: 6px;
+            alignment: start;
+
+            for label[index] in root.category-labels: Chip {
+                text: label;
+                active: index == root.category;
+                clicked => {
+                    root.category = index;
+                    root.category-changed(index);
+                }
+            }
+        }
+
+        HorizontalLayout {
+            spacing: 12px;
+
+            VerticalLayout {
+                width: 280px;
+                spacing: 6px;
+
+                if root.available-message != "": Text {
+                    text: root.available-message;
+                    wrap: word-wrap;
+                    opacity: 0.7;
+                }
+
+                ListView {
+                    for row in root.available-rows: AvailableItem {
+                        item: row;
+                        clicked => {
+                            if (row.is-header) {
+                                root.toggle-group(row.key);
+                            } else {
+                                root.select(row.key);
+                            }
+                        }
+                    }
+                }
+            }
+
+            if !root.has-available-detail: Text {
+                text: @tr("Select a model on the left.");
+                horizontal-alignment: center;
+                vertical-alignment: center;
+                opacity: 0.6;
+            }
+
+            if root.has-available-detail: ScrollView {
+                property <CatalogEntry> entry: root.available-detail;
+
+                VerticalLayout {
+                    alignment: start;
+                    padding-right: 12px;
+                    spacing: 14px;
+
+                    Text {
+                        text: entry.name;
+                        font-size: 20px;
+                        font-weight: 700;
+                        wrap: word-wrap;
+                    }
+
+                    Text {
+                        text: entry.source;
+                        font-size: 12px;
+                        opacity: 0.6;
+                    }
+
+                    if entry.description != "": Text {
+                        text: entry.description;
+                        wrap: word-wrap;
+                        opacity: 0.8;
+                    }
+
+                    if entry.categories != "": Text {
+                        text: @tr("Good for: ") + entry.categories + (entry.capabilities != "" ? "     " + @tr("Can: ") + entry.capabilities : "");
+                        font-size: 12px;
+                        wrap: word-wrap;
+                    }
+
+                    if entry.strengths.length > 0: PointList {
+                        title: @tr("Strengths");
+                        marker: "+";
+                        points: entry.strengths;
+                    }
+
+                    if entry.weaknesses.length > 0: PointList {
+                        title: @tr("Weaknesses");
+                        marker: "−";
+                        points: entry.weaknesses;
+                    }
+
+                    Text {
+                        text: @tr("Sizes");
+                        font-weight: 600;
+                    }
+
+                    for variant in entry.variants: VariantRow {
+                        variant: variant;
+                        install => { root.install(variant.tag); }
+                    }
+
+                    if entry.note != "": Text {
+                        text: entry.note;
+                        font-size: 12px;
+                        opacity: 0.7;
+                        wrap: word-wrap;
+                    }
+
+                    Text {
+                        text: @tr("VRAM, RAM and speed are rough estimates for your hardware.");
+                        font-size: 11px;
+                        opacity: 0.6;
+                        wrap: word-wrap;
+                    }
+                }
+            }
+        }
+    }
+}

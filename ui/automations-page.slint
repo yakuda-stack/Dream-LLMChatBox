@@ -1,0 +1,284 @@
+import { Button, ComboBox, LineEdit, Palette, ScrollView, SpinBox, Switch, TextEdit } from "std-widgets.slint";
+
+export struct AutomationEntry {
+    name: string,
+    schedule: string,
+    detail: string,
+    enabled: bool,
+    has-result: bool,
+}
+
+export global Automations {
+    in property <[AutomationEntry]> entries;
+    in property <[string]> kinds;
+    in property <[string]> weekdays;
+    in property <[string]> models;
+    in property <[string]> groups;
+    in property <string> message;
+    in property <bool> running;
+    in property <int> active-count;
+    in-out property <int> editing: -2;
+    in-out property <string> form-name;
+    in-out property <string> form-prompt;
+    in-out property <int> form-kind;
+    in-out property <string> form-time: "08:00";
+    in-out property <int> form-weekday;
+    in-out property <int> form-hours: 6;
+    in-out property <int> form-model;
+    in-out property <int> form-group;
+    callback create();
+    callback edit(int);
+    callback save();
+    callback cancel();
+    callback remove(int);
+    callback toggle(int, bool);
+    callback run-now(int);
+    callback open-result(int);
+}
+
+component AutomationRow inherits Rectangle {
+    in property <AutomationEntry> entry;
+    in property <int> index;
+
+    border-radius: 10px;
+    border-width: 1px;
+    border-color: entry.enabled ? Palette.accent-background : Palette.border;
+    background: Palette.background;
+    height: row.preferred-height;
+
+    row := HorizontalLayout {
+        padding: 14px;
+        spacing: 8px;
+
+        VerticalLayout {
+            horizontal-stretch: 1;
+            spacing: 4px;
+            alignment: center;
+
+            Text {
+                text: "⏰ " + entry.name;
+                font-size: 15px;
+                font-weight: 700;
+                overflow: elide;
+            }
+
+            Text {
+                text: entry.schedule + (entry.detail != "" ? "  ·  " + entry.detail : "");
+                font-size: 12px;
+                opacity: 0.7;
+                overflow: elide;
+            }
+        }
+
+        if entry.has-result: Button {
+            text: @tr("Open result");
+            clicked => { Automations.open-result(index); }
+        }
+
+        Button {
+            text: @tr("Run now");
+            enabled: !Automations.running;
+            clicked => { Automations.run-now(index); }
+        }
+
+        Button {
+            text: @tr("Edit");
+            clicked => { Automations.edit(index); }
+        }
+
+        Button {
+            text: "✕";
+            clicked => { Automations.remove(index); }
+        }
+
+        VerticalLayout {
+            alignment: center;
+
+            Switch {
+                text: @tr("Active");
+                checked: entry.enabled;
+                toggled => { Automations.toggle(index, self.checked); }
+            }
+        }
+    }
+}
+
+component Label inherits Text {
+    font-size: 11px;
+    opacity: 0.7;
+}
+
+export component AutomationsPage inherits ScrollView {
+    VerticalLayout {
+        padding: 12px;
+        spacing: 10px;
+        alignment: start;
+
+        Rectangle {
+            height: intro.preferred-height;
+
+            intro := Text {
+                x: 0;
+                y: 0;
+                width: parent.width;
+                text: @tr("The model does a task on its own at set times, e.g. every morning at 8:00. Each run becomes a new chat titled with ⏰ (in the chosen group). Runs only while the app is open; a missed run is done once when you start the app. Automations work without tools, so the model can't read files or search the web on its own.");
+                font-size: 12px;
+                opacity: 0.75;
+                wrap: word-wrap;
+            }
+        }
+
+        for entry[index] in Automations.entries: AutomationRow {
+            entry: entry;
+            index: index;
+        }
+
+        if Automations.editing == -2: HorizontalLayout {
+            alignment: start;
+
+            Button {
+                text: "+ " + @tr("New automation");
+                primary: true;
+                clicked => { Automations.create(); }
+            }
+        }
+
+        if Automations.editing != -2: Rectangle {
+            border-radius: 10px;
+            border-width: 1px;
+            border-color: Palette.accent-background;
+            height: form.preferred-height;
+
+            form := VerticalLayout {
+                padding: 14px;
+                spacing: 8px;
+
+                Text {
+                    text: Automations.editing == -1 ? @tr("New automation") : @tr("Edit automation");
+                    font-weight: 700;
+                }
+
+                Label { text: @tr("Name"); }
+
+                LineEdit {
+                    placeholder-text: @tr("e.g. Morning briefing");
+                    text <=> Automations.form-name;
+                }
+
+                Label { text: @tr("What should the model do?"); }
+
+                TextEdit {
+                    height: 110px;
+                    wrap: word-wrap;
+                    text <=> Automations.form-prompt;
+                }
+
+                HorizontalLayout {
+                    spacing: 10px;
+
+                    VerticalLayout {
+                        spacing: 4px;
+
+                        Label { text: @tr("When"); }
+
+                        ComboBox {
+                            width: 190px;
+                            model: Automations.kinds;
+                            current-index <=> Automations.form-kind;
+                        }
+                    }
+
+                    if Automations.form-kind == 2: VerticalLayout {
+                        spacing: 4px;
+
+                        Label { text: @tr("Day"); }
+
+                        ComboBox {
+                            width: 140px;
+                            model: Automations.weekdays;
+                            current-index <=> Automations.form-weekday;
+                        }
+                    }
+
+                    if Automations.form-kind != 3: VerticalLayout {
+                        spacing: 4px;
+
+                        Label { text: @tr("Time"); }
+
+                        LineEdit {
+                            width: 80px;
+                            placeholder-text: "08:00";
+                            text <=> Automations.form-time;
+                        }
+                    }
+
+                    if Automations.form-kind == 3: VerticalLayout {
+                        spacing: 4px;
+
+                        Label { text: @tr("Every … hours"); }
+
+                        SpinBox {
+                            width: 90px;
+                            minimum: 1;
+                            maximum: 168;
+                            value <=> Automations.form-hours;
+                        }
+                    }
+
+                    Rectangle { horizontal-stretch: 1; }
+                }
+
+                HorizontalLayout {
+                    spacing: 10px;
+
+                    VerticalLayout {
+                        spacing: 4px;
+                        horizontal-stretch: 1;
+
+                        Label { text: @tr("Model"); }
+
+                        ComboBox {
+                            model: Automations.models;
+                            current-index <=> Automations.form-model;
+                        }
+                    }
+
+                    VerticalLayout {
+                        spacing: 4px;
+                        horizontal-stretch: 1;
+
+                        Label { text: @tr("Save results in group"); }
+
+                        ComboBox {
+                            model: Automations.groups;
+                            current-index <=> Automations.form-group;
+                        }
+                    }
+                }
+
+                HorizontalLayout {
+                    spacing: 6px;
+                    alignment: end;
+
+                    Button {
+                        text: @tr("Cancel");
+                        clicked => { Automations.cancel(); }
+                    }
+
+                    Button {
+                        text: @tr("Save");
+                        primary: true;
+                        clicked => { Automations.save(); }
+                    }
+                }
+            }
+        }
+
+        if Automations.message != "": Text {
+            text: Automations.message;
+            font-size: 12px;
+            opacity: 0.75;
+            wrap: word-wrap;
+        }
+    }
+}

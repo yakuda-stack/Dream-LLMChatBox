@@ -1,0 +1,14 @@
+[Desktop Entry]
+Type=Application
+Name=Dream-LLMChatBox
+GenericName=AI Chat
+GenericName[de]=KI-Chat
+Comment=Chat with local AI models (Ollama)
+Comment[de]=Mit lokalen KI-Modellen chatten (Ollama)
+Exec=dream-llmchatbox
+Icon=dream-llmchatbox
+Terminal=false
+Categories=Utility;Development;
+Keywords=AI;LLM;Ollama;chat;KI;
+StartupNotify=true
+StartupWMClass=dream-llmchatbox
