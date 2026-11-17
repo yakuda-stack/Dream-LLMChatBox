@@ -60,7 +60,7 @@ Slint UI (ui/*.slint)  ⇄  setup()/callbacks in src/*_ui.rs, chat.rs …
 | Preview | `preview.rs`, `ui/preview.slint` (global `PreviewState`) | Side panel tab: files from the checkpoints of this chat + picked files; images, PDF (`pdftoppm`), text, HTML as text |
 | Answer styles | `answer_style.rs` | Style files in `~/.config/dream-llmchatbox/answer_styles/*.md` (defaults written once); the start argument `answer_style` stores the chosen style in `StartArg::choice` |
 | Theme | `theme.rs`, `ui/settings-dialog.slint`, `ui/app-window.slint` | `settings.theme` 0 System / 1 Light / 2 Dark → `theme-index`; app-window sets `Palette.color-scheme` in `changed theme-index` |
-| Install script | `install.sh` | Reads the latest release from the GitHub API, puts the AppImage into `~/.local/share/dream-llmchatbox/app/`, symlink in `~/.local/bin`, desktop entry; `--uninstall` |
+| Install script | `install.sh` | Detects the package manager (pacman/dnf/apt/zypper), installs build deps, checks Rust ≥ 1.88 (rustup fallback), clones `main` to `~/.cache/dream-llmchatbox-src`, `cargo build --release --locked`, installs binary/desktop/icons to `/usr/local`; `uninstall` |
 | Desktop entry | `desktop_entry.rs`, `assets/icon.svg`/`icon.png` | Sets the xdg app id, writes the .desktop file and icon on start |
 | Side panel | `activity.rs`, `browser.rs`, `ui/side-panel.slint` | Activity per chat, browser tab |
 | Input & media | `composer.rs`, `attachments.rs`, `audio.rs`, `speech.rs`, `tts.rs`, `readaloud.rs` | Attachments, whisper, Piper |

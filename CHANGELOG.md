@@ -10,7 +10,7 @@ First public release (GitHub, AppImage, AUR). Everything below was built before 
 - Release files: AppImage with delta updates (`scripts/build_appimage.sh`), AUR package (`packaging/aur/PKGBUILD`), `scripts/bump_version.py`
 - `dream-llmchatbox --version` and `--help`
 - Desktop entry points to the AppImage file itself; with the AUR package the system entry is used
-- `install.sh`: one-line install with `curl … | bash` (AppImage to `~/.local`, `--uninstall`)
+- `install.sh`: one-line install with `curl … | bash` – detects the distro, installs build dependencies, builds and installs natively to `/usr/local`, offers Ollama; `uninstall`
 - Appearance setting: System (default), Light, Dark
 - New README with screenshots, feature overview and contributors
 

@@ -20,8 +20,8 @@ Rust + Slint, runs on Linux, works with [Ollama](https://ollama.com) and every O
 curl -fsSL https://raw.githubusercontent.com/yakuda-stack/Dream-LLMChatBox/main/install.sh | bash
 ```
 
-The script downloads the newest AppImage from the [Releases](https://github.com/yakuda-stack/Dream-LLMChatBox/releases) to `~/.local/share/dream-llmchatbox/app/`, adds `dream-llmchatbox` to `~/.local/bin` and an entry to your app menu. No sudo needed. Run it again to update.
-Uninstall: `curl -fsSL https://raw.githubusercontent.com/yakuda-stack/Dream-LLMChatBox/main/install.sh | bash -s -- --uninstall` (your chats and settings stay).
+The script detects your distro (Arch, Fedora, Debian/Ubuntu, openSUSE), installs the build dependencies, gets a current Rust if needed, builds the app and installs it into the system (`/usr/local/bin/dream-llmchatbox`, app menu entry and icon). If Ollama is missing, it offers to install it. Run the same line again to update.
+Uninstall: `curl -fsSL https://raw.githubusercontent.com/yakuda-stack/Dream-LLMChatBox/main/install.sh | bash -s -- uninstall` (your chats and settings stay).
 
 Other ways:
 
