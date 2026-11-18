@@ -24,6 +24,8 @@ const MAX_READ_BYTES: u64 = 2_000_000;
 const MAX_WRITE_BYTES: usize = 1_000_000;
 const MAX_MATCHES: usize = 100;
 const MAX_SEARCH_FILES: usize = 5_000;
+const CONTEXT_LINES: usize = 2;
+const MAX_SHOWN_LINES: usize = 30;
 
 pub fn definitions(folders: &[Folder]) -> Vec<Value> {
     if folders.is_empty() {
@@ -315,6 +317,13 @@ fn edit_file(folders: &[Folder], path: &str, old_text: &str, new_text: &str) -> 
         return Err("old_text is empty".to_string());
     }
     let content = fs::read_to_string(&target.path).map_err(|e| format!("{}: {e}", target.shown()))?;
+    if already_applied(&content, old_text, new_text) {
+        return Err(format!(
+            "This change is already in {}. Do not apply it again – read the file to see its current state.",
+            target.shown()
+        ));
+    }
+    let line = edit_line(&content, old_text);
     let found = content.matches(old_text).count();
     let (content, found) = if found == 0 && content.contains("\r\n") {
         let crlf = old_text.replace("\r\n", "\n").replace('\n', "\r\n");
@@ -331,14 +340,41 @@ fn edit_file(folders: &[Folder], path: &str, old_text: &str, new_text: &str) -> 
             }
             fs::write(&target.path, &content).map_err(|e| format!("{}: {e}", target.shown()))?;
             Ok(format!(
-                "Edited {}: replaced {} lines with {} lines",
+                "Edited {}: replaced {} lines with {} lines. The file now looks like this there:\n{}",
                 target.shown(),
                 old_text.lines().count().max(1),
-                new_text.lines().count()
+                new_text.lines().count(),
+                show_lines(&content, line, new_text.lines().count())
             ))
         }
         n => Err(format!("old_text appears {n} times in {}. Add more surrounding lines so it is unique.", target.shown())),
     }
+}
+
+fn already_applied(content: &str, old_text: &str, new_text: &str) -> bool {
+    !new_text.trim().is_empty()
+        && content.contains(new_text)
+        && (new_text.contains(old_text) || !content.contains(old_text))
+}
+
+fn edit_line(content: &str, old_text: &str) -> usize {
+    let crlf = old_text.replace("\r\n", "\n").replace('\n', "\r\n");
+    content
+        .find(old_text)
+        .or_else(|| content.find(crlf.as_str()))
+        .map_or(0, |pos| content[..pos].matches('\n').count())
+}
+
+fn show_lines(content: &str, first: usize, count: usize) -> String {
+    let start = first.saturating_sub(CONTEXT_LINES);
+    content
+        .lines()
+        .enumerate()
+        .skip(start)
+        .take((first - start + count + CONTEXT_LINES).min(MAX_SHOWN_LINES))
+        .map(|(index, line)| format!("{:>4}| {line}", index + 1))
+        .collect::<Vec<_>>()
+        .join("\n")
 }
 
 fn search_files(folders: &[Folder], path: &str, query: &str, regex: bool) -> Result<String, String> {
@@ -453,6 +489,9 @@ mod tests {
         assert!(twice.contains("2 times"), "{twice}");
         let edited = run("edit_file", &json!({"path": "src/lib.rs", "old_text": "fn b() {\n    1", "new_text": "fn b() {\n    2"}), &folders).unwrap();
         assert!(edited.starts_with("Edited"), "{edited}");
+        assert!(edited.contains("   4| fn b() {"), "{edited}");
+        let again = run("edit_file", &json!({"path": "src/lib.rs", "old_text": "fn b() {\n    1", "new_text": "fn b() {\n    2"}), &folders).unwrap();
+        assert!(again.contains("already"), "{again}");
         assert!(fs::read_to_string(base.join("src/lib.rs")).unwrap().ends_with("fn b() {\n    2\n}\n"));
         let escape = run("write_file", &json!({"path": "../evil.txt", "content": "x"}), &folders).unwrap();
         assert!(escape.starts_with("Error"), "{escape}");

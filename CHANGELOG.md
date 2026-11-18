@@ -2,6 +2,12 @@
 
 All notable changes to Dream-LLMChatBox. Newest first.
 
+## [v0.1.3] – 2026-11-18
+
+### Changed
+- `edit_file` refuses a change that is already in the file (e.g. the same insert sent twice) instead of adding it again
+- `edit_file` shows the model the edited lines with line numbers after each change, so it sees the real file state and doesn't have to guess
+
 ## [v0.1.2] – 2026-11-18
 
 ### Added
