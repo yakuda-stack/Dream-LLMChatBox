@@ -6,6 +6,7 @@ use crate::auto_switch;
 use crate::coding;
 use crate::coding_ui;
 use crate::checkpoint;
+use crate::auto_check;
 use crate::cloud_cli;
 use crate::composer;
 use crate::context_saver;
@@ -827,6 +828,19 @@ fn start_stream(
         let writing_label = trf("Writing the answer ({})", &[&short_model]);
         let answer_id = activity::start(&weak, &chat_id, "🤖", &thinking_label);
         let mut writing = false;
+        let max_steps = if mode.is_coding() { tools::MAX_CODING_STEPS } else { tools::MAX_STEPS };
+        let mut files_changed = false;
+        let mut check_rounds = 0;
+        let ask_weak = weak.clone();
+        let ask_cancel = cancel.clone();
+        let ask = move |command: &str, directory: &std::path::Path, read_only: bool| {
+            approval::ask(&ask_weak, &ask_cancel, command, directory, read_only)
+        };
+        let web_weak = weak.clone();
+        let web_cancel = cancel.clone();
+        let ask_web = move |title: &str, text: &str, note: &str| {
+            approval::show(&web_weak, &web_cancel, title, text, note, "")
+        };
         loop {
             let step_start = stream.reply.len();
             let thread_limit = limit_hit.clone();
@@ -930,13 +944,45 @@ fn start_stream(
                     stream.push("\n\n");
                     continue;
                 }
+                Ok(_) if mode.is_coding()
+                    && files_changed
+                    && check_rounds < auto_check::MAX_ROUNDS
+                    && !cancel.load(Ordering::SeqCst) =>
+                {
+                    files_changed = false;
+                    let Some(feedback) = run_auto_check(
+                        &weak,
+                        &chat_id,
+                        &shared,
+                        &current.safe_commands,
+                        &cancel,
+                        &ask,
+                        &ask_web,
+                        &mut stream,
+                        &mut check_rounds,
+                    ) else {
+                        break;
+                    };
+                    request.push(Message {
+                        role: "assistant".to_string(),
+                        content: markdown::without_tool_blocks(&stream.reply[step_start..]),
+                        ..Default::default()
+                    });
+                    request.push(Message {
+                        role: "user".to_string(),
+                        content: feedback,
+                        ..Default::default()
+                    });
+                    stream.push("\n\n");
+                    continue;
+                }
                 _ => break,
             };
             if cancel.load(Ordering::SeqCst) {
                 break;
             }
             step += 1;
-            if step > tools::MAX_STEPS {
+            if step > max_steps {
                 steps_hit = true;
                 break;
             }
@@ -954,16 +1000,6 @@ fn start_stream(
                 tool_calls: calls.clone(),
                 ..Default::default()
             });
-            let ask_weak = weak.clone();
-            let ask_cancel = cancel.clone();
-            let ask = move |command: &str, directory: &std::path::Path, read_only: bool| {
-                approval::ask(&ask_weak, &ask_cancel, command, directory, read_only)
-            };
-            let web_weak = weak.clone();
-            let web_cancel = cancel.clone();
-            let ask_web = move |title: &str, text: &str, note: &str| {
-                approval::show(&web_weak, &web_cancel, title, text, note, "")
-            };
             let context = tools::Context {
                 folders: &shared,
                 chat_id: &chat_id,
@@ -1007,6 +1043,9 @@ fn start_stream(
                 };
                 if let Some(ticker) = ticker {
                     ticker.store(true, Ordering::SeqCst);
+                }
+                if auto_check::changes_files(&call.function.name, &output) {
+                    files_changed = true;
                 }
                 let failed = output.starts_with("Error")
                     || output.starts_with("The user did not allow")
@@ -1272,6 +1311,57 @@ fn grant_project(
         )
     } else {
         "The user did not give access. Do not try again; continue without it or ask what to do.".to_string()
+    }
+}
+
+#[allow(clippy::too_many_arguments)]
+fn run_auto_check(
+    weak: &slint::Weak<AppWindow>,
+    chat_id: &str,
+    shared: &[sandbox::Folder],
+    safe: &[String],
+    cancel: &Arc<AtomicBool>,
+    ask: &dyn Fn(&str, &std::path::Path, bool) -> crate::commands::Approval,
+    ask_web: &dyn Fn(&str, &str, &str) -> crate::commands::Approval,
+    stream: &mut Stream,
+    rounds: &mut usize,
+) -> Option<String> {
+    let root = shared.first()?;
+    let command = auto_check::command(std::path::Path::new(&root.path))?;
+    *rounds += 1;
+    let label = trf("Auto check: {}", &[&command]);
+    let tool_id = activity::start(weak, chat_id, "🔍", &label);
+    let ticker = start_ticker(weak.clone(), chat_id.to_string(), tool_id, label);
+    let context = tools::Context {
+        folders: shared,
+        chat_id,
+        group: "",
+        safe,
+        cancel: Some(cancel.clone()),
+        ask,
+        ask_web,
+        checkpoint: None,
+    };
+    let output = crate::commands::run(&serde_json::json!({ "command": command }), &context);
+    ticker.store(true, Ordering::SeqCst);
+    let outcome = auto_check::judge(&output);
+    let first_line = output.lines().find(|line| !line.trim().is_empty()).unwrap_or_default();
+    activity::finish(
+        weak,
+        chat_id,
+        tool_id,
+        if outcome == auto_check::Outcome::Problems { activity::FAILED } else { activity::DONE },
+        first_line,
+    );
+    stream.push(&markdown::tool_block(&format!("auto_check({command})"), &output));
+    stream.flush();
+    match outcome {
+        auto_check::Outcome::Problems => Some(auto_check::feedback(command, &output, *rounds)),
+        auto_check::Outcome::Clean => None,
+        auto_check::Outcome::Skipped => {
+            *rounds = auto_check::MAX_ROUNDS;
+            None
+        }
     }
 }
 

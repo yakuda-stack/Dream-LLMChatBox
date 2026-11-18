@@ -15,6 +15,7 @@ use crate::web_tools;
 use serde_json::{Value, json};
 
 pub const MAX_STEPS: usize = 10;
+pub const MAX_CODING_STEPS: usize = 20;
 
 pub const BUILTIN: [(&str, &str); 22] = [
     ("get_current_time", "Current date, time and weekday of this computer"),

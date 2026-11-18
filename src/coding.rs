@@ -126,6 +126,13 @@ const TEMPLATE: &str = "# <Project> – Architektur
 ## Bauen & Starten
 ## Konventionen";
 
+const SELF_CHECK: &str = "\n\nBefore you say a change is done, check it against this list and fix what is missing:
+- What happens right after the action? Does the UI or the state refresh?
+- Does it work on every system and variant the project supports?
+- Are new user texts in every language file?
+- What does the user see when it fails (error message, status)?
+- Is the code in the file the architecture names for this job?";
+
 const NEW_QUESTIONS: &str = "\n\nThis is a brand new project. First ask the user at most 5 short questions: the goal, the language/framework, the platform, the main features and anything special. ";
 
 fn write_steps(project: Option<&Project>) -> String {
@@ -191,6 +198,15 @@ pub fn system_note(mode: &Mode, project: Option<&Project>) -> Option<String> {
             note.push_str(TEMPLATE);
             note.push_str("\nThen do the user's task.");
         }
+    }
+    note.push_str(SELF_CHECK);
+    if project.tools
+        && project.writable
+        && let Some(command) = crate::auto_check::command(project.root)
+    {
+        note.push_str(&format!(
+            "\nAfter you change files, the app runs `{command}` by itself and sends you any errors or warnings. Fix them before you answer."
+        ));
     }
     match find_roadmap(project.root) {
         Some(path) => {

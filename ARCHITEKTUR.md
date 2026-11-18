@@ -28,7 +28,7 @@ Slint UI (ui/*.slint)  ⇄  setup()/callbacks in src/*_ui.rs, chat.rs …
 ### Modules
 | Area | Files | Job |
 |---|---|---|
-| Chat flow | `chat.rs` | Send, stream, agent loop (max. 10 tool steps, loop guard `repeats`, `pause_and_wait` + `schedule_continue`, command timer `start_ticker`), context limit, context bar, work folder prompt |
+| Chat flow | `chat.rs` | Send, stream, agent loop (max. 10 tool steps, 20 in Coding mode, auto check `run_auto_check`, loop guard `repeats`, `pause_and_wait` + `schedule_continue`, command timer `start_ticker`), context limit, context bar, work folder prompt |
 | Context saver | `context_saver.rs` | Per answer: skip re-reading unchanged files (`Reads`), shorten old tool results over ~55 % context (`shorten_old`), strip `<think>` from history |
 | Model choice | `auto_switch.rs` | BETA: smallest model rates the task (`/api/generate`, keep_alive 30m), `pick()` chooses an installed model, keeps a loaded one if it fits; `route_text()` adds the last 3 user messages to short follow-ups, `adjust()` turns "simple" into "coding" in Coding mode |
 | Ollama | `ollama.rs`, `server.rs`, `usage.rs` | HTTP API, start/stop server, VRAM/RAM display |
@@ -40,7 +40,7 @@ Slint UI (ui/*.slint)  ⇄  setup()/callbacks in src/*_ui.rs, chat.rs …
 | Work folder UI | `work_ui.rs`, `ui/work-dialog.slint` | Changes chip, diff dialog (`similar`), apply to project, "🧪 Test environment" dialog (`TestEnvDialog`) |
 | Work folders | `workspace.rs` | Base folder, per group/chat folders, project copy (skips `.git`, `target`, …) |
 | Profiles | `profiles.rs`, `profiles_ui.rs`, `profile.rs` | Profile list, switching, settings dialog; old password profiles are decrypted once |
-| Coding mode | `coding.rs`, `coding_ui.rs` | ARCHITEKTUR.md / ROADMAP.md workflow; `architecture_hint` for all other chats with a folder |
+| Coding mode | `coding.rs`, `coding_ui.rs`, `auto_check.rs` | ARCHITEKTUR.md / ROADMAP.md workflow, `SELF_CHECK` list; `auto_check`: check command per project (Cargo.toml → clippy), `judge` output, feedback to the model (max. `MAX_ROUNDS`); `architecture_hint` for all other chats with a folder |
 | Start arguments | `start_args.rs`, `start_args_page.rs` | Standard and own rules for every chat (incl. "ask when unknown", "no code comments" off by default); `for_group` adds the args a group switched on (`Group::extra_start_args`) and drops the ones it removed (`removed_start_args`); `title` gives short titles (`ui/arg-label.slint` with "i") |
 | Documents (RAG) | `rag.rs`, `rag_ui.rs` | `Group::docs_folder`; text from pdftotext / unzip (docx, odt) / plain files, ~1200-char passages, vectors from Ollama `/api/embed`, index as JSON in `<profile>/rag/<hash>.json` (only changed files are embedded again); `search_documents` = cosine similarity, top 6 |
 | OpenAI servers | `openai_compat.rs`, `servers_ui.rs`, `ui/server-models.slint` (global `ServerModels`) | `settings.servers`; `/models` for the list, `/chat/completions` with SSE streaming, `reasoning_content` as thinking, tool calls rebuilt from deltas; messages converted with `to_openai` (tool call ids) |
@@ -88,7 +88,7 @@ Rust-Desktop-App mit Slint-1.18-Oberfläche. Sie spricht per HTTP (`ureq`) mit e
 | Arbeitsordner | `<Arbeitsordner>/<Gruppe>/<Chat>/`, Standard `~/DreamWork` |
 
 ### Module (Kurzfassung)
-- **chat.rs**: Senden, Streaming, Agenten-Schleife (max. 10 Werkzeug-Schritte), Kontext-Leiste, Nachfrage für den Arbeitsordner
+- **chat.rs**: Senden, Streaming, Agenten-Schleife (max. 10 Werkzeug-Schritte, 20 im Coding-Modus, automatische Prüfung), Kontext-Leiste, Nachfrage für den Arbeitsordner
 - **auto_switch.rs** (BETA): kleinstes Modell bewertet die Aufgabe, `pick()` wählt ein installiertes Modell, ein geladenes passendes bleibt (VRAM wird nicht unnötig geleert)
 - **context_saver.rs**: keine doppelten `read_file` pro Antwort, alte Werkzeug-Ergebnisse kürzen ab ~55 % Kontext, `<think>` nicht in den Verlauf
 - **hardware.rs**: nur die aktive GPU, genauer Name über `amdgpu.ids`, iGPU wird ignoriert
@@ -105,6 +105,7 @@ Rust-Desktop-App mit Slint-1.18-Oberfläche. Sie spricht per HTTP (`ureq`) mit e
 - **theme.rs**: appearance (System / Light / Dark)
 - **auto_sync.rs**: per-chat toggle (`auto_sync.json` in the profile), `before_send()` runs `project_sync::sync` and puts a note in front of the user message in the request (not in the stored chat)
 - **project_sync.rs**: tool `sync_from_project` – project → test environment, only differing files, skips `workspace::SKIP` folders, no approval (target is always the test environment)
+- **auto_check.rs**: after file changes in Coding mode `chat.rs` runs the project check (Rust: `cargo clippy --all-targets`) through `commands::run` and sends problems back as a user turn (max. `MAX_ROUNDS`)
 - **nudge.rs**: `stalled()` spots answers that only announce a step or are cut after a few characters; `chat.rs` then adds `MESSAGE` as a user turn and continues the tool loop (max. `MAX`)
 - **reset.rs**: alles zurücksetzen
 - **container.rs**: Befehle der Testumgebung optional in Podman/Docker

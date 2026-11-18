@@ -2,6 +2,7 @@ mod activity;
 mod answer_style;
 mod approval;
 mod attachments;
+mod auto_check;
 mod auto_switch;
 mod auto_sync;
 mod automations;

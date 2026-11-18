@@ -1,6 +1,6 @@
 # Maintainer: yakuda <yakuda@outlook.de>
 pkgname=dream-llmchatbox
-pkgver=0.1.1
+pkgver=0.1.2
 pkgrel=1
 pkgdesc="Chat with local AI models (Ollama) - tools, folders, memory, groups, speech, German/English"
 arch=('x86_64')

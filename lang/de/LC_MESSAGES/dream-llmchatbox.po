@@ -2430,3 +2430,6 @@ msgstr "Dein Profil und das Menü: Einstellungen (Sprache, diese Tour, Zurückse
 
 msgid "Ollama's model runner crashed – this is a problem inside Ollama, not in this app.\n\n- Restart Ollama (button bottom left: Stop, then Start) and try again.\n- AMD graphics card: the ROCm version of Ollama often crashes on RX 9000 cards. Try the Vulkan version instead (CachyOS/Arch: install `ollama-vulkan` instead of `ollama-rocm`) or update Ollama.\n- Try a smaller context in the Ollama settings or another model.\n- Details: `journalctl -u ollama -n 50` in a terminal."
 msgstr "Der Modell-Runner von Ollama ist abgestürzt – das ist ein Problem in Ollama, nicht in dieser App.\n\n- Starte Ollama neu (Knopf unten links: Stopp, dann Start) und versuch es erneut.\n- AMD-Grafikkarte: Die ROCm-Version von Ollama stürzt auf RX-9000-Karten oft ab. Probier stattdessen die Vulkan-Version (CachyOS/Arch: `ollama-vulkan` statt `ollama-rocm` installieren) oder aktualisiere Ollama.\n- Probier einen kleineren Kontext in den Ollama-Einstellungen oder ein anderes Modell.\n- Details: `journalctl -u ollama -n 50` in einem Terminal."
+
+msgid "Auto check: {}"
+msgstr "Automatische Prüfung: {}"

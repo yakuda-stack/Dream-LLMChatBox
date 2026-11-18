@@ -90,6 +90,7 @@ English first, Deutsch below.
 - [x] OpenAI-compatible servers (LM Studio, llama.cpp, …)
 - [x] Global memory: projects + access on request
 - [x] Architecture index in prompt and group memory
+- [x] Coding: automatic `cargo clippy` after file changes, self-check list, 20 tool steps
 - [x] Online tab: Claude Code / Codex / Gemini / Grok CLIs
 - [x] Lists with hanging indent
 - [x] Checkpoints + Undo per answer
@@ -204,6 +205,7 @@ English first, Deutsch below.
 - [x] OpenAI-kompatible Server (LM Studio, llama.cpp, …)
 - [x] Globales Gedächtnis: Projekte + Zugriff auf Nachfrage
 - [x] Architektur-Index im Prompt und im Gruppen-Gedächtnis
+- [x] Coding: automatisches `cargo clippy` nach Dateiänderungen, Selbstprüf-Liste, 20 Werkzeug-Schritte
 - [x] Online-Reiter: Claude Code / Codex / Gemini / Grok über ihre CLIs
 - [x] Listen mit echter Einrückung
 - [x] Checkpoints + Rückgängig pro Antwort

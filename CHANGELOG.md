@@ -2,6 +2,15 @@
 
 All notable changes to Dream-LLMChatBox. Newest first.
 
+## [v0.1.2] – 2026-11-18
+
+### Added
+- Coding mode: automatic check after file changes – in Rust projects the app runs `cargo clippy --all-targets` when the model is done and sends errors and warnings back to it (max. 3 rounds)
+- Coding mode: self-check list in the prompt (refresh after the action, all supported systems, texts in every language file, error path, right file per ARCHITEKTUR.md)
+
+### Changed
+- Coding mode allows 20 tool steps per answer instead of 10
+
 ## [v0.1.1] – 2026-11-17
 
 ### Added
