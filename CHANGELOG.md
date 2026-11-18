@@ -2,6 +2,16 @@
 
 All notable changes to Dream-LLMChatBox. Newest first.
 
+## [v0.1.4] – 2026-11-18
+
+### Added
+- Models → Installed: "Remove" button deletes a model via Ollama (second click confirms)
+- Profile menu (bottom left) shows the app version at the top
+
+### Changed
+- `search_files` shows paths with the folder name, the same way as `read_file` and `edit_file`
+- `search_files` hints at `regex: true` when a search with `|` finds nothing
+
 ## [v0.1.3] – 2026-11-18
 
 ### Changed

@@ -296,6 +296,7 @@ export component ModelsPage inherits VerticalLayout {
     in property <bool> chat-busy;
     callback install(string);
     callback test(string);
+    callback remove(string);
     callback refresh();
     callback search(string);
     callback source-changed(int);
@@ -305,6 +306,7 @@ export component ModelsPage inherits VerticalLayout {
 
     property <int> tab <=> Tutorial.models-tab;
     property <int> installed-index: 0;
+    property <string> confirm-remove;
     property <int> source: 0;
     property <int> category: 0;
     property <[string]> category-labels: [@tr("All"), @tr("Everyday"), @tr("Coding"), @tr("Reasoning"), @tr("Vision"), @tr("All-in-one")];
@@ -360,7 +362,10 @@ export component ModelsPage inherits VerticalLayout {
                 title: entry.name;
                 subtitle: entry.subtitle;
                 active: index == root.installed-index;
-                clicked => { root.installed-index = index; }
+                clicked => {
+                    root.installed-index = index;
+                    root.confirm-remove = "";
+                }
             }
         }
 
@@ -470,12 +475,28 @@ export component ModelsPage inherits VerticalLayout {
 
                         VerticalLayout {
                             alignment: center;
+                            spacing: 6px;
 
                             Button {
                                 width: 96px;
                                 text: root.testing-model == entry.name ? @tr("Testing…") : @tr("Test");
                                 enabled: root.testing-model == "" && !root.chat-busy;
                                 clicked => { root.test(entry.name); }
+                            }
+
+                            Button {
+                                width: 96px;
+                                text: root.confirm-remove == entry.name ? @tr("Really?") : @tr("Remove");
+                                enabled: root.testing-model == "" && !root.chat-busy;
+                                clicked => {
+                                    if (root.confirm-remove == entry.name) {
+                                        root.confirm-remove = "";
+                                        root.installed-index = 0;
+                                        root.remove(entry.name);
+                                    } else {
+                                        root.confirm-remove = entry.name;
+                                    }
+                                }
                             }
                         }
                     }

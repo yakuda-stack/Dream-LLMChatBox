@@ -2433,3 +2433,18 @@ msgstr "Der Modell-Runner von Ollama ist abgestürzt – das ist ein Problem in 
 
 msgid "Auto check: {}"
 msgstr "Automatische Prüfung: {}"
+
+msgid "Remove"
+msgstr "Entfernen"
+
+msgid "Really?"
+msgstr "Wirklich?"
+
+msgid "Removing {}…"
+msgstr "Entferne {}…"
+
+msgid "{} removed"
+msgstr "{} entfernt"
+
+msgid "Could not remove {}: {}"
+msgstr "{} konnte nicht entfernt werden: {}"

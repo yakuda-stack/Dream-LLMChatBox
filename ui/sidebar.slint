@@ -504,6 +504,7 @@ export component Sidebar inherits Rectangle {
     in property <int> chat-page-size: 30;
     in-out property <bool> chats-open: true;
     in property <string> user-name;
+    in property <string> app-version;
     in property <image> user-picture;
     in property <bool> has-user-picture;
     callback open-profiles();
@@ -915,6 +916,23 @@ export component Sidebar inherits Rectangle {
 
                         VerticalLayout {
                             padding: 6px;
+
+                            HorizontalLayout {
+                                height: 28px;
+                                padding-left: 10px;
+
+                                Text {
+                                    text: "Dream-LLMChatBox v" + root.app-version;
+                                    font-size: 12px;
+                                    vertical-alignment: center;
+                                    opacity: 0.6;
+                                }
+                            }
+
+                            Rectangle {
+                                height: 1px;
+                                background: Palette.border;
+                            }
 
                             for item[index] in [@tr("Profile"), @tr("Settings"), @tr("Ollama settings"), @tr("Tools"), @tr("Start arguments"), @tr("Switch profile…")]: Rectangle {
                                 height: 34px;

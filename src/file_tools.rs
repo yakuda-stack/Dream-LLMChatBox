@@ -401,9 +401,10 @@ fn search_files(folders: &[Folder], path: &str, query: &str, regex: bool) -> Res
             continue;
         }
         let text = String::from_utf8_lossy(&bytes);
+        let name = sandbox::display_name(&target.root.to_string_lossy());
         let shown = file
             .strip_prefix(&target.root)
-            .map(|rest| rest.display().to_string())
+            .map(|rest| format!("{name}/{}", rest.display()))
             .unwrap_or_else(|_| file.display().to_string());
         for (number, line) in text.lines().enumerate() {
             if pattern.is_match(line) {
@@ -416,7 +417,8 @@ fn search_files(folders: &[Folder], path: &str, query: &str, regex: bool) -> Res
         }
     }
     if total == 0 {
-        return Ok(format!("No matches for \"{query}\" in {} ({} files searched)", target.shown(), files.len()));
+        let tip = if !regex && query.contains('|') { " Tip: set regex true to search for a|b patterns." } else { "" };
+        return Ok(format!("No matches for \"{query}\" in {} ({} files searched).{tip}", target.shown(), files.len()));
     }
     let mut out = format!("{total} matches for \"{query}\" in {}:\n{}", target.shown(), lines.join("\n"));
     if total > MAX_MATCHES {

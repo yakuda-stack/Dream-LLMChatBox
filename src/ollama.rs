@@ -315,6 +315,15 @@ pub fn list_models() -> Result<Vec<InstalledModel>, String> {
     Ok(models)
 }
 
+pub fn delete_model(model: &str) -> Result<(), String> {
+    let mut response = agent()
+        .delete(format!("{}/api/delete", base_url()))
+        .force_send_body()
+        .send_json(serde_json::json!({ "model": model }))
+        .map_err(|e| e.to_string())?;
+    check_status(&mut response)
+}
+
 pub fn running_models() -> Result<Vec<RunningModel>, String> {
     let mut response = ureq::get(format!("{}/api/ps", base_url()))
         .call()

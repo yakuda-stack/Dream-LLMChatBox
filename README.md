@@ -96,7 +96,7 @@ Simple local chat apps (like Alpaca) are great for chatting. Dream-LLMChatBox go
 
 - Coding mode: the model reads `ARCHITEKTUR.md` / `ARCHITECTURE.md` and `ROADMAP.md` first, or writes them from a template
 - Architecture index: headings and module list right away, the full file only when needed
-- Tools: `search_files` (like grep), `edit_file` (only the changed part, shows the result with line numbers and blocks duplicate edits), `write_file`, `create_document` (PDF, DOCX, ODT, PPTX, HTML, EPUB via pandoc)
+- Tools: `search_files` (like grep, same paths as `read_file`, hints at `regex` when `a|b` finds nothing), `edit_file` (only the changed part, shows the result with line numbers and blocks duplicate edits), `write_file`, `create_document` (PDF, DOCX, ODT, PPTX, HTML, EPUB via pandoc)
 - **Terminal commands** with approval ("Yes, once" / "Allow in this chat" / "No"); safe commands like `cargo test` run without asking; `sudo`, `rm -rf /`, paths outside the folder and `curl … | bash` are always blocked; up to 15 minutes with a timer
 - **Automatic check (Rust):** after file changes the app runs `cargo clippy` and lets the model fix errors and warnings (max. 3 rounds); 20 tool steps per answer in Coding mode
 - **Checkpoints:** "↶ Undo file changes" puts every file back
@@ -136,7 +136,7 @@ Simple local chat apps (like Alpaca) are great for chatting. Dream-LLMChatBox go
 
 ### Models and servers
 
-- **Installed:** size, VRAM/RAM and speed estimate, "Test" measures real VRAM/RAM and tokens per second
+- **Installed:** size, VRAM/RAM and speed estimate, "Test" measures real VRAM/RAM and tokens per second, "Remove" deletes the model (asks once more)
 - **Available:** curated list plus live search on ollama.com and Hugging Face (GGUF), filters and model families; one-click install
 - Two bars per size: share of your VRAM and your RAM
 - **Servers:** LM Studio, llama.cpp, vLLM, LocalAI or another PC (OpenAI-compatible API), with tools and thinking

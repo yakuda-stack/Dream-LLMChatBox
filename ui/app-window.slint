@@ -188,6 +188,7 @@ export component AppWindow inherits Window {
     in-out property <[VoiceEntry]> voices;
     in-out property <bool> voice-downloading;
     in-out property <string> user-name: "You";
+    in property <string> app-version;
     in-out property <int> settings-page: 0;
     in-out property <string> profile-name;
     in-out property <string> profile-about;
@@ -426,6 +427,7 @@ export component AppWindow inherits Window {
     callback mic-gain-changed(float);
     callback install-model(string);
     callback test-model(string);
+    callback remove-model(string);
     callback available-search(string);
     callback available-source(int);
     callback available-category(int);
@@ -593,6 +595,7 @@ export component AppWindow inherits Window {
                 group-create => { root.group-create(); }
                 group-import => { root.group-import(); }
                 user-name: root.user-name;
+                app-version: root.app-version;
                 user-picture: root.profile-picture;
                 has-user-picture: root.has-profile-picture;
                 open-profiles => { root.open-profiles(); }
@@ -903,6 +906,7 @@ export component AppWindow inherits Window {
                         hardware-text: root.hardware-text;
                         install(tag) => { root.install-model(tag); }
                         test(name) => { root.test-model(name); }
+                        remove(name) => { root.remove-model(name); }
                         search(query) => { root.available-search(query); }
                         source-changed(index) => { root.available-source(index); }
                         category-changed(index) => { root.available-category(index); }

@@ -105,6 +105,13 @@ pub fn setup(ui: &AppWindow) {
     });
 
     let weak = ui.as_weak();
+    ui.on_remove_model(move |name| {
+        if let Some(ui) = weak.upgrade() {
+            remove(&ui, name.to_string());
+        }
+    });
+
+    let weak = ui.as_weak();
     ui.on_test_model(move |name| {
         if let Some(ui) = weak.upgrade() {
             test(&ui, name.to_string());
@@ -654,6 +661,24 @@ fn install(ui: &AppWindow, tag: &str) {
         }
         Err(e) => ui.set_status(e.into()),
     }
+}
+
+fn remove(ui: &AppWindow, name: String) {
+    if ui.get_busy() {
+        return;
+    }
+    ui.set_status(trf("Removing {}…", &[&name]).into());
+    let weak = ui.as_weak();
+    thread::spawn(move || {
+        let result = ollama::delete_model(&name);
+        let _ = weak.upgrade_in_event_loop(move |ui| {
+            match result {
+                Ok(()) => ui.set_status(trf("{} removed", &[&name]).into()),
+                Err(e) => ui.set_status(trf("Could not remove {}: {}", &[&name, &e]).into()),
+            }
+            ui.invoke_refresh_models();
+        });
+    });
 }
 
 fn test(ui: &AppWindow, name: String) {

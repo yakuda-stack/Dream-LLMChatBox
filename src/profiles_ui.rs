@@ -72,6 +72,7 @@ fn with_writer<T>(change: impl FnOnce() -> Result<T, String>) -> Result<T, Strin
 }
 
 pub fn setup(ui: &AppWindow) {
+    ui.set_app_version(crate::cli::VERSION.into());
     let current = settings::load();
     if let Err(e) = profiles::migrate_in(&storage::base_dir(), &config_dir(), &current.user_name, &current.user_about) {
         ui.set_status(trf("Could not move your data into the profile folder: {}", &[&e]).into());
