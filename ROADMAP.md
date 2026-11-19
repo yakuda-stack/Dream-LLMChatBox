@@ -106,6 +106,8 @@ English first, Deutsch below.
 - [x] "+" → Test environment (asks first, shows the path)
 - [x] Chat search, Markdown export, automatic titles
 - [x] Optional: run tests in a Docker/Podman container instead of a plain work folder
+- [x] Sandbox for terminal commands with bwrap (per group and per chat)
+- [x] Chat settings dialog and "Rename" in the chat right-click menu
 - [x] Guided tour + German/English
 - [x] Reset everything
 - [x] Ollama graphics backend switch
@@ -221,6 +223,8 @@ English first, Deutsch below.
 - [x] „+“ → Testumgebung (fragt vorher, zeigt den Pfad)
 - [x] Chat-Suche, Markdown-Export, automatische Titel
 - [x] Optional: Tests in einem Docker/Podman-Container statt im einfachen Arbeitsordner
+- [x] Sandbox für Terminal-Befehle mit bwrap (pro Gruppe und pro Chat)
+- [x] Chat-Einstellungen und „Umbenennen“ im Rechtsklick-Menü des Chats
 - [x] Geführte Tour + Deutsch/Englisch
 - [x] Alles zurücksetzen
 - [x] Grafik-Backend für Ollama umschalten

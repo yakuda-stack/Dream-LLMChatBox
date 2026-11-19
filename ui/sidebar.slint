@@ -1,5 +1,6 @@
 import { Button, LineEdit, Palette, ScrollView } from "std-widgets.slint";
 import { ChatList } from "chat-list.slint";
+import { ChatSettings } from "chat-settings-dialog.slint";
 import { Automations } from "automations-page.slint";
 import { Spot, Tutorial } from "hint.slint";
 import { ChatEntry, GroupEntry } from "types.slint";
@@ -187,6 +188,30 @@ component ChatItem inherits Rectangle {
 
             VerticalLayout {
                 padding: 4px;
+
+                MenuEntry {
+                    text: @tr("✏ Rename");
+                    clicked => {
+                        menu.close();
+                        title-input.text = entry.title;
+                        root.editing = true;
+                        title-input.focus();
+                        title-input.select-all();
+                    }
+                }
+
+                MenuEntry {
+                    text: @tr("⚙ Chat settings…");
+                    clicked => {
+                        ChatSettings.show(entry.id);
+                        menu.close();
+                    }
+                }
+
+                Rectangle {
+                    height: 1px;
+                    background: Palette.border;
+                }
 
                 MenuEntry {
                     text: entry.pinned ? @tr("📌 Unpin") : @tr("📌 Pin to top");

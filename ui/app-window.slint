@@ -8,6 +8,7 @@ import { ChatList } from "chat-list.slint";
 import { Button, CheckBox, ComboBox, Palette, ScrollView } from "std-widgets.slint";
 import { Hint, Spot, Tutorial, TourOverlay } from "hint.slint";
 import { ResetDialog } from "reset-dialog.slint";
+import { ChatSettings, ChatSettingsDialog } from "chat-settings-dialog.slint";
 import { ChatMessage, ChatEntry, InstalledEntry, CatalogEntry, ModelVariant, AvailableRow, MessageSegment, VoiceEntry, SharedFolder, ToolEntry, StartArgEntry, ActivityEntry, BrowserLink, GroupEntry, ProfileEntry, GroupArg } from "types.slint";
 import { MessageBubble } from "message-bubble.slint";
 import { Sidebar } from "sidebar.slint";
@@ -24,7 +25,7 @@ import { ProfilesDialog } from "profiles-dialog.slint";
 import { UnlockScreen } from "unlock-screen.slint";
 import { Segmented } from "segmented.slint";
 
-export { ChatMessage, ChatEntry, InstalledEntry, CatalogEntry, ModelVariant, AvailableRow, MessageSegment, VoiceEntry, SharedFolder, ToolEntry, StartArgEntry, ActivityEntry, BrowserLink, GroupEntry, ProfileEntry, McpPage, ChatList, GroupArg, PreviewState, CloudModels, CloudEntry, ServerModels, ServerEntry, Automations, AutomationEntry, Tutorial }
+export { ChatMessage, ChatEntry, InstalledEntry, CatalogEntry, ModelVariant, AvailableRow, MessageSegment, VoiceEntry, SharedFolder, ToolEntry, StartArgEntry, ActivityEntry, BrowserLink, GroupEntry, ProfileEntry, McpPage, ChatList, GroupArg, PreviewState, CloudModels, CloudEntry, ServerModels, ServerEntry, Automations, AutomationEntry, Tutorial, ChatSettings }
 
 component MenuToggle inherits Rectangle {
     callback clicked();
@@ -322,6 +323,8 @@ export component AppWindow inherits Window {
     in-out property <[GroupArg]> group-dialog-removed-args;
     callback group-dialog-toggle-removed(int);
     in-out property <bool> group-dialog-test-env;
+    in-out property <bool> group-dialog-sandbox: true;
+    in-out property <string> group-dialog-sandbox-status;
     in-out property <string> group-dialog-docs;
     in-out property <string> group-dialog-docs-status;
     callback group-dialog-pick-docs();
@@ -955,6 +958,8 @@ export component AppWindow inherits Window {
         removed-args: root.group-dialog-removed-args;
         toggle-removed(index) => { root.group-dialog-toggle-removed(index); }
         test-env <=> root.group-dialog-test-env;
+        sandbox <=> root.group-dialog-sandbox;
+        sandbox-status: root.group-dialog-sandbox-status;
         docs: root.group-dialog-docs;
         docs-status: root.group-dialog-docs-status;
         pick-docs => { root.group-dialog-pick-docs(); }
@@ -1130,6 +1135,11 @@ export component AppWindow inherits Window {
     }
 
     if Tutorial.active: TourOverlay {
+        width: root.width;
+        height: root.height;
+    }
+
+    if ChatSettings.open: ChatSettingsDialog {
         width: root.width;
         height: root.height;
     }

@@ -213,12 +213,24 @@ pub fn run(arguments: &Value, context: &Context) -> String {
             }
         }
     }
-    let script = match wrapped {
-        Ok(wrapped) => wrapped.unwrap_or_else(|| command.to_string()),
+    let (script, jailed) = match wrapped {
+        Ok(Some(wrapped)) => (wrapped, false),
+        Ok(None) => {
+            let script = crate::bwrap::wrap(context.chat_id, context.group, &directory, folder.writable, command);
+            let jailed = script != command;
+            (script, jailed)
+        }
         Err(e) => return format!("Error: {e}"),
     };
     match shell::run(&script, &directory, &[], TIMEOUT, context.cancel.clone()) {
-        Ok(output) => output.summary(&shorten(&output.text)),
+        Ok(output) => {
+            let summary = output.summary(&shorten(&output.text));
+            if jailed && output.text.contains("Read-only file system") {
+                format!("{summary}\n{}", crate::bwrap::READ_ONLY_HINT)
+            } else {
+                summary
+            }
+        }
         Err(e) => format!("Error: {e}"),
     }
 }

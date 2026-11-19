@@ -2,6 +2,16 @@
 
 All notable changes to Dream-LLMChatBox. Newest first.
 
+## [v0.1.5] – 2026-11-18
+
+### Added
+- Sandbox for terminal commands with `bwrap`: only the shared project folder is writable, the rest of the system is read-only, `~/.ssh`, `~/.gnupg` and keyrings are hidden; cargo/npm caches stay writable
+- Group setting "🛡 Sandbox" (on by default) and a per-chat switch that overrides the group
+- Right-click on a chat: "✏ Rename" (works no matter how long the title is) and "⚙ Chat settings…" with name, group, shared folders, memory folder and sandbox switch
+
+### Changed
+- The auto check uses the chat's group (for the sandbox setting)
+
 ## [v0.1.4] – 2026-11-18
 
 ### Added

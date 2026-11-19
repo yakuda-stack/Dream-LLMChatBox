@@ -34,6 +34,8 @@ pub struct Group {
     pub removed_start_args: Vec<String>,
     #[serde(default)]
     pub test_env: bool,
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub sandbox_off: bool,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub docs_folder: Option<String>,
 }

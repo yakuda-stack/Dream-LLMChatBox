@@ -39,6 +39,8 @@ export component GroupDialog inherits Rectangle {
     in property <[GroupArg]> removed-args;
     callback toggle-removed(int);
     in-out property <bool> test-env;
+    in-out property <bool> sandbox: true;
+    in property <string> sandbox-status;
     in property <string> docs;
     in property <string> docs-status;
     callback pick-docs();
@@ -317,6 +319,16 @@ export component GroupDialog inherits Rectangle {
                 CheckBox {
                     text: @tr("🧪 Test environment for every chat");
                     checked <=> root.test-env;
+                }
+            }
+
+            Field {
+                label: @tr("Sandbox");
+                hint: root.sandbox-status;
+
+                CheckBox {
+                    text: @tr("🛡 Terminal commands may only write into the project folder");
+                    checked <=> root.sandbox;
                 }
             }
 

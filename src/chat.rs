@@ -340,6 +340,7 @@ fn delete_chat(ui: &AppWindow, id: &str) {
     if let Ok(chat) = storage::load_chat(id) {
         workspace::delete_chat(&chat.group, id);
         checkpoint::delete_chat(id);
+        crate::bwrap::forget_chat(id);
         for folder in sandbox::from_json(&chat.folders) {
             if workspace::is_inside(&folder.path) && folder.path.contains(id) {
                 let _ = std::fs::remove_dir_all(&folder.path);
@@ -953,6 +954,7 @@ fn start_stream(
                     let Some(feedback) = run_auto_check(
                         &weak,
                         &chat_id,
+                        &group_id,
                         &shared,
                         &current.safe_commands,
                         &cancel,
@@ -1318,6 +1320,7 @@ fn grant_project(
 fn run_auto_check(
     weak: &slint::Weak<AppWindow>,
     chat_id: &str,
+    group_id: &str,
     shared: &[sandbox::Folder],
     safe: &[String],
     cancel: &Arc<AtomicBool>,
@@ -1335,7 +1338,7 @@ fn run_auto_check(
     let context = tools::Context {
         folders: shared,
         chat_id,
-        group: "",
+        group: group_id,
         safe,
         cancel: Some(cancel.clone()),
         ask,

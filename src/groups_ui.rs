@@ -67,6 +67,8 @@ pub fn setup(ui: &AppWindow) {
         ui.set_group_dialog_use_global(true);
         set_extra_args(&ui, &[], &[]);
         ui.set_group_dialog_test_env(false);
+        ui.set_group_dialog_sandbox(true);
+        ui.set_group_dialog_sandbox_status(crate::bwrap::status().into());
         ui.set_group_dialog_docs("".into());
         ui.set_group_dialog_docs_status("".into());
         ui.set_group_dialog_memory(true);
@@ -95,6 +97,8 @@ pub fn setup(ui: &AppWindow) {
         ui.set_group_dialog_use_global(group.use_global_start_args);
         set_extra_args(&ui, &group.extra_start_args, &group.removed_start_args);
         ui.set_group_dialog_test_env(group.test_env);
+        ui.set_group_dialog_sandbox(!group.sandbox_off);
+        ui.set_group_dialog_sandbox_status(crate::bwrap::status().into());
         let docs = group.docs_folder.clone().unwrap_or_default();
         ui.set_group_dialog_docs_status(crate::rag_ui::status_text(&docs).into());
         ui.set_group_dialog_docs(docs.into());
@@ -344,6 +348,7 @@ fn save_dialog(ui: &AppWindow) -> Result<Group, String> {
     group.extra_start_args = chosen(&ui.get_group_dialog_extra_args());
     group.removed_start_args = chosen(&ui.get_group_dialog_removed_args());
     group.test_env = ui.get_group_dialog_test_env();
+    group.sandbox_off = !ui.get_group_dialog_sandbox();
     let docs = ui.get_group_dialog_docs().trim().to_string();
     group.docs_folder = (!docs.is_empty()).then_some(docs);
     group.memory_enabled = ui.get_group_dialog_memory();

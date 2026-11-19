@@ -112,6 +112,8 @@ Simple local chat apps (like Alpaca) are great for chatting. Dream-LLMChatBox go
 - `sync_from_project`: the model copies files from your original project into the test environment when they are missing or differ there (one file, a folder or everything; never changes your project, runs without asking)
 - Per group: a test environment for every chat
 - **Container** (Settings, off by default): commands run in Podman or Docker, image changeable (default `debian:stable-slim`)
+- **🛡 Sandbox** (per group, on by default; per chat in the chat settings): terminal commands run with `bwrap` and can only write into the shared project folder; `~/.ssh`, `~/.gnupg` and keyrings are hidden (needs `bubblewrap`)
+- Right-click on a chat: "✏ Rename" and "⚙ Chat settings…" (name, group, shared folders, memory folder, sandbox switch)
 
 ### Tools, web and MCP
 
@@ -159,7 +161,7 @@ Simple local chat apps (like Alpaca) are great for chatting. Dream-LLMChatBox go
 - VRAM, RAM and speed values are rough estimates. GPU detection: NVIDIA via `nvidia-smi`, AMD/Intel via sysfs.
 - The ollama.com search reads the public website, so it may break if the site layout changes.
 - The internet is only contacted when you search models, use web tools (with approval), or download a speech model or voice.
-- Optional programs: `ffmpeg` (audio/video), `pdftotext` (PDF), `tesseract` (OCR), `pandoc` (documents), `piper-tts` (read aloud), `podman`/`docker` (container).
+- Optional programs: `ffmpeg` (audio/video), `pdftotext` (PDF), `tesseract` (OCR), `pandoc` (documents), `piper-tts` (read aloud), `podman`/`docker` (container), `bubblewrap` (sandbox).
 - A larger context length uses more VRAM.
 
 ## Build

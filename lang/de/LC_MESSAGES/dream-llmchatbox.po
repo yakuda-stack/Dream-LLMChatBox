@@ -2448,3 +2448,48 @@ msgstr "{} entfernt"
 
 msgid "Could not remove {}: {}"
 msgstr "{} konnte nicht entfernt werden: {}"
+
+msgid "Chat settings"
+msgstr "Chat-Einstellungen"
+
+msgid "Group"
+msgstr "Gruppe"
+
+msgid "Shared folders"
+msgstr "Freigegebene Ordner"
+
+msgid "Memory (brain)"
+msgstr "Gedächtnis (Gehirn)"
+
+msgid "Open"
+msgstr "Öffnen"
+
+msgid "Sandbox"
+msgstr "Sandbox"
+
+msgid "🛡 Terminal commands may only write into the project folder"
+msgstr "🛡 Terminal-Befehle dürfen nur in den Projektordner schreiben"
+
+msgid "✏ Rename"
+msgstr "✏ Umbenennen"
+
+msgid "⚙ Chat settings…"
+msgstr "⚙ Chat-Einstellungen…"
+
+msgid "No folders shared"
+msgstr "Keine Ordner freigegeben"
+
+msgid "Switched off in the group settings"
+msgstr "In den Gruppeneinstellungen ausgeschaltet"
+
+msgid "Only chats in a group have a memory"
+msgstr "Nur Chats in einer Gruppe haben ein Gedächtnis"
+
+msgid "The chat needs a name"
+msgstr "Der Chat braucht einen Namen"
+
+msgid "bwrap found ✓ – commands can only write into the shared project folder."
+msgstr "bwrap gefunden ✓ – Befehle können nur in den freigegebenen Projektordner schreiben."
+
+msgid "bwrap is not installed – commands run without sandbox. Install the package “bubblewrap”."
+msgstr "bwrap ist nicht installiert – Befehle laufen ohne Sandbox. Installiere das Paket „bubblewrap“."
